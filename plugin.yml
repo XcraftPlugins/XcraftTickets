@@ -1,0 +1,15 @@
+name: XcraftTickets
+
+main: me.INemesisI.XcraftTickets.XcraftTickets
+
+version: 0.2
+
+commands:
+  ticket:
+    usage:
+  ti:
+    usage:
+  tk:
+    usage:
+  pe:
+    usage:
