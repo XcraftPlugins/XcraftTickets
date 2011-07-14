@@ -21,14 +21,16 @@ public class ViewCommand implements CommandExecutor{
 	@Override
 	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		boolean isplayer = (sender instanceof Player);
-		if (args.length < 1 || !args[1].matches("\\d*")) {
+		if (args.length < 2 && !args[1].matches("\\d*")) {
 			sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket view <Nr>)");
 			return true;
 		}
 		int id = Integer.parseInt(args[1]);
 		HashMap<String, String> info = new HashMap<String, String>();
 		
-		// Reminder stuff
+		if(plugin.data.getAllTicketIDs().contains(id) && isplayer)
+			plugin.data.setPlayerWatchedTicket(id, plugin.data.getSendersName(sender));
+		
 		if(!plugin.data.getAllTicketIDs().contains(id) && isplayer) {
 			info = plugin.data.getClosedTicketInfo(id);
 			if(info == null || info.isEmpty() || info.get("owner") == null) {
@@ -79,8 +81,6 @@ public class ViewCommand implements CommandExecutor{
 			output = ChatColor.BLUE+"-> "+ChatColor.DARK_GRAY+time+ChatColor.WHITE+"|"+ChatColor.YELLOW+inf0+ChatColor.WHITE+out;
 			sender.sendMessage(output);
 		}
-		if(plugin.data.getAllTicketIDs().contains(id) && isplayer)
-		plugin.data.setPlayerWatchedTicket(id, plugin.data.getSendersName(sender));
 		return true;
 	}
 }

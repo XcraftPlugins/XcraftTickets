@@ -26,15 +26,17 @@ public class ListCommand implements CommandExecutor{
 		Collections.sort(IDs);
 		sender.sendMessage(ChatColor.YELLOW+plugin.getName()+ChatColor.GREEN+"Ticket list");
 		int counter = -1;
+		Player player = null;
+		if (isplayer)
+			player = (Player) sender;
+		boolean isMod = plugin.hasPermission(player, "XcraftTickets.Mod");
 		for(int i=0;i<IDs.size();i++) {
 			counter = i;
 			HashMap<String, String> info = plugin.data.getTicketInfo(IDs.get(i));
 			String assignee = info.get("assignee");
-			Player player = null;
-			if (isplayer)
-				player = (Player) sender;
+			
 			if (player != null && (player.getName().equals(info.get("owner")) || (assignee.equals("none") || args[0].equals("listall") || assignee.toLowerCase().equals(player.getName().toLowerCase()) || 
-			(assignee.startsWith("G:") && plugin.permissionHandler.inGroup(player.getWorld().getName(), player.getName(), assignee.replace("G:", "")))) && plugin.data.isMod(player)) || !isplayer) {
+			(assignee.startsWith("G:") && plugin.permissionHandler.inGroup(player.getWorld().getName(), player.getName(), assignee.replace("G:", "")))) &&  isMod || !isplayer)) {
 				String assign = "";
 				if(!assignee.equals("none"))
 				assign = ChatColor.LIGHT_PURPLE+"->"+ChatColor.DARK_PURPLE+assignee;

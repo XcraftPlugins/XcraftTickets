@@ -6,19 +6,14 @@ import java.util.logging.Logger;
 import me.INemesisI.XcraftTickets.Commands.*;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class XcraftTickets extends JavaPlugin {
-	 
-	//ClassListeners
-	private final XcraftTicketsPlayerListener playerListener = new XcraftTicketsPlayerListener(this);
-    //ClassListeners
+
 	public XcraftTicketsData data = new XcraftTicketsData(this);
        
     public Logger log = Logger.getLogger("Minecraft");//Define your logger
@@ -33,10 +28,6 @@ public class XcraftTickets extends JavaPlugin {
  
     @Override
 	public void onEnable() {
-    PluginManager pm = this.getServer().getPluginManager();
-
-    pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
-    pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
     
     setupPermissions();
     registerCommands();
@@ -92,9 +83,10 @@ public class XcraftTickets extends JavaPlugin {
     public boolean hasPermission(Player player, String node) {
 		 if (permissionHandler != null)
 		      return permissionHandler.has(player, node);
-		 else if (player.isOp())
-			 return true;
-		 else return false;
+		 else 
+			 if (player.isOp())
+				 return true;
+			 else return false;
 	}
 
     public String getName() {

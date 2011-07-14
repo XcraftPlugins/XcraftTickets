@@ -3,9 +3,11 @@ package me.INemesisI.XcraftTickets;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -24,7 +26,6 @@ public class XcraftTicketsData {
 	private HashMap<Integer, Configuration> tickets = new HashMap<Integer, Configuration>();
 	private HashMap<Integer, ArrayList<String>> log = new HashMap<Integer, ArrayList<String>>();
 	private HashMap<Integer, ArrayList<String>> watched = new HashMap<Integer, ArrayList<String>>();
-	private ArrayList<Player> mods = new ArrayList<Player>();
 	private int nextID;
 	Calendar calendar = Calendar.getInstance();
 	SimpleDateFormat date = new SimpleDateFormat();
@@ -70,9 +71,9 @@ public class XcraftTicketsData {
 		//apply date pattern
 		date.applyPattern("E, hh:mm a");
 		Player[] players = plugin.getServer().getOnlinePlayers();
+		if (players != null && players.length != 0)
 		for(int i=0;i<players.length;i++)
-			if(plugin.hasPermission(players[i], "XcraftTickets.mod"))
-				mods.add(players[i]);
+			if(plugin.hasPermission(players[i], "XcraftTickets.Mod"))
 		startScheduler(config.getInt("save.intervall", 5)*1200);
 		nextID = config.getInt("next_ticket_ID", 1);
 		reminder.load();
@@ -104,8 +105,14 @@ public class XcraftTicketsData {
 	
 	@SuppressWarnings("unchecked")
 	public void InformPlayers(){
-		ArrayList<Player> players = new ArrayList<Player>();
 		HashMap<Player, Integer> list = new HashMap<Player, Integer>();
+		List<Player> mods = Arrays.asList(plugin.getServer().getOnlinePlayers());
+		for (int i=0;i<mods.size();i++) {
+			if (!isMod(mods.get(i))) {
+				mods.remove(i);
+				i--;
+			}
+		}
 		for(int i=0;i<tickets.size();i++) {
 			for(int a=0;a<mods.size();a++) {
 				if(!hasWatchedTicket(ticketIds.get(i), mods.get(a).getName())) {
@@ -113,8 +120,8 @@ public class XcraftTicketsData {
 						list.put(mods.get(a), list.get(mods.get(a))+1);
 					else
 						list.put(mods.get(a), 1);
-					if(!players.contains(mods.get(a)))
-					players.add(mods.get(a));
+					if(!mods.contains(mods.get(a)))
+					mods.add(mods.get(a));
 				}
 			}
 			Player owner = getTicketOwner(ticketIds.get(i));
@@ -126,9 +133,9 @@ public class XcraftTicketsData {
 			}
 		}
 		if(list.size() != 0)
-		for (int i=0;i<players.size();i++) {
-			if(list.get(players.get(i)) != null && list.get(players.get(i)) != 0)
-				players.get(i).sendMessage(ChatColor.GRAY+"Du hast noch "+ChatColor.GOLD+list.get(players.get(i))+ChatColor.GRAY+" ungelesene Tickets offen! (/ticket list)");
+		for (int i=0;i<mods.size();i++) {
+			if(list.get(mods.get(i)) != null && list.get(mods.get(i)) != 0)
+				mods.get(i).sendMessage(ChatColor.GRAY+"Du hast noch "+ChatColor.GOLD+list.get(mods.get(i))+ChatColor.GRAY+" ungelesene Tickets offen! (/ticket list)");
 		}
 		Player[] oplayers = plugin.getServer().getOnlinePlayers();
 		for(int i=0;i<oplayers.length;i++) {
@@ -271,9 +278,20 @@ public class XcraftTicketsData {
 		}
 		return null;
 	}
+	
+	public boolean isMod(Player player) {
+		return (plugin.permissionHandler.has(player, "XcraftTickets.Mod"));
+	}
 
 	public void sendMessageToMods(int id, String message) {
 		String owner = tickets.get(id).getString("Ticket.owner");
+		List<Player> mods = Arrays.asList(plugin.getServer().getOnlinePlayers());
+		for (int i=0;i<mods.size();i++) {
+			if (!isMod(mods.get(i))) {
+				mods.remove(i);
+				i--;
+			}
+		}
 		for(int i=0;i<mods.size();i++) {
 			if (!mods.get(i).getName().equals(owner))
 				mods.get(i).sendMessage(message);
@@ -287,7 +305,7 @@ public class XcraftTicketsData {
 	}
 	
 	public void setPlayerWatchedTicket(int id, String player) {
-		if (!watched.get(id).contains(player))
+		if (!watched.get(id).contains(player) && !player.equals("Konsole"))
 				watched.get(id).add(player);
 	}
 	
@@ -320,18 +338,6 @@ public class XcraftTicketsData {
 
 	public int getNextID() {
 		return nextID;
-	}
-	
-	public void addToMods(Player player) {
-		mods.add(player);
-	}
-	
-	public void removeFromMods(Player player) {
-		mods.remove(player);
-	}
-	
-	public boolean isMod(Player player) {
-		return mods.contains(player);
 	}
 	
 	public boolean isOwner(int id, String player) {
