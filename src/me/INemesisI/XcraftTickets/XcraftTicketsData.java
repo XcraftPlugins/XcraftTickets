@@ -3,12 +3,8 @@ package me.INemesisI.XcraftTickets;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -27,7 +23,6 @@ public class XcraftTicketsData {
 	private HashMap<Integer, ArrayList<String>> log = new HashMap<Integer, ArrayList<String>>();
 	private HashMap<Integer, ArrayList<String>> watched = new HashMap<Integer, ArrayList<String>>();
 	private int nextID;
-	Calendar calendar = Calendar.getInstance();
 	SimpleDateFormat date = new SimpleDateFormat();
 	
 	
@@ -70,21 +65,17 @@ public class XcraftTicketsData {
 		}
 		//apply date pattern
 		date.applyPattern("E, hh:mm a");
-		Player[] players = plugin.getServer().getOnlinePlayers();
-		if (players != null && players.length != 0)
-		for(int i=0;i<players.length;i++)
-			if(plugin.hasPermission(players[i], "XcraftTickets.Mod"))
 		startScheduler(config.getInt("save.intervall", 5)*1200);
 		nextID = config.getInt("next_ticket_ID", 1);
 		reminder.load();
 	}
 	
 	public void startScheduler(long intervall) {
-		Runnable runnable = new Runnable() { public void run() {
+		Runnable task = new Runnable() { public void run() {
 				save();
 				InformPlayers();
 			}};
-		plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, runnable, intervall, intervall);
+		plugin.getServer().getScheduler().scheduleAsyncRepeatingTask(plugin, task, intervall, intervall);
 	}
 	
 	public void save() {
@@ -106,57 +97,38 @@ public class XcraftTicketsData {
 	@SuppressWarnings("unchecked")
 	public void InformPlayers(){
 		HashMap<Player, Integer> list = new HashMap<Player, Integer>();
-		List<Player> mods = Arrays.asList(plugin.getServer().getOnlinePlayers());
-		for (int i=0;i<mods.size();i++) {
-			if (!isMod(mods.get(i))) {
-				mods.remove(i);
-				i--;
-			}
-		}
+		Player[] informants = plugin.getServer().getOnlinePlayers();
+		
 		for(int i=0;i<tickets.size();i++) {
-			for(int a=0;a<mods.size();a++) {
-				if(!hasWatchedTicket(ticketIds.get(i), mods.get(a).getName())) {
-					if(list.containsKey(mods.get(a)))
-						list.put(mods.get(a), list.get(mods.get(a))+1);
+			for(Player player : informants) {
+				if(!hasWatchedTicket(ticketIds.get(i), player.getName()) &&(isMod(player) || isOwner(ticketIds.get(i), player.getName()))) {
+					if(list.containsKey(player))
+						list.put(player, list.get(player)+1);
 					else
-						list.put(mods.get(a), 1);
-					if(!mods.contains(mods.get(a)))
-					mods.add(mods.get(a));
+						list.put(player, 1);
 				}
 			}
-			Player owner = getTicketOwner(ticketIds.get(i));
-			if(owner != null && !hasWatchedTicket(ticketIds.get(i), owner.getName())) {
-				if(list.containsKey(owner))
-					list.put(owner, (list.get(owner))+1);
-				else
-					list.put(owner, 1);
-			}
 		}
-		if(list.size() != 0)
-		for (int i=0;i<mods.size();i++) {
-			if(list.get(mods.get(i)) != null && list.get(mods.get(i)) != 0)
-				mods.get(i).sendMessage(ChatColor.GRAY+"Du hast noch "+ChatColor.GOLD+list.get(mods.get(i))+ChatColor.GRAY+" ungelesene Tickets offen! (/ticket list)");
-		}
-		Player[] oplayers = plugin.getServer().getOnlinePlayers();
-		for(int i=0;i<oplayers.length;i++) {
-			ArrayList<Integer> ids = (ArrayList<Integer>) reminder.getProperty(oplayers[i].getName());
+		for (Player player : informants) {
+				if(list.containsKey(player))
+					player.sendMessage(ChatColor.GRAY+"Du hast noch "+ChatColor.GOLD+list.get(player)+ChatColor.GRAY+" ungelesene Tickets offen! (/ticket list)");
+
+			ArrayList<Integer> ids = (ArrayList<Integer>) reminder.getProperty(player.getName());
 			if (ids != null) {
 				if (ids.size() == 1)
-					oplayers[i].sendMessage(ChatColor.GRAY+"Dein Ticket wurde geschlossen! Schau es dir bitte nochmal an. (/ticket view "+ChatColor.GOLD+ids.get(0)+ChatColor.GRAY+")");
+					player.sendMessage(ChatColor.GRAY+"Dein Ticket wurde geschlossen! Schau es dir bitte nochmal an. (/ticket view "+ChatColor.GOLD+ids.get(0)+ChatColor.GRAY+")");
 				if (ids.size() > 1) {
 					String id = ids.toString().replace("[", "").replace("]", "");
-					oplayers[i].sendMessage(ChatColor.GRAY+"Es wurden "+ChatColor.GOLD+ids.size()+ChatColor.GRAY+" deiner Tickets geschlossen! Schau sie dir bitte nochmal an. (/ticket view "+ChatColor.GOLD+id+ChatColor.GRAY+")");
+					player.sendMessage(ChatColor.GRAY+"Es wurden "+ChatColor.GOLD+ids.size()+ChatColor.GRAY+" deiner Tickets geschlossen! Schau sie dir bitte nochmal an. (/ticket view "+ChatColor.GOLD+id+ChatColor.GRAY+")");
 				}
 			}
 		}
 	}
 	
-	public void newTicket(CommandSender player, String title) {
-		String name = getSendersName(player);
-		Location loc = getSendersLocation(player);
+	public void newTicket(String owner, Location loc, String title) {
 		Configuration ticket = new Configuration(new File(plugin.getDataFolder(),"/"+ nextID+".yml"));
 		ticket.load();
-		ticket.setProperty("Ticket.owner", name);
+		ticket.setProperty("Ticket.owner", owner);
 		ticket.setProperty("Ticket.title", title);
 		ticket.setProperty("Ticket.date", date.format(new Date()));
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -183,15 +155,13 @@ public class XcraftTicketsData {
 		Configuration ticket = tickets.get(id);
 		ticket.removeProperty("Ticket.watched");
 		ticket.save();
-		Player owner = getTicketOwner(id);
-		if(owner == null) {
-			ArrayList<Integer> list = (ArrayList<Integer>) reminder.getProperty(ticket.getString("Ticket.owner"));
+		String owner = ticket.getString("Ticket.owner");
+			ArrayList<Integer> list = (ArrayList<Integer>) reminder.getProperty(owner);
 			if (list == null) {
 				list = new ArrayList<Integer>();
 			}
 			list.add(id);
-			reminder.setProperty( ticket.getString("Ticket.owner"), list);
-		}
+			reminder.setProperty(owner, list);
 		
 		Configuration archive = new Configuration(new File(folder, "/archive/"+ id+".yml"));
 		archive.load();
@@ -227,6 +197,9 @@ public class XcraftTicketsData {
 	public void addToLog(String player, int id, String type, String text) {
 		ArrayList<String> idlog = log.get(id);
 		String cdate = date.format(new Date());
+		if (player.isEmpty())
+			idlog.add(cdate+" | "+type+": "+text);
+		else
 		idlog.add(cdate+" | "+type+" by "+player+": "+text);
 		log.put(id, idlog);
 	}
@@ -280,16 +253,16 @@ public class XcraftTicketsData {
 	}
 	
 	public boolean isMod(Player player) {
-		return (plugin.permissionHandler.has(player, "XcraftTickets.Mod"));
+		return (player.hasPermission("XcraftTickets.Mod"));
 	}
 
 	public void sendMessageToMods(int id, String message) {
 		String owner = tickets.get(id).getString("Ticket.owner");
-		List<Player> mods = Arrays.asList(plugin.getServer().getOnlinePlayers());
-		for (int i=0;i<mods.size();i++) {
-			if (!isMod(mods.get(i))) {
-				mods.remove(i);
-				i--;
+		Player[] players = plugin.getServer().getOnlinePlayers();
+		ArrayList<Player> mods = new ArrayList<Player>();
+		for (Player p : players) {
+			if (isMod(p)) {
+				mods.add(p);
 			}
 		}
 		for(int i=0;i<mods.size();i++) {

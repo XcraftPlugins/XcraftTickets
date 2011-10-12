@@ -6,19 +6,12 @@ import java.util.logging.Logger;
 import me.INemesisI.XcraftTickets.Commands.*;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class XcraftTickets extends JavaPlugin {
 
 	public XcraftTicketsData data = new XcraftTicketsData(this);
-       
     public Logger log = Logger.getLogger("Minecraft");//Define your logger
-    public PermissionHandler permissionHandler;
-    public boolean assignSupport;
     
     @Override
 	public void onDisable() {
@@ -28,8 +21,6 @@ public class XcraftTickets extends JavaPlugin {
  
     @Override
 	public void onEnable() {
-    
-    setupPermissions();
     registerCommands();
     data.load();
     
@@ -56,37 +47,13 @@ public class XcraftTickets extends JavaPlugin {
 	     commandHandler.registerExecutor("goto", new WarpCommand(this), "XcraftTickets.Mod");
 	     commandHandler.registerExecutor("assign", new AssignCommand(this), "XcraftTickets.Mod"); 
 	     commandHandler.registerExecutor("unassign", new AssignCommand(this), "XcraftTickets.Mod"); 
+	     commandHandler.registerExecutor("appl", new ApplicationCommand(this), "XcraftTickets.Mod"); 
+	     commandHandler.registerExecutor("accept", new ApplicationCommand(this), "XcraftTickets.Mod"); 
    }
         
-	private void setupPermissions() {
-		Plugin permissionsPlugin = this.getServer().getPluginManager().getPlugin("Permissions");
-		
-		if (permissionHandler == null) {
-			if (permissionsPlugin != null) {
-				permissionHandler = ((Permissions) permissionsPlugin).getHandler();
-				String name = permissionsPlugin.getDescription().getFullName();
-				log.info(getName() +"Hooked into "+name+"!");
-				if (name.contains("Permissions v3."))
-					assignSupport = true;
-				else
-					assignSupport = false;
-			}
-			else {
-				log.info(getName() +"Could not find permissions! Using OPs");
-				assignSupport = false;
-			}
-		}
-		
-			
-	}
     
     public boolean hasPermission(Player player, String node) {
-		 if (permissionHandler != null)
-		      return permissionHandler.has(player, node);
-		 else 
-			 if (player.isOp())
-				 return true;
-			 else return false;
+		      return player.hasPermission(node);
 	}
 
     public String getName() {

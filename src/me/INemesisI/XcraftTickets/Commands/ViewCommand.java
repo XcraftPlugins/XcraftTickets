@@ -20,18 +20,16 @@ public class ViewCommand implements CommandExecutor{
 
 	@Override
 	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		boolean isplayer = (sender instanceof Player);
-		if (args.length < 2 && !args[1].matches("\\d*")) {
+		if (args.length < 2 || !args[1].matches("\\d*")) {
 			sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket view <Nr>)");
 			return true;
 		}
 		int id = Integer.parseInt(args[1]);
 		HashMap<String, String> info = new HashMap<String, String>();
 		
-		if(plugin.data.getAllTicketIDs().contains(id) && isplayer)
+		if(plugin.data.getAllTicketIDs().contains(id))
 			plugin.data.setPlayerWatchedTicket(id, plugin.data.getSendersName(sender));
-		
-		if(!plugin.data.getAllTicketIDs().contains(id) && isplayer) {
+		else {
 			info = plugin.data.getClosedTicketInfo(id);
 			if(info == null || info.isEmpty() || info.get("owner") == null) {
 				sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Ein Ticket mit dieser Nummer existier nicht!");
@@ -46,7 +44,11 @@ public class ViewCommand implements CommandExecutor{
 		// Ticket view stuff
 		if(info.isEmpty())
 		info = plugin.data.getTicketInfo(id);
-		if (isplayer && !plugin.data.getSendersName(sender).equals(info.get("owner")) && !plugin.data.isMod((Player) sender)) {
+		return sendInfo(sender, id, info);
+	}
+	
+	public static boolean sendInfo(CommandSender sender, int id, HashMap<String, String> info) {
+		if ((sender instanceof Player) && !plugin.data.getSendersName(sender).equals(info.get("owner")) && !plugin.data.isMod((Player) sender)) {
 			sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Rechte dieses Ticket zu sehen!"+ChatColor.GRAY+"  Es ist nicht dein Ticket...");
 			return true;
 		}
@@ -81,6 +83,6 @@ public class ViewCommand implements CommandExecutor{
 			output = ChatColor.BLUE+"-> "+ChatColor.DARK_GRAY+time+ChatColor.WHITE+"|"+ChatColor.YELLOW+inf0+ChatColor.WHITE+out;
 			sender.sendMessage(output);
 		}
-		return true;
+		return false;
 	}
 }

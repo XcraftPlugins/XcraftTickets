@@ -2,7 +2,7 @@ name: XcraftTickets
 
 main: me.INemesisI.XcraftTickets.XcraftTickets
 
-version: 0.2
+version: 0.3
 
 commands:
   ticket:
@@ -13,3 +13,13 @@ commands:
     usage:
   pe:
     usage:
+    
+permissions:
+    XcraftTickets.Mod:
+        description: Access to all /ticket commands
+        children:
+            XcraftTickets: true
+        default: op
+        
+    XcraftTickets:
+        description: Access to all user related /ticket commands

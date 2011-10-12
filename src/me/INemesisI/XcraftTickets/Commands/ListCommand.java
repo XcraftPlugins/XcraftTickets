@@ -21,22 +21,26 @@ public class ListCommand implements CommandExecutor{
 
 	@Override
 	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		boolean isplayer = (sender instanceof Player);
+		boolean isPlayer = sender instanceof Player;
 		ArrayList<Integer> IDs = plugin.data.getAllTicketIDs();
 		Collections.sort(IDs);
 		sender.sendMessage(ChatColor.YELLOW+plugin.getName()+ChatColor.GREEN+"Ticket list");
 		int counter = -1;
 		Player player = null;
-		if (isplayer)
+		boolean isMod;
+		if (sender instanceof Player) {
 			player = (Player) sender;
-		boolean isMod = plugin.hasPermission(player, "XcraftTickets.Mod");
+			isMod = plugin.hasPermission(player, "XcraftTickets.Mod");
+		}
+		else isMod = true;
+		
 		for(int i=0;i<IDs.size();i++) {
-			counter = i;
+			
 			HashMap<String, String> info = plugin.data.getTicketInfo(IDs.get(i));
 			String assignee = info.get("assignee");
 			
-			if (player != null && (player.getName().equals(info.get("owner")) || (assignee.equals("none") || args[0].equals("listall") || assignee.toLowerCase().equals(player.getName().toLowerCase()) || 
-			(assignee.startsWith("G:") && plugin.permissionHandler.inGroup(player.getWorld().getName(), player.getName(), assignee.replace("G:", "")))) &&  isMod || !isplayer)) {
+			if ((player != null && (player.getName().equals(info.get("owner")) || (assignee.equals("none") || args[0].equals("listall") || assignee.equals(player.getName())) &&  isMod)) || !isPlayer) {
+				counter++;
 				String assign = "";
 				if(!assignee.equals("none"))
 				assign = ChatColor.LIGHT_PURPLE+"->"+ChatColor.DARK_PURPLE+assignee;

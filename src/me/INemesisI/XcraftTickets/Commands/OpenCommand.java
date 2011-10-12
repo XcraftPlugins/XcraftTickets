@@ -20,7 +20,6 @@ public class OpenCommand implements CommandExecutor{
 			sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Nachricht eingeben! "+ChatColor.GRAY+"(/ticket open <Nachricht>)");
 			return true;
 		}
-		
 		if(args[0].equals("open")){
 			String title = "";
 			for (int i=1;i<args.length;i++) {
@@ -29,7 +28,7 @@ public class OpenCommand implements CommandExecutor{
 					title = title+" ";
 			}
 			int id = (plugin.data.getNextID());
-			plugin.data.newTicket(sender , title);
+			plugin.data.newTicket(plugin.data.getSendersName(sender), plugin.data.getSendersLocation(sender), title);
 			sender.sendMessage(ChatColor.GRAY+"Vielen Dank! deine Ticketnummer ist "+ChatColor.GOLD+"#"+id+ChatColor.GRAY+". Ein Mod wird sich nun darum kümmern!");
 			plugin.data.sendMessageToMods(id, ChatColor.GRAY+"Ein Ticket (Nr. "+ChatColor.GOLD+"#"+id+ChatColor.GRAY+") wurde von " +ChatColor.YELLOW+plugin.data.getSendersName(sender)+ChatColor.GRAY+" eröffnet "+ChatColor.GRAY+": "+ChatColor.AQUA+title);
 			plugin.data.setPlayerWatchedTicket(id, plugin.data.getSendersName(sender));

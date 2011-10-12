@@ -30,6 +30,6 @@ public class WarpCommand implements CommandExecutor{
 		}
 		Location loc = plugin.data.getTicketLocation(id);
 		player.teleport(loc);
-		return true;
+		return ViewCommand.sendInfo(sender, id, plugin.data.getTicketInfo(id));
 	}
 }

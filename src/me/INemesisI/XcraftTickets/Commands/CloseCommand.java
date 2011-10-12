@@ -1,6 +1,8 @@
 package me.INemesisI.XcraftTickets.Commands;
 
 
+import java.util.ArrayList;
+
 import me.INemesisI.XcraftTickets.XcraftTickets;
 
 import org.bukkit.ChatColor;
@@ -19,6 +21,10 @@ public class CloseCommand implements CommandExecutor{
 	@Override
 	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		boolean isplayer = (sender instanceof Player);
+		if (args.length < 3) {
+			sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Nachricht eingeben! "+ChatColor.GRAY+"(/ticket close <Nr> <Nachricht>)");
+			return true;
+		}
 		String text = "";
 		for (int i=2;i<args.length;i++) {
 			text = text+args[i];
@@ -45,9 +51,16 @@ public class CloseCommand implements CommandExecutor{
 		else  dot = ": ";
 		if (!isplayer)
 			sender.sendMessage(ChatColor.GRAY+"Ticket "+ChatColor.GOLD+"#"+id+ChatColor.GRAY+" wurde geschlossen"+dot+ChatColor.AQUA+text);
-			plugin.data.sendMessageToOwner(id, ChatColor.GRAY+"Dein Ticket "+ChatColor.GOLD+"#"+id+ChatColor.GRAY+" wurde geschlossen"+dot+ChatColor.AQUA+text);
+		plugin.data.sendMessageToOwner(id, ChatColor.GRAY+"Dein Ticket "+ChatColor.GOLD+"#"+id+ChatColor.GRAY+" wurde geschlossen"+dot+ChatColor.AQUA+text);
 		plugin.data.sendMessageToMods(id, ChatColor.GRAY+"Ticket "+ChatColor.GOLD+"#"+id+ChatColor.GRAY+" wurde geschlossen"+dot+ChatColor.AQUA+text);
 		plugin.data.closeTicket(id);
+		if (sender instanceof Player) {
+				ArrayList<Integer> reminder = plugin.data.getReminderTickets(((Player) sender).getName());
+			if (reminder != null && reminder.contains(id)) {
+				reminder.remove((Integer) id);
+				plugin.data.setReminderTickets((Player) sender, reminder);
+			}	
+		}
 		
 		
 		return true;
