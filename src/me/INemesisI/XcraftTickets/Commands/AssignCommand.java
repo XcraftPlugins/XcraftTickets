@@ -1,66 +1,43 @@
 package me.INemesisI.XcraftTickets.Commands;
 
-
-import me.INemesisI.XcraftTickets.XcraftTickets;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class AssignCommand implements CommandExecutor{
-    public static XcraftTickets plugin;
-	
-    public AssignCommand(XcraftTickets survival) {
-		plugin = survival;
-    }
+import me.INemesisI.XcraftTickets.Ticket;
+import me.INemesisI.XcraftTickets.XcraftTickets;
+
+public class AssignCommand extends CommandHelper{
+
+	protected AssignCommand(XcraftTickets instance) {
+		super(instance);
+	}
 
 	@Override
-	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		Player player = (Player) sender;
-		if (args.length < 1 || !args[1].matches("\\d*")) {
-			player.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket assign <Nr> <Name|G:Gruppe>)");
-		return true;
+	protected void execute(CommandSender sender, String Command, List<String> list) {
+		this.setSender(sender);
+		
+	if (list.size() == 0 || !list.get(0).matches("\\d*")) {
+		error("Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket assign <#> <Name|G:Gruppe>)");
+		return;
 	}
-	int id = Integer.parseInt(args[1]);
-	if(!plugin.data.getAllTicketIDs().contains(id)) {
-		player.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Ein Ticket mit dieser nummer existier nicht!");
-		return true;
+	Ticket ticket = plugin.ticketHandler.getTicket(Integer.parseInt(list.get(0)));
+	if(ticket == null) {
+		error("Ein Ticket mit dieser nummer existier nicht!");
+		return;
 	}
-		if(args[0].equals("assign")) {
-			String name = args[2];
-			String mod = "";
-			Player p = plugin.getServer().getPlayer(args[2]);
-			if (p == null) {
-				OfflinePlayer op = plugin.getServer().getOfflinePlayer(name);
-				if(op != null)
-				mod = op.getName();
-				else
-					player.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Spieler mit dem Namen existiert nicht!");
-			}
-			else
-				if (p.hasPermission("XcraftTickets.Mod")) {
-				mod = p.getDisplayName();
-				}
-				else
-					player.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Konnte Mod "+ChatColor.DARK_PURPLE+args[2]+ChatColor.RED+" nicht finden!");
-			if (!mod.isEmpty()) {
-				plugin.data.assignTo(id, mod);
-				plugin.data.sendMessageToMods(id, ChatColor.GRAY+"Ticket "+ChatColor.GOLD+"#"+id+ ChatColor.GRAY+" wurde "+ChatColor.DARK_PURPLE+mod+ChatColor.GRAY +" zugewiesen!");
-				plugin.data.sendMessageToOwner(id, ChatColor.GRAY+"Dein Ticket "+ChatColor.GOLD+"#"+id+ ChatColor.GRAY+" wurde "+ChatColor.DARK_PURPLE+mod+ChatColor.GRAY +" zugewiesen!");
-				return true;
-			}
-		}
-		if(args[0].equals("unassign")){
-			plugin.data.addToLog(player.getName(), id, "unassigned", "");
-			plugin.data.assignTo(id, "none");
-			plugin.data.sendMessageToOwner(id, ChatColor.GRAY+"Die Zuweisung für dein Ticket "+ChatColor.GOLD+"#"+id+ ChatColor.GRAY+" wurde entfernt!");
-			plugin.data.sendMessageToMods(id, ChatColor.GRAY+"Die Zuweisung für Ticket "+ChatColor.GOLD+"#"+id+ ChatColor.GRAY+" wurde entfernt!");
-			plugin.data.setTicketUnWatched(id);
-			return true;
-		}
-		return false;
+	String assignee;
+	OfflinePlayer p = plugin.getServer().getOfflinePlayer(list.get(1));
+	if (p == null) {
+			error("Ein Spieler mit diesem Namen existiert nicht!");
+			return;
+	} else {
+		assignee = p.getName();
+		ticket.setAssignee(assignee);
+	}
+	sendToMods(ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
+	sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
 	}
 }

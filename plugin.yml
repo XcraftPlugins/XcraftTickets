@@ -2,24 +2,74 @@ name: XcraftTickets
 
 main: me.INemesisI.XcraftTickets.XcraftTickets
 
-version: 0.3
+version: 0.5
 
 commands:
   ticket:
     usage:
-  ti:
-    usage:
-  tk:
+  t:
     usage:
   pe:
     usage:
     
 permissions:
-    XcraftTickets.Mod:
-        description: Access to all /ticket commands
+    XcraftTicket.Admin:
+        description: Access to all /ticket commands this plugin provides
         children:
-            XcraftTickets: true
+            XcraftTickets.Mod: true
+            XcraftTickets.Save: true
+            XcraftTickets.Reload: true
         default: op
         
-    XcraftTickets:
-        description: Access to all user related /ticket commands
+    XcraftTickets.Mod:
+        description: Access to all mod related /ticket commands
+        children:
+            XcraftTickets.User: true
+            XcraftTickets.Warp: true
+            XcraftTickets.Assign: true
+            XcraftTickets.Unassign: true
+            XcraftTickets.List.Other: true
+            XcraftTickets.List.All: true
+            XcraftTickets.View.Other: true
+        default: false
+        
+    XcraftTickets.User:
+        description: Access  to all user related /ticket commands
+        children:
+            XcraftTickets.Open: true
+            XcraftTickets.Reopen: true
+            XcraftTickets.Close: true
+            XcraftTickets.List: true
+            XcraftTickets.View: true
+        default: true
+        
+    XcraftTickets.Save:
+        description: Access to /ticket save
+    XcraftTickets.Reload:
+        description: Access to /ticket reload
+    XcraftTickets.Open:
+        description: Access to /ticket open
+    XcraftTickets.Reopen:
+        description: Access to /ticket reopen
+    XcraftTickets.Close:
+        description: Access to /ticket close
+    XcraftTickets.Log:
+        description: Access to /ticket log
+    XcraftTickets.List:
+        description: Access to /ticket list
+    XcraftTickets.List.Other:
+        description: Access to /ticket list (shows other tickets)
+    XcraftTickets.List.All:
+        description: Access to /ticket listall (shows even assigned tickets)
+    XcraftTickets.View:
+        description: Access to /ticket view
+    XcraftTickets.View.Other:
+        description: Access to /ticket view (allows to see other tickets)S
+    XcraftTickets.Warp:
+        description: Access to /ticket warp
+    XcraftTickets.Assign:
+        description: Access to /ticket assign
+    XcraftTickets.Unassign:
+        description: Access to /ticket unassign
+    
+    

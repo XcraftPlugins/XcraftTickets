@@ -1,53 +1,38 @@
 package me.INemesisI.XcraftTickets.Commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-
-import me.INemesisI.XcraftTickets.XcraftTickets;
+import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class ListCommand implements CommandExecutor{
-    public static XcraftTickets plugin;
-	
-    public ListCommand(XcraftTickets survival) {
-		plugin = survival;
-    }
+import me.INemesisI.XcraftTickets.Ticket;
+import me.INemesisI.XcraftTickets.XcraftTickets;
+
+public class ListCommand extends CommandHelper{
+
+	protected ListCommand(XcraftTickets instance) {
+		super(instance);
+	}
 
 	@Override
-	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		boolean isPlayer = sender instanceof Player;
-		ArrayList<Integer> IDs = plugin.data.getAllTicketIDs();
-		Collections.sort(IDs);
-		sender.sendMessage(ChatColor.YELLOW+plugin.getName()+ChatColor.GREEN+"Ticket list");
-		int counter = -1;
-		Player player = null;
-		boolean isMod;
-		if (sender instanceof Player) {
-			player = (Player) sender;
-			isMod = plugin.hasPermission(player, "XcraftTickets.Mod");
-		}
-		else isMod = true;
+	protected void execute(CommandSender sender, String Command, List<String> list) {
+		this.setSender(sender);
 		
-		for(int i=0;i<IDs.size();i++) {
-			
-			HashMap<String, String> info = plugin.data.getTicketInfo(IDs.get(i));
-			String assignee = info.get("assignee");
-			
-			if ((player != null && (player.getName().equals(info.get("owner")) || (assignee.equals("none") || args[0].equals("listall") || assignee.equals(player.getName())) &&  isMod)) || !isPlayer) {
+		List<Ticket> tickets = th.getTickets();
+		reply("---Ticket list---");
+		int counter = -1;
+		for(Ticket ticket : tickets) {
+			if (ticket.getOwner().equals(sender.getName()) || 
+					(senderHasPermission("List.Other") && ticket.getAssignee().equals("none") || ticket.getAssignee().equals(sender.getName()) || 
+							(Command.equals("listall") && senderHasPermission("List.All")))) {
 				counter++;
-				String assign = "";
-				if(!assignee.equals("none"))
-				assign = ChatColor.LIGHT_PURPLE+"->"+ChatColor.DARK_PURPLE+assignee;
-				String id = ChatColor.GOLD+"#"+IDs.get(i);
-				int comments = plugin.data.getTicketLogCounter(IDs.get(i));
+				String assignee = "";
+				if(!ticket.getAssignee().equals("none"))
+				assignee = ChatColor.LIGHT_PURPLE+"->"+ChatColor.DARK_PURPLE+ticket.getAssignee();
+				String id = ChatColor.GOLD+"#"+ticket.getId();
+				int comments = ticket.getLog().size()-1;
 				String count;
-				if (plugin.data.hasWatchedTicket(IDs.get(i), plugin.data.getSendersName(sender))) {
+				if (ticket.getWatched().contains(sender.getName())) {
 					if (comments == 1) count = ChatColor.GRAY+"["+comments+" Kommentar]";
 					else count = ChatColor.GRAY+"["+comments+" Kommentare]";
 				}
@@ -56,27 +41,22 @@ public class ListCommand implements CommandExecutor{
 				else count = ChatColor.DARK_AQUA+"["+comments+" Kommentare]";
 				
 				String marker = null;
-				Player[] players = plugin.getServer().getOnlinePlayers();
-				for (int a=0;a<players.length;a++) {
-					if (players[a].getName().equals(info.get("owner")))
-						marker = ChatColor.DARK_GREEN+"+";
+				if (plugin.getServer().getOfflinePlayer(ticket.getOwner()).isOnline()) {
+					marker = ChatColor.DARK_GREEN+"+";
+				} else {
+					marker = ChatColor.DARK_RED+"-";
 				}
-				if(marker == null)
-					 marker = ChatColor.DARK_RED+"-";
-				String name = ChatColor.WHITE+info.get("owner");
-				String text = ChatColor.GRAY+info.get("title");
+				String name = ChatColor.WHITE+ticket.getOwner();
+				String text = ChatColor.GRAY+ticket.getLog().get(0);
 				
-				String output = id+" "+marker+name+assign+": "+text+" "+count;
+				String output = id+" "+marker+name+assignee+": "+text+" "+count;
 				if(comments == 0)
-					plugin.data.setPlayerWatchedTicket(IDs.get(i), plugin.data.getSendersName(sender));
-				sender.sendMessage(output);
-			}
-			else {
-				plugin.data.setPlayerWatchedTicket(IDs.get(i), plugin.data.getSendersName(sender));
+					ticket.getWatched().add(sender.getName());
+				reply(output);
 			}
 		}
 		if (counter==-1)
-			sender.sendMessage(ChatColor.GRAY+"Es gibt keine offenen Tickets!");
-		return true;
+			reply("Es gibt keine offenen Tickets!");
+		return;
 	}
 }

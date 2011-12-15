@@ -2,61 +2,83 @@ package me.INemesisI.XcraftTickets;
 
 import java.util.logging.Logger;
 
+import me.INemesisI.XcraftTickets.Commands.CommandHandler;
+import net.milkbowl.vault.permission.Permission;
 
-import me.INemesisI.XcraftTickets.Commands.*;
-
-import org.bukkit.entity.Player;
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 public class XcraftTickets extends JavaPlugin {
 
-	public XcraftTicketsData data = new XcraftTicketsData(this);
-    public Logger log = Logger.getLogger("Minecraft");//Define your logger
+	public ConfigHandler configHandler;
+	public TicketHandler ticketHandler;
+	
+	private Permission permission = null;
+	
+    public Logger log = Logger.getLogger("Minecraft");
+    private boolean logging;
     
     @Override
 	public void onDisable() {
-    	data.save();
-    	log.info(getName()+"disabled!");
+    	configHandler.save();
+    	log.info(this.getDescription().getName() + "disabled!");
     }
  
     @Override
 	public void onEnable() {
     registerCommands();
-    data.load();
+    setupPermissions();
+    setupHandler();
+    configHandler.load();
     
-    log.info(getName()+"by INemesisI loaded!");
+    log.info(this.getDescription().getName() + "enabled!");
 	
     } // End onEnable
     
     private void registerCommands(){
-    	XcraftTicketsCommandHandler commandHandler = new XcraftTicketsCommandHandler(this);
-	     getCommand("ticket").setExecutor(commandHandler);
-	     getCommand("ti").setExecutor(commandHandler);
-	     getCommand("tk").setExecutor(commandHandler);
-	     getCommand("pe").setExecutor(commandHandler);
-	     commandHandler.registerExecutor("open", new OpenCommand(this), ""); 
-	     commandHandler.registerExecutor("reopen", new OpenCommand(this), ""); 
-	     commandHandler.registerExecutor("close", new CloseCommand(this), ""); 
-	     commandHandler.registerExecutor("comment", new CommentCommand(this), "");
-	     commandHandler.registerExecutor("log", new CommentCommand(this), "");
-	     commandHandler.registerExecutor("view", new ViewCommand(this), ""); 
-	     commandHandler.registerExecutor("info", new ViewCommand(this), ""); 
-	     commandHandler.registerExecutor("list", new ListCommand(this), ""); 
-	     commandHandler.registerExecutor("listall", new ListCommand(this), "XcraftTickets.Mod"); 
-	     commandHandler.registerExecutor("warp", new WarpCommand(this), "XcraftTickets.Mod"); 
-	     commandHandler.registerExecutor("goto", new WarpCommand(this), "XcraftTickets.Mod");
-	     commandHandler.registerExecutor("assign", new AssignCommand(this), "XcraftTickets.Mod"); 
-	     commandHandler.registerExecutor("unassign", new AssignCommand(this), "XcraftTickets.Mod"); 
-	     commandHandler.registerExecutor("appl", new ApplicationCommand(this), "XcraftTickets.Mod"); 
-	     commandHandler.registerExecutor("accept", new ApplicationCommand(this), "XcraftTickets.Mod"); 
-   }
-        
+    	CommandHandler commandHandler = new CommandHandler(this);
+	    getCommand("ticket").setExecutor(commandHandler);
+	    getCommand("t").setExecutor(commandHandler);
+	    getCommand("pe").setExecutor(commandHandler);
+    }
     
-    public boolean hasPermission(Player player, String node) {
-		      return player.hasPermission(node);
+	private Boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+		if (permissionProvider != null) {
+			permission = permissionProvider.getProvider();
+		}
+		return (permission != null);
+	}
+	
+	private void setupHandler() {
+		this.configHandler = new ConfigHandler(this);
+		this.ticketHandler = new TicketHandler(this);
 	}
 
+	public Permission getPermission() {
+		return permission;
+	}
+	
+	public void Log(String message) {
+		if (isLogging())
+			log.info(this.getDescription().getFullName() + message);
+	}
+    
     public String getName() {
-      	return "["+this.getDescription().getName()+"] ";
-   	}
+		return ChatColor.DARK_GRAY + "[" + this.getDescription().getName() + "] " + getChatColor();
+	}
+
+	public ChatColor getChatColor() {
+		return ChatColor.DARK_AQUA;
+	}
+
+	public boolean isLogging() {
+		return logging;
+	}
+
+	public void setLogging(boolean logging) {
+		this.logging = logging;
+	}
 }

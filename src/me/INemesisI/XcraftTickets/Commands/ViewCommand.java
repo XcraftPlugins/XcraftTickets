@@ -1,88 +1,65 @@
 package me.INemesisI.XcraftTickets.Commands;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import me.INemesisI.XcraftTickets.XcraftTickets;
+import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class ViewCommand implements CommandExecutor{
-    public static XcraftTickets plugin;
-	
-    public ViewCommand(XcraftTickets survival) {
-		plugin = survival;
-    }
+import me.INemesisI.XcraftTickets.Ticket;
+import me.INemesisI.XcraftTickets.XcraftTickets;
+
+public class ViewCommand extends CommandHelper{
+
+	protected ViewCommand(XcraftTickets instance) {
+		super(instance);
+	}
 
 	@Override
-	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		if (args.length < 2 || !args[1].matches("\\d*")) {
-			sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket view <Nr>)");
-			return true;
-		}
-		int id = Integer.parseInt(args[1]);
-		HashMap<String, String> info = new HashMap<String, String>();
+	protected void execute(CommandSender sender, String Command, List<String> list) {
+		this.setSender(sender);
 		
-		if(plugin.data.getAllTicketIDs().contains(id))
-			plugin.data.setPlayerWatchedTicket(id, plugin.data.getSendersName(sender));
-		else {
-			info = plugin.data.getClosedTicketInfo(id);
-			if(info == null || info.isEmpty() || info.get("owner") == null) {
-				sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Ein Ticket mit dieser Nummer existier nicht!");
-				return true;
-			}
-			ArrayList<Integer> reminder = plugin.data.getReminderTickets(((Player) sender).getName());
-			if (reminder != null && reminder.contains(id)) {
-				reminder.remove((Integer) id);
-				plugin.data.setReminderTickets((Player) sender, reminder);
+		
+		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
+			error("Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket view <Nr>)");
+			return;
+		}
+		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));
+		
+		if (ticket == null) {
+			ticket = th.getArchievedTicket(Integer.parseInt(list.get(0)));
+			if (ticket == null) {
+				error("Ein Ticket mit dieser Nummer existiert nicht!");
+				return;
 			}
 		}
-		// Ticket view stuff
-		if(info.isEmpty())
-		info = plugin.data.getTicketInfo(id);
-		return sendInfo(sender, id, info);
-	}
-	
-	public static boolean sendInfo(CommandSender sender, int id, HashMap<String, String> info) {
-		if ((sender instanceof Player) && !plugin.data.getSendersName(sender).equals(info.get("owner")) && !plugin.data.isMod((Player) sender)) {
-			sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Rechte dieses Ticket zu sehen!"+ChatColor.GRAY+"  Es ist nicht dein Ticket...");
-			return true;
+		
+		if (ticket.getOwner().equals(sender.getName()) || senderHasPermission("View.Other")) {
+			error("Du hast keine Rechte dieses Ticket zu sehen!"+ChatColor.GRAY+"  Es ist nicht dein Ticket...");
+			return;
 		}
-		sender.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.GREEN+"info für Ticket " +ChatColor.GOLD+"#"+id +"  "+ChatColor.GRAY+info.get("date"));
+		
+		reply(ChatColor.GREEN+"info für Ticket " +ChatColor.GOLD+"#"+ticket.getId() +"  "+ChatColor.GRAY+ticket.getDate());
 		String marker = null;
-		Player[] players = plugin.getServer().getOnlinePlayers();
-		for (int i=0;i<players.length;i++) {
-			if (players[i].getName().equals(info.get("owner")))
-				marker = ChatColor.DARK_GREEN+"+";
+		if (plugin.getServer().getOfflinePlayer(ticket.getOwner()).isOnline()) {
+			marker = ChatColor.DARK_GREEN+"+";
+		} else {
+			marker = ChatColor.DARK_RED+"-";
 		}
-		if(marker == null)
-			 marker = ChatColor.DARK_RED+"-";
-		String name = ChatColor.YELLOW+info.get("owner");
-		String text = ChatColor.GRAY+info.get("title");
-		String output = ChatColor.GOLD+"Ticket opened "+marker+name+": "+text;
-		sender.sendMessage(output);
-		if (!info.get("assignee").equals("none"))
-			sender.sendMessage(ChatColor.GOLD+"Assigned to: "+ChatColor.RED+info.get("assignee"));
-		ArrayList<String> log = new ArrayList<String>();
-		if(plugin.data.getAllTicketIDs().contains(id))
-			log = plugin.data.getTicketLog(id);
-		else 
-			log = plugin.data.getClosedTicketLog(id);
-		for(int i=0;i<log.size();i++) {
-			text = log.get(i);
-			text = text.replace("comment by ", "");
-			String[] split = text.split("\\|", 2);
+		
+		reply(ChatColor.GOLD+"Ticket opened "+marker+ChatColor.WHITE+ticket.getOwner()+": "+ChatColor.GRAY+ticket.getLog().get(0));
+
+		if (ticket.getAssignee() != null)
+			reply(ChatColor.GOLD+"Assigned to: "+ChatColor.RED+ticket.getAssignee());
+		List<String> logs = ticket.getLog();
+		for(String log : logs) {
+			log = log.replace("comment by ", "");
+			String[] split = log.split("\\|", 2);
 			String time = split[0];
 			split = split[1].split(":", 2);
-			String inf0 = split[0];
+			String info = split[0];
 			String out = split[1];
-			output = ChatColor.BLUE+"-> "+ChatColor.DARK_GRAY+time+ChatColor.WHITE+"|"+ChatColor.YELLOW+inf0+ChatColor.WHITE+out;
-			sender.sendMessage(output);
+			reply(ChatColor.BLUE+"-> "+ChatColor.DARK_GRAY+time+ChatColor.WHITE+"|"+ChatColor.YELLOW+info+ChatColor.WHITE+out);
 		}
-		return false;
+		ticket.getWatched().add(sender.getName());
 	}
 }

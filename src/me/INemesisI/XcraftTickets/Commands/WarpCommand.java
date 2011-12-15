@@ -1,35 +1,44 @@
 package me.INemesisI.XcraftTickets.Commands;
 
-import me.INemesisI.XcraftTickets.XcraftTickets;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class WarpCommand implements CommandExecutor{
-    public static XcraftTickets plugin;
-	
-    public WarpCommand(XcraftTickets survival) {
-		plugin = survival;
-    }
+import me.INemesisI.XcraftTickets.Ticket;
+import me.INemesisI.XcraftTickets.XcraftTickets;
+
+public class WarpCommand extends CommandHelper{
+
+	protected WarpCommand(XcraftTickets instance) {
+		super(instance);
+	}
 
 	@Override
-	 public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		Player player = (Player) sender;
-		if (args.length < 1 || !args[1].matches("\\d*")) {
-			player.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket warp <Nr>)");
-			return true;
+	protected void execute(CommandSender sender, String Command, List<String> list) {
+		this.setSender(sender);
+		
+		
+		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
+			error("Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket warp <Nr>)");
+			return;
 		}
-		int id = Integer.parseInt(args[1]);
-		if(!plugin.data.getAllTicketIDs().contains(id)) {
-			player.sendMessage(ChatColor.BLUE+plugin.getName()+ChatColor.RED+"Ein Ticket mit dieser Nummer existier nicht!");
-			return true;
+		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));
+		if(ticket == null) {
+			error("Ein Ticket mit dieser Nummer existier nicht!");
+			return;
 		}
-		Location loc = plugin.data.getTicketLocation(id);
-		player.teleport(loc);
-		return ViewCommand.sendInfo(sender, id, plugin.data.getTicketInfo(id));
+		Location loc = ticket.getLoc();
+		if (loc != null) {
+			player.teleport(loc);
+			if (player != null) {
+				player.performCommand("/ticket view "+ticket.getId());
+			}
+		} else {
+			error("Für dieses Ticket gibt es keinen Warp");
+		}
+		
 	}
+
 }
