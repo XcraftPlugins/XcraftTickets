@@ -18,18 +18,17 @@ public class ConfigHandler {
 	FileConfiguration config;
 	File remFile;
 	FileConfiguration reminder;
-	
+
 	public ConfigHandler(XcraftTickets instance) {
 		plugin = instance;
 	}
-	
+
 	public void load() {
 		folder = plugin.getDataFolder();
-		archive = new File(folder.getPath()+"/archive");
-		if (!archive.exists())
-			archive.mkdirs();
+		archive = new File(folder.getPath() + "/archive");
+		if (!archive.exists()) archive.mkdirs();
 		config = plugin.getConfig();
-		//load tickets
+		// load tickets
 		File[] files = folder.listFiles();
 		List<Ticket> tickets = new ArrayList<Ticket>();
 		for (File file : files) {
@@ -43,7 +42,7 @@ public class ConfigHandler {
 		remFile = new File(folder, "reminder.yml");
 		reminder = YamlConfiguration.loadConfiguration(remFile);
 	}
-	
+
 	public void save() {
 		config.set("Next_Ticket_ID", plugin.ticketHandler.getNextID());
 		plugin.saveConfig();
@@ -61,7 +60,7 @@ public class ConfigHandler {
 			ConfigurationSection cs = temp.getConfigurationSection("Ticket");
 			ArrayList<String> log = new ArrayList<String>();
 			log.add(cs.getString("title"));
-			log.addAll((ArrayList<String>) cs.getList("log"));
+			log.addAll(cs.getList("log"));
 			ArrayList<String> watched = (ArrayList<String>) cs.getList("watched");
 			if (watched == null) watched = new ArrayList<String>();
 			String owner = cs.getString("owner");
@@ -76,9 +75,9 @@ public class ConfigHandler {
 		}
 		return null;
 	}
-	
+
 	public void saveTicket(File folder, Ticket ticket) {
-		File file = new File(folder, ticket.getId()+".yml");
+		File file = new File(folder, ticket.getId() + ".yml");
 		FileConfiguration temp = YamlConfiguration.loadConfiguration(file);
 		temp.set("Ticket.title", ticket.getLog().get(0));
 		temp.set("Ticket.owner", ticket.getOwner());
@@ -95,12 +94,13 @@ public class ConfigHandler {
 		temp.set("Ticket.watched", ticket.getWatched());
 		try {
 			temp.save(file);
-		} catch (IOException e) {}
+		} catch (IOException e) {
+		}
 	}
-	
+
 	public void archiveTicket(Ticket ticket) {
 		saveTicket(archive, ticket);
-		File file = new File(folder, ticket.getId()+".yml");
+		File file = new File(folder, ticket.getId() + ".yml");
 		file.delete();
 	}
 }

@@ -10,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-
 public abstract class CommandHelper {
 	protected XcraftTickets plugin = null;
 	protected CommandSender sender = null;
@@ -21,17 +20,15 @@ public abstract class CommandHelper {
 	protected CommandHelper(XcraftTickets instance) {
 		plugin = instance;
 	}
-	
+
 	protected void init(CommandSender sender) {
 		this.sender = sender;
-		if (sender instanceof Player)
-			this.player = (Player) sender;
+		if (sender instanceof Player) this.player = (Player) sender;
 		th = plugin.ticketHandler;
 	}
-	
+
 	protected boolean senderHasPermission(String perm) {
-		if (player != null)
-			return player.hasPermission("XcraftTicket."+perm);
+		if (player != null) return player.hasPermission("XcraftTicket." + perm);
 		else
 			return true;
 	}
@@ -43,14 +40,13 @@ public abstract class CommandHelper {
 	protected void error(String message) {
 		sender.sendMessage(plugin.getName() + ChatColor.RED + "Error: " + message);
 	}
-	
+
 	protected void sendToMods(String message) {
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			if (player.hasPermission("XcraftTickets.Mod"))
-				player.sendMessage(message);
+			if (player.hasPermission("XcraftTickets.Mod")) player.sendMessage(message);
 		}
 	}
-	
+
 	protected boolean sendToPlayer(String name, String message) {
 		Player player = plugin.getServer().getPlayer(name);
 		if (player != null) {
@@ -60,6 +56,5 @@ public abstract class CommandHelper {
 		return false;
 	}
 
-	protected abstract void execute(CommandSender sender, String Command,
-			List<String> list);
+	protected abstract void execute(CommandSender sender, String Command, List<String> list);
 }

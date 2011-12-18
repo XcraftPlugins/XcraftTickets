@@ -9,7 +9,7 @@ import java.util.List;
 import org.bukkit.Location;
 
 public class TicketHandler {
-	XcraftTickets plugin; 
+	XcraftTickets plugin;
 	private int nextID;
 	private List<Ticket> tickets = new ArrayList<Ticket>();
 	SimpleDateFormat date = new SimpleDateFormat();
@@ -18,19 +18,18 @@ public class TicketHandler {
 		plugin = instance;
 		date.applyPattern("E, hh:mm a");
 	}
-	
+
 	public List<Ticket> getTickets() {
 		return tickets;
 	}
-	
+
 	public Ticket getTicket(int id) {
 		for (Ticket ticket : tickets) {
-			if (ticket.getId() == id )
-				return ticket;
+			if (ticket.getId() == id) return ticket;
 		}
 		return null;
 	}
-	
+
 	public void setTickets(List<Ticket> tickets) {
 		this.tickets = tickets;
 	}
@@ -38,10 +37,10 @@ public class TicketHandler {
 	public Ticket addTicket(String owner, Location loc) {
 		Ticket ticket = new Ticket(getNextID(), owner, date.format(new Date()), loc);
 		tickets.add(ticket);
-		setNextID(getNextID()+1);
+		setNextID(getNextID() + 1);
 		return ticket;
 	}
-	
+
 	public void addTicket(Ticket ticket) {
 		tickets.add(ticket);
 	}
@@ -54,17 +53,17 @@ public class TicketHandler {
 			return plugin.configHandler.loadTicket(archive);
 		}
 	}
-	
+
 	public void setArchivedTicket(Ticket ticket) {
 		tickets.remove(ticket);
 		plugin.configHandler.archiveTicket(ticket);
 	}
-	
+
 	public void LogTicket(Ticket ticket, String player, String type, String message) {
 		String cdate = date.format(new Date());
-		ticket.log(cdate+" | "+type+" by "+player+": "+message);
+		ticket.log(cdate + " | " + type + " by " + player + ": " + message);
 	}
-	
+
 	public int getNextID() {
 		return nextID;
 	}

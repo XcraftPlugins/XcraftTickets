@@ -2,13 +2,13 @@ package me.INemesisI.XcraftTickets.Commands;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-
 import me.INemesisI.XcraftTickets.Ticket;
 import me.INemesisI.XcraftTickets.XcraftTickets;
 
-public class CloseCommand extends CommandHelper{
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+
+public class CloseCommand extends CommandHelper {
 
 	protected CloseCommand(XcraftTickets instance) {
 		super(instance);
@@ -17,7 +17,7 @@ public class CloseCommand extends CommandHelper{
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
 		this.init(sender);
-		
+
 		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
 			sender.sendMessage(ChatColor.BLUE + plugin.getName() + ChatColor.RED + "Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket close <Nr> <Nachricht>)");
 			return;
@@ -30,7 +30,7 @@ public class CloseCommand extends CommandHelper{
 		System.out.println("closemessage: " + message);
 		int id = Integer.parseInt(list.get(0));
 		Ticket ticket = plugin.ticketHandler.getTicket(id);
-		if(ticket == null) {
+		if (ticket == null) {
 			sender.sendMessage(ChatColor.BLUE + plugin.getName() + ChatColor.RED + "Ein Ticket mit dieser Nummer existier nicht!");
 			return;
 		}

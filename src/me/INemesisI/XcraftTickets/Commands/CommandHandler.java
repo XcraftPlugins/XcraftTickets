@@ -52,10 +52,9 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 		addCommand("unassign", "Unassign", ch);
 		addCommand("u", "Unassign", ch);
 	}
-	
+
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd,
-			String commandLabel, String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		this.sender = sender;
 		player = (sender instanceof Player) ? (Player) sender : null;
 
@@ -79,15 +78,14 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 		}
 		return true;
 	}
-	
+
 	private void addCommand(String command, String permode, CommandHelper commandclass) {
 		permNodes.put(command, permode);
 		subcommands.put(command, commandclass);
 	}
 
 	protected void print(String cmd, String values, String message) {
-		if (player.hasPermission("XcraftRegionMarket." + permNodes.get(cmd)))
-			sender.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/ticket " + cmd + " " + values + ChatColor.DARK_AQUA + " - " + message);
+		if (player.hasPermission("XcraftRegionMarket." + permNodes.get(cmd))) sender.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/ticket " + cmd + " " + values + ChatColor.DARK_AQUA + " - " + message);
 	}
 
 	public void PrintHelp() {
@@ -98,12 +96,11 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 		print("reopen/r", "<Typ>", "Ändert den Typ");
 		print("list", "", "Listet alle Tickets auf");
 		print("view/v", "<#>", "Zeigt alle Informationen eines Tickets");
-		print("warp/w", "<#>", "");	
+		print("warp/w", "<#>", "");
 		print("assign/a", "<#>", "");
 		print("unassign/u", "<#>", "");
 		print("listall", "", "");
 	}
-	
 
 	@Override
 	public void execute(CommandSender sender, String Command, List<String> list) {
