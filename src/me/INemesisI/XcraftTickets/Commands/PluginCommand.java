@@ -14,7 +14,7 @@ public class PluginCommand extends CommandHelper{
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
-		this.setSender(sender);
+		this.init(sender);
 		
 		if(Command.equals("reload")) {
 			//TODO: do some stuff

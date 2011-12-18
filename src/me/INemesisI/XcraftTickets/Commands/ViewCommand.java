@@ -16,41 +16,42 @@ public class ViewCommand extends CommandHelper{
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
-		this.setSender(sender);
+		this.init(sender);
 		
 		
 		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket view <Nr>)");
+			error("Du hast keine Ticketnummer angegeben" + ChatColor.GRAY + "(/ticket view <Nr>)");
 			return;
 		}
 		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));
 		
 		if (ticket == null) {
-			ticket = th.getArchievedTicket(Integer.parseInt(list.get(0)));
+			ticket = th.getArchivedTicket(Integer.parseInt(list.get(0)));
 			if (ticket == null) {
 				error("Ein Ticket mit dieser Nummer existiert nicht!");
 				return;
 			}
 		}
 		
-		if (ticket.getOwner().equals(sender.getName()) || senderHasPermission("View.Other")) {
-			error("Du hast keine Rechte dieses Ticket zu sehen!"+ChatColor.GRAY+"  Es ist nicht dein Ticket...");
+		if (!ticket.getOwner().equals(sender.getName()) || !senderHasPermission("View.Other")) {
+			error("Du hast keine Rechte dieses Ticket zu sehen!" + "\n" + ChatColor.GRAY + "  Es ist nicht dein Ticket...");
 			return;
 		}
 		
-		reply(ChatColor.GREEN+"info für Ticket " +ChatColor.GOLD+"#"+ticket.getId() +"  "+ChatColor.GRAY+ticket.getDate());
+		reply(ChatColor.GREEN + "info für Ticket "  + ChatColor.GOLD + "#" + ticket.getId() +ChatColor.GREEN + " erstellt: " + ChatColor.GRAY + ticket.getDate());
 		String marker = null;
 		if (plugin.getServer().getOfflinePlayer(ticket.getOwner()).isOnline()) {
-			marker = ChatColor.DARK_GREEN+"+";
+			marker = ChatColor.DARK_GREEN + " + ";
 		} else {
-			marker = ChatColor.DARK_RED+"-";
+			marker = ChatColor.DARK_RED + "-";
 		}
 		
-		reply(ChatColor.GOLD+"Ticket opened "+marker+ChatColor.WHITE+ticket.getOwner()+": "+ChatColor.GRAY+ticket.getLog().get(0));
+		sender.sendMessage(ChatColor.GOLD + "Ticket opened " + marker + ChatColor.WHITE + ticket.getOwner() + ": " + ChatColor.GRAY + ticket.getLog().get(0));
 
 		if (ticket.getAssignee() != null)
-			reply(ChatColor.GOLD+"Assigned to: "+ChatColor.RED+ticket.getAssignee());
+			sender.sendMessage(ChatColor.GOLD + "Assigned to: " + ChatColor.RED + ticket.getAssignee());
 		List<String> logs = ticket.getLog();
+		logs = logs.subList(1, logs.size());
 		for(String log : logs) {
 			log = log.replace("comment by ", "");
 			String[] split = log.split("\\|", 2);
@@ -58,7 +59,7 @@ public class ViewCommand extends CommandHelper{
 			split = split[1].split(":", 2);
 			String info = split[0];
 			String out = split[1];
-			reply(ChatColor.BLUE+"-> "+ChatColor.DARK_GRAY+time+ChatColor.WHITE+"|"+ChatColor.YELLOW+info+ChatColor.WHITE+out);
+			sender.sendMessage(ChatColor.BLUE + "-> " + ChatColor.DARK_GRAY + time + ChatColor.WHITE + "|" + ChatColor.YELLOW + info + ChatColor.WHITE + out);
 		}
 		ticket.getWatched().add(sender.getName());
 	}

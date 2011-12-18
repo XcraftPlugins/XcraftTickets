@@ -17,10 +17,10 @@ public class OpenCommand extends CommandHelper{
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
-		this.setSender(sender);
+		this.init(sender);
 		
 		if (list.size() < 1) {
-			sender.sendMessage(ChatColor.BLUE + plugin.getName() + ChatColor.RED + "Du hast keine Nachricht eingeben! " + ChatColor.GRAY + "(/ticket open <Nachricht>)");
+			sender.sendMessage(ChatColor.BLUE + plugin.getName() + ChatColor.RED + "Du hast keine Nachricht eingeben! " + "\n" + ChatColor.GRAY + "(/ticket open <Nachricht>)");
 			return;
 		}
 		

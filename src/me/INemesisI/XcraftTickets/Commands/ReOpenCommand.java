@@ -16,16 +16,16 @@ public class ReOpenCommand extends CommandHelper{
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
-		this.setSender(sender);
+		this.init(sender);
 		
 		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben" + ChatColor.GRAY + "(/ticket reopen <Nr> <Nachricht>)");
+			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket reopen <Nr> <Nachricht>)");
 			return;
 		}
 		int id = Integer.parseInt(list.get(0));
 		String message = list.subList(1, list.size()).toString().replace(",", "").replace("[", "").replace("]", "");
 		System.out.println("reopenmessage: "  +  message);
-		Ticket ticket = th.getArchievedTicket(id);
+		Ticket ticket = th.getArchivedTicket(id);
 		if (ticket == null) {
 			error("Ein Ticket mit der Nummer "+ChatColor.GOLD+id+ChatColor.RED+" konnte nicht gefunden werden");
 		} else {

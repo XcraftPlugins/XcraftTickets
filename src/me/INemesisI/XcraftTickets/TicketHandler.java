@@ -38,6 +38,7 @@ public class TicketHandler {
 	public Ticket addTicket(String owner, Location loc) {
 		Ticket ticket = new Ticket(getNextID(), owner, date.format(new Date()), loc);
 		tickets.add(ticket);
+		setNextID(getNextID()+1);
 		return ticket;
 	}
 	
@@ -45,7 +46,7 @@ public class TicketHandler {
 		tickets.add(ticket);
 	}
 
-	public Ticket getArchievedTicket(int id) {
+	public Ticket getArchivedTicket(int id) {
 		File archive = new File(plugin.getDataFolder(), "/archive/" + id + ".yml");
 		if (!archive.exists()) {
 			return null;
@@ -54,9 +55,9 @@ public class TicketHandler {
 		}
 	}
 	
-	public void setArchievedTicket(Ticket ticket) {
+	public void setArchivedTicket(Ticket ticket) {
 		tickets.remove(ticket);
-		plugin.configHandler.archieveTicket(ticket);
+		plugin.configHandler.archiveTicket(ticket);
 	}
 	
 	public void LogTicket(Ticket ticket, String player, String type, String message) {

@@ -32,7 +32,7 @@ public class XcraftTickets extends JavaPlugin {
     setupPermissions();
     setupHandler();
     configHandler.load();
-    
+    //TODO: timed notification
     log.info(this.getDescription().getName() + "enabled!");
 	
     } // End onEnable

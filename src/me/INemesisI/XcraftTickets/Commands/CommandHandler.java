@@ -38,6 +38,7 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 		addCommand("l", "Log", ch);
 		ch = new ListCommand(plugin);
 		addCommand("list", "List", ch);
+		addCommand("listall", "List.All", ch);
 		ch = new ViewCommand(plugin);
 		addCommand("view", "View", ch);
 		addCommand("v", "View", ch);
@@ -86,20 +87,20 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 
 	protected void print(String cmd, String values, String message) {
 		if (player.hasPermission("XcraftRegionMarket." + permNodes.get(cmd)))
-			sender.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/ticket " + cmd + " " + values + ChatColor.DARK_AQUA + "- " + message);
+			sender.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/ticket " + cmd + " " + values + ChatColor.DARK_AQUA + " - " + message);
 	}
 
 	public void PrintHelp() {
 		sender.sendMessage(ChatColor.BLUE + "[" + plugin.getDescription().getFullName() + "] by INemesisI");
-		print("open|o", "<Nachricht>", "Öffnet ein neues Ticket");
-		print("comment|log", "<#>", "Kommentiert ein Ticket");
-		print("close|c", "<#>", "Schliesst ein Ticket");
-		print("reopen", "<Typ>", "Ändert den Typ");
+		print("open/o", "<Nachricht>", "Öffnet ein neues Ticket");
+		print("comment/log", "<#>", "Kommentiert ein Ticket");
+		print("close/c", "<#>", "Schliesst ein Ticket");
+		print("reopen/r", "<Typ>", "Ändert den Typ");
 		print("list", "", "Listet alle Tickets auf");
-		print("view|v", "<#>", "Zeigt alle Informationen eines Tickets");
-		print("warp", "<#>", "");	
-		print("assign", "<#>", "");
-		print("unassign", "<#>", "");
+		print("view/v", "<#>", "Zeigt alle Informationen eines Tickets");
+		print("warp/w", "<#>", "");	
+		print("assign/a", "<#>", "");
+		print("unassign/u", "<#>", "");
 		print("listall", "", "");
 	}
 	

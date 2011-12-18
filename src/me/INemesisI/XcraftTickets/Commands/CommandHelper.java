@@ -20,14 +20,13 @@ public abstract class CommandHelper {
 
 	protected CommandHelper(XcraftTickets instance) {
 		plugin = instance;
-		th = plugin.ticketHandler;
-		permission = plugin.getPermission();
 	}
 	
-	protected void setSender(CommandSender sender) {
+	protected void init(CommandSender sender) {
 		this.sender = sender;
 		if (sender instanceof Player)
 			this.player = (Player) sender;
+		th = plugin.ticketHandler;
 	}
 	
 	protected boolean senderHasPermission(String perm) {
@@ -42,7 +41,7 @@ public abstract class CommandHelper {
 	}
 
 	protected void error(String message) {
-		sender.sendMessage(ChatColor.RED + "Error: " + message);
+		sender.sendMessage(plugin.getName() + ChatColor.RED + "Error: " + message);
 	}
 	
 	protected void sendToMods(String message) {

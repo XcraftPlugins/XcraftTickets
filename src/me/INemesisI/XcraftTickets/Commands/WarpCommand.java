@@ -17,11 +17,11 @@ public class WarpCommand extends CommandHelper{
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
-		this.setSender(sender);
+		this.init(sender);
 		
 		
 		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben"+ChatColor.GRAY+"(/ticket warp <Nr>)");
+			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket warp <Nr>)");
 			return;
 		}
 		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));
@@ -33,7 +33,7 @@ public class WarpCommand extends CommandHelper{
 		if (loc != null) {
 			player.teleport(loc);
 			if (player != null) {
-				player.performCommand("/ticket view "+ticket.getId());
+				player.performCommand("/ticket view " + ticket.getId());
 			}
 		} else {
 			error("Für dieses Ticket gibt es keinen Warp");

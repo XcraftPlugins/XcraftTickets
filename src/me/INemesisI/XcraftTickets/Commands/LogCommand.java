@@ -16,14 +16,14 @@ public class LogCommand extends CommandHelper{
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
-		this.setSender(sender);
+		this.init(sender);
 
 		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben" + ChatColor.GRAY + "(/ticket comment <#> <Nachricht>)");
+			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket comment <#> <Nachricht>)");
 			return;
 		}
 		if (list.size() < 2) {
-			error("Du hast keine Nachricht eingeben! " + ChatColor.GRAY + "(/ticket comment <#> <Nachricht>)");
+			error("Du hast keine Nachricht eingeben!" + "\n" + ChatColor.GRAY + "(/ticket comment <#> <Nachricht>)");
 			return;
 		}
 		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));

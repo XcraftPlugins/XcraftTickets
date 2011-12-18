@@ -1,6 +1,7 @@
 package me.INemesisI.XcraftTickets;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class ConfigHandler {
 	
 	public void save() {
 		config.set("Next_Ticket_ID", plugin.ticketHandler.getNextID());
+		plugin.saveConfig();
 		for (Ticket ticket : plugin.ticketHandler.getTickets()) {
 			saveTicket(folder, ticket);
 		}
@@ -55,16 +57,17 @@ public class ConfigHandler {
 		String filename = ticket.getAbsoluteFile().getName();
 		if (!filename.equals("config.yml") && !filename.equals("archive") && !filename.equals("reminder.yml")) {
 			int id = Integer.parseInt(filename.replace(".yml", ""));
-			FileConfiguration temp = YamlConfiguration.loadConfiguration(new File(folder, filename));
+			FileConfiguration temp = YamlConfiguration.loadConfiguration(ticket);
 			ConfigurationSection cs = temp.getConfigurationSection("Ticket");
-			ArrayList<String> log = (ArrayList<String>) cs.getList("log");
-			if (log == null) log = new ArrayList<String>();;
+			ArrayList<String> log = new ArrayList<String>();
+			log.add(cs.getString("title"));
+			log.addAll((ArrayList<String>) cs.getList("log"));
 			ArrayList<String> watched = (ArrayList<String>) cs.getList("watched");
 			if (watched == null) watched = new ArrayList<String>();
 			String owner = cs.getString("owner");
 			String assignee = cs.getString("assignee");
+			if (assignee.equals("none")) assignee = null;
 			String date = cs.getString("date");
-			if (assignee.equals("null")) assignee = null;
 			cs = temp.getConfigurationSection("Ticket.location");
 			World world = plugin.getServer().getWorld(cs.getString("world"));
 			Location loc = new Location(world, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
@@ -75,17 +78,27 @@ public class ConfigHandler {
 	}
 	
 	public void saveTicket(File folder, Ticket ticket) {
-		FileConfiguration temp = YamlConfiguration.loadConfiguration(new File(folder, ticket.getId()+".yml"));
+		File file = new File(folder, ticket.getId()+".yml");
+		FileConfiguration temp = YamlConfiguration.loadConfiguration(file);
 		temp.set("Ticket.title", ticket.getLog().get(0));
 		temp.set("Ticket.owner", ticket.getOwner());
 		temp.set("Ticket.date", ticket.getDate());
 		temp.set("Ticket.assignee", ticket.getAssignee());
-		temp.set("Ticket.log", ticket.getLog());
-		temp.set("Ticket.loc", ticket.getLoc());
+		temp.set("Ticket.log", ticket.getLog().subList(1, ticket.getLog().size()));
+		Location loc = ticket.getLoc();
+		temp.set("Ticket.location.x", loc.getX());
+		temp.set("Ticket.location.y", loc.getY());
+		temp.set("Ticket.location.z", loc.getZ());
+		temp.set("Ticket.location.pitch", loc.getPitch());
+		temp.set("Ticket.location.yaw", loc.getYaw());
+		temp.set("Ticket.location.world", loc.getWorld().getName());
 		temp.set("Ticket.watched", ticket.getWatched());
+		try {
+			temp.save(file);
+		} catch (IOException e) {}
 	}
 	
-	public void archieveTicket(Ticket ticket) {
+	public void archiveTicket(Ticket ticket) {
 		saveTicket(archive, ticket);
 		File file = new File(folder, ticket.getId()+".yml");
 		file.delete();
