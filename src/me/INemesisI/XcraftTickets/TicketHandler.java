@@ -61,7 +61,7 @@ public class TicketHandler {
 
 	public void LogTicket(Ticket ticket, String player, String type, String message) {
 		String cdate = date.format(new Date());
-		ticket.log(cdate + " | " + type + " by " + player + ": " + message);
+		ticket.log(cdate + " | " + type + " von " + player + ": " + message);
 	}
 
 	public int getNextID() {

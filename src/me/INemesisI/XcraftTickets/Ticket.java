@@ -29,7 +29,7 @@ public class Ticket {
 		this.setOwner(owner);
 		this.setDate(date);
 		this.setLoc(loc);
-		this.setAssignee("none");
+		this.setAssignee(null);
 		this.setLog(new ArrayList<String>());
 		this.setWatched(new ArrayList<String>());
 	}

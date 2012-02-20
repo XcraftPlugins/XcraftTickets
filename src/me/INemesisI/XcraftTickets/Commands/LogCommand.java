@@ -32,21 +32,18 @@ public class LogCommand extends CommandHelper {
 			return;
 		}
 		boolean isMod;
-		if (player != null) isMod = player.hasPermission("XcraftTickets.List.All");
-		else
-			isMod = true;
-		if (!ticket.getOwner().equals(sender.getName()) && !isMod) {
+		isMod = senderHasPermission("XcraftTickets.List.All");
+		if (!ticket.getOwner().equals(getName()) && !isMod) {
 			error("Du hast keine Rechte dieses Ticket kommentieren!" + ChatColor.GRAY + " \nEs ist nicht dein Ticket...");
 			return;
 		}
 		String message = list.subList(1, list.size()).toString().replace(",", "").replace("[", "").replace("]", "");
-		System.out.println("logmessage: " + message);
-		th.LogTicket(ticket, sender.getName(), "comment", message);
+		th.LogTicket(ticket, getName(), "Kommentiert", message);
 
 		ticket.getWatched().clear();
-		ticket.getWatched().add(sender.getName());
+		ticket.getWatched().add(getName());
 
-		sendToMods(ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " kommentiert: " + ChatColor.AQUA + message);
-		sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " kommentiert: " + ChatColor.AQUA + message);
+		sendToMods(ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + getName() + ChatColor.GRAY + " kommentiert: " + ChatColor.AQUA + message);
+		sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + getName() + ChatColor.GRAY + " kommentiert: " + ChatColor.AQUA + message);
 	}
 }

@@ -60,18 +60,23 @@ public class ConfigHandler {
 			ConfigurationSection cs = temp.getConfigurationSection("Ticket");
 			ArrayList<String> log = new ArrayList<String>();
 			log.add(cs.getString("title"));
-			log.addAll(cs.getList("log"));
+			List<String> list = cs.getList("log");
+			if (list != null && !list.isEmpty())
+			log.addAll(list);
 			ArrayList<String> watched = (ArrayList<String>) cs.getList("watched");
 			if (watched == null) watched = new ArrayList<String>();
 			String owner = cs.getString("owner");
 			String assignee = cs.getString("assignee");
-			if (assignee.equals("none")) assignee = null;
+			if (assignee != null && assignee.equals("none")) assignee = null;
 			String date = cs.getString("date");
 			cs = temp.getConfigurationSection("Ticket.location");
-			World world = plugin.getServer().getWorld(cs.getString("world"));
-			Location loc = new Location(world, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
-			cs = temp.getConfigurationSection("Ticket");
+			Location loc = null;
+			if (cs != null) {
+				World world = plugin.getServer().getWorld(cs.getString("world"));
+				loc = new Location(world, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
+			}
 			return new Ticket(id, owner, assignee, date, loc, watched, log);
+
 		}
 		return null;
 	}
@@ -85,13 +90,14 @@ public class ConfigHandler {
 		temp.set("Ticket.assignee", ticket.getAssignee());
 		temp.set("Ticket.log", ticket.getLog().subList(1, ticket.getLog().size()));
 		Location loc = ticket.getLoc();
-		temp.set("Ticket.location.x", loc.getX());
-		temp.set("Ticket.location.y", loc.getY());
-		temp.set("Ticket.location.z", loc.getZ());
-		temp.set("Ticket.location.pitch", loc.getPitch());
-		temp.set("Ticket.location.yaw", loc.getYaw());
-		temp.set("Ticket.location.world", loc.getWorld().getName());
-		temp.set("Ticket.watched", ticket.getWatched());
+		if (loc != null) {
+			temp.set("Ticket.location.x", loc.getX());
+			temp.set("Ticket.location.y", loc.getY());
+			temp.set("Ticket.location.z", loc.getZ());
+			temp.set("Ticket.location.pitch", loc.getPitch());
+			temp.set("Ticket.location.yaw", loc.getYaw());
+			temp.set("Ticket.location.world", loc.getWorld().getName());
+		}
 		try {
 			temp.save(file);
 		} catch (IOException e) {

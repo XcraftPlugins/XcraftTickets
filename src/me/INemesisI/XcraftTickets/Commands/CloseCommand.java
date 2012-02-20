@@ -27,18 +27,17 @@ public class CloseCommand extends CommandHelper {
 			return;
 		}
 		String message = list.subList(1, list.size()).toString().replace(",", "").replace("[", "").replace("]", "");
-		System.out.println("closemessage: " + message);
 		int id = Integer.parseInt(list.get(0));
 		Ticket ticket = plugin.ticketHandler.getTicket(id);
 		if (ticket == null) {
 			sender.sendMessage(ChatColor.BLUE + plugin.getName() + ChatColor.RED + "Ein Ticket mit dieser Nummer existier nicht!");
 			return;
 		}
-		if (!ticket.getOwner().equals(player.getName()) && !player.hasPermission("XcraftTickets.Close.All")) {
+		if (!ticket.getOwner().equals(getName()) && !senderHasPermission("XcraftTickets.Close.All")) {
 			error("Du hast keine Rechte dieses Ticket schliessen! (Nr: " + id + ")");
 			return;
 		}
-		th.LogTicket(ticket, player.getName(), "closed", message);
+		th.LogTicket(ticket, getName(), "geschlossen", message);
 		th.setArchivedTicket(ticket);
 		sendToMods(ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde geschlossen: " + ChatColor.AQUA + message);
 		sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde geschlossen: " + ChatColor.AQUA + message);

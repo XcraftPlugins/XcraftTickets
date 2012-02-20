@@ -8,6 +8,7 @@ import me.INemesisI.XcraftTickets.XcraftTickets;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class WarpCommand extends CommandHelper {
 
@@ -30,12 +31,16 @@ public class WarpCommand extends CommandHelper {
 		}
 		Location loc = ticket.getLoc();
 		if (loc != null) {
-			player.teleport(loc);
-			if (player != null) {
-				player.performCommand("/ticket view " + ticket.getId());
-			}
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
+				if (player != null) {
+					player.teleport(loc);
+					player.performCommand("/ticket view " + ticket.getId());
+				}
+			} else
+				error("Wie soll ich die Konsole teleportieren???!?");
 		} else {
-			error("Für dieses Ticket gibt es keinen Warp");
+			error("FÃ¼r dieses Ticket gibt es keinen Warp");
 		}
 
 	}

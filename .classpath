@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="D:/Coding/Minecraft/bukkit.jar"/>
 	<classpathentry kind="lib" path="D:/Coding/Minecraft/Vault.jar"/>
+	<classpathentry kind="lib" path="D:/Coding/Minecraft/SpaceAPI.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

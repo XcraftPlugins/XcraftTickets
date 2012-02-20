@@ -24,16 +24,15 @@ public class ReOpenCommand extends CommandHelper {
 		}
 		int id = Integer.parseInt(list.get(0));
 		String message = list.subList(1, list.size()).toString().replace(",", "").replace("[", "").replace("]", "");
-		System.out.println("reopenmessage: " + message);
 		Ticket ticket = th.getArchivedTicket(id);
 		if (ticket == null) {
 			error("Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 		} else {
 			th.addTicket(ticket);
-			th.LogTicket(ticket, sender.getName(), "reopened", message);
-			ticket.getWatched().add(sender.getName());
-			sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde wieder eröffnet: " + ChatColor.AQUA + message);
-			sendToMods(ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde wieder eröffnet: " + ChatColor.AQUA + message);
+			th.LogTicket(ticket, getName(), "wieder erÃ¶ffnet", message);
+			ticket.getWatched().add(getName());
+			sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde wieder erÃ¶ffnet: " + ChatColor.AQUA + message);
+			sendToMods(ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde wieder erÃ¶ffnet: " + ChatColor.AQUA + message);
 			return;
 		}
 

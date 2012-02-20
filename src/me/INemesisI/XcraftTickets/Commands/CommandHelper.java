@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 public abstract class CommandHelper {
 	protected XcraftTickets plugin = null;
 	protected CommandSender sender = null;
-	protected Player player = null;
 	protected Permission permission = null;
 	protected TicketHandler th = null;
 
@@ -23,14 +22,12 @@ public abstract class CommandHelper {
 
 	protected void init(CommandSender sender) {
 		this.sender = sender;
-		if (sender instanceof Player) this.player = (Player) sender;
 		th = plugin.ticketHandler;
 	}
 
 	protected boolean senderHasPermission(String perm) {
-		if (player != null) return player.hasPermission("XcraftTicket." + perm);
-		else
-			return true;
+		if (sender instanceof Player) return sender.hasPermission("XcraftTicket." + perm);
+		else return true;
 	}
 
 	protected void reply(String message) {
@@ -38,7 +35,13 @@ public abstract class CommandHelper {
 	}
 
 	protected void error(String message) {
-		sender.sendMessage(plugin.getName() + ChatColor.RED + "Error: " + message);
+		sender.sendMessage(plugin.getName() + ChatColor.RED + message);
+	}
+
+	protected String getName() {
+		if (sender instanceof Player) return ((Player) sender).getName();
+		else
+			return "Server";
 	}
 
 	protected void sendToMods(String message) {

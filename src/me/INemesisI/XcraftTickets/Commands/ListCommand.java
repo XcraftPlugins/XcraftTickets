@@ -17,26 +17,23 @@ public class ListCommand extends CommandHelper {
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
 		this.init(sender);
-
-		List<Ticket> tickets = th.getTickets();
-		sender.sendMessage(plugin.getChatColor() + "---Ticket list---");
 		int counter = -1;
-		for (Ticket ticket : tickets) {
-			if (ticket.getOwner().equals(sender.getName()) || (senderHasPermission("List.Other") && ticket.getAssignee().equals("none") || ticket.getAssignee().equals(sender.getName()) || (ticket.getAssignee().startsWith("g:") && plugin.getPermission().playerInGroup((String) null, sender.getName(), ticket.getAssignee().replace("g:", ""))) || (Command.equals("listall") && senderHasPermission("List.All")))) {
+		for (Ticket ticket : th.getTickets()) {
+			if (ticket.getOwner().equals(getName()) || getName().equals("Server") || (senderHasPermission("List.Other") && (ticket.getAssignee() == null 
+					|| ticket.getAssignee().equals(getName()) 
+					|| (ticket.getAssignee().startsWith("G:") && plugin.getPermission().playerInGroup((String) null, getName(), ticket.getAssignee().replace("G:", ""))))
+					|| (Command.equals("listall") && senderHasPermission("List.All")))) {
 				counter++;
 				String assignee = "";
-				if (ticket.getAssignee() != null) assignee = ChatColor.LIGHT_PURPLE + "->" + ChatColor.DARK_PURPLE + ticket.getAssignee();
+				if (ticket.getAssignee() != null) assignee = ChatColor.LIGHT_PURPLE + "->" + ChatColor.DARK_PURPLE + ticket
+						.getAssignee();
 				String id = ChatColor.GOLD + "#" + ticket.getId();
 				int comments = ticket.getLog().size() - 1;
 				String count;
-				if (ticket.getWatched().contains(sender.getName())) {
-					if (comments == 1) count = ChatColor.GRAY + "[" + comments + " Kommentar]";
-					else
-						count = ChatColor.GRAY + "[" + comments + " Kommentare]";
-				} else if (comments == 1) count = ChatColor.DARK_AQUA + "[" + comments + " Kommentar]";
-				else
-					count = ChatColor.DARK_AQUA + "[" + comments + " Kommentare]";
-
+				if (ticket.getWatched().contains(getName())) {
+					count = ChatColor.GRAY + "[" + comments + "]";
+				} else
+					count = ChatColor.DARK_AQUA + "[" + comments + "]";
 				String marker = null;
 				if (plugin.getServer().getOfflinePlayer(ticket.getOwner()).isOnline()) {
 					marker = ChatColor.DARK_GREEN + "+";
@@ -45,9 +42,10 @@ public class ListCommand extends CommandHelper {
 				}
 				String name = ChatColor.WHITE + ticket.getOwner();
 				String text = ChatColor.GRAY + ticket.getLog().get(0);
-
+				
 				String output = id + " " + marker + name + assignee + ": " + text + " " + count;
-				if (comments == 0) ticket.getWatched().add(sender.getName());
+				if (comments == 0) ticket.getWatched().add(getName());
+				if (counter == 0) sender.sendMessage(plugin.getName() + "Ticketliste");
 				sender.sendMessage(output);
 			}
 		}

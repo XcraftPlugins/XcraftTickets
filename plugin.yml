@@ -2,7 +2,7 @@ name: XcraftTickets
 
 main: me.INemesisI.XcraftTickets.XcraftTickets
 
-version: 0.5
+version: 1.0
 
 commands:
   ticket:

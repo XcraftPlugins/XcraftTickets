@@ -8,6 +8,7 @@ import me.INemesisI.XcraftTickets.XcraftTickets;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class OpenCommand extends CommandHelper {
 
@@ -25,13 +26,12 @@ public class OpenCommand extends CommandHelper {
 		}
 
 		String message = list.subList(0, list.size()).toString().replace(",", "").replace("[", "").replace("]", "");
-		System.out.println("openmessage: " + message);
 		Location loc = null;
-		if (player != null) loc = player.getLocation();
-		Ticket ticket = th.addTicket(sender.getName(), loc);
+		if (sender instanceof Player) loc = ((Player) sender).getLocation();
+		Ticket ticket = th.addTicket(getName(), loc);
 		ticket.getLog().add(message);
 		ticket.getWatched().add(ticket.getOwner());
 		reply("Vielen dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#" + ticket.getId());
-		sendToMods(ChatColor.GRAY + "Ein Ticket (Nr. " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + ") wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " eröffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA + message);
+		sendToMods(ChatColor.GRAY + "Ein Ticket (Nr. " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + ") wurde von " + ChatColor.YELLOW + getName() + ChatColor.GRAY + " erÃ¶ffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA + message);
 	}
 }

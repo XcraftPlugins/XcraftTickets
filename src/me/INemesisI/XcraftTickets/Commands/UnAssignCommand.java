@@ -25,8 +25,8 @@ public class UnAssignCommand extends CommandHelper {
 		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));
 		ticket.setAssignee(null);
 		ticket.getWatched().clear();
-		ticket.getWatched().add(sender.getName());
-		sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung für dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde entfernt!");
-		sendToMods(ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde entfernt!");
+		ticket.getWatched().add(getName());
+		sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung fÃ¼r dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde entfernt!");
+		sendToMods(ChatColor.GRAY + "Die Zuweisung fÃ¼r Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde entfernt!");
 	}
 }

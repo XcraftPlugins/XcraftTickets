@@ -32,12 +32,12 @@ public class ViewCommand extends CommandHelper {
 			}
 		}
 
-		if (!ticket.getOwner().equals(sender.getName()) || !senderHasPermission("View.Other")) {
+		if (!ticket.getOwner().equals(getName()) && !senderHasPermission("View.Other")) {
 			error("Du hast keine Rechte dieses Ticket zu sehen!" + "\n" + ChatColor.GRAY + "  Es ist nicht dein Ticket...");
 			return;
 		}
 
-		reply(ChatColor.GREEN + "info f�r Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GREEN + " erstellt: " + ChatColor.GRAY + ticket.getDate());
+		reply(ChatColor.GREEN + "info für Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.DARK_AQUA + " erstellt: " + ticket.getDate());
 		String marker = null;
 		if (plugin.getServer().getOfflinePlayer(ticket.getOwner()).isOnline()) {
 			marker = ChatColor.DARK_GREEN + " + ";
@@ -45,13 +45,13 @@ public class ViewCommand extends CommandHelper {
 			marker = ChatColor.DARK_RED + "-";
 		}
 
-		sender.sendMessage(ChatColor.GOLD + "Ticket opened " + marker + ChatColor.WHITE + ticket.getOwner() + ": " + ChatColor.GRAY + ticket.getLog().get(0));
+		sender.sendMessage(ChatColor.GOLD + "Ticket eröffnet von " + marker + ChatColor.WHITE + ticket.getOwner() + ": " + ChatColor.GRAY + ticket.getLog().get(0));
 
-		if (ticket.getAssignee() != null) sender.sendMessage(ChatColor.GOLD + "Assigned to: " + ChatColor.RED + ticket.getAssignee());
+		if (ticket.getAssignee() != null) sender.sendMessage(ChatColor.GOLD + "Zugewiesen an: " + ChatColor.RED + ticket.getAssignee());
 		List<String> logs = ticket.getLog();
 		logs = logs.subList(1, logs.size());
 		for (String log : logs) {
-			log = log.replace("comment by ", "");
+			log = log.replace("Kommentiert von ", "");
 			String[] split = log.split("\\|", 2);
 			String time = split[0];
 			split = split[1].split(":", 2);
@@ -59,6 +59,6 @@ public class ViewCommand extends CommandHelper {
 			String out = split[1];
 			sender.sendMessage(ChatColor.BLUE + "-> " + ChatColor.DARK_GRAY + time + ChatColor.WHITE + "|" + ChatColor.YELLOW + info + ChatColor.WHITE + out);
 		}
-		ticket.getWatched().add(sender.getName());
+		ticket.getWatched().add(getName());
 	}
 }

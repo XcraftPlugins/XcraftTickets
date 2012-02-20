@@ -12,7 +12,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class CommandHandler extends CommandHelper implements CommandExecutor {
 	private static Map<String, CommandHelper> subcommands = new HashMap<String, CommandHelper>();
@@ -20,61 +19,69 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 
 	public CommandHandler(XcraftTickets instance) {
 		super(instance);
-		CommandHelper ch = new PluginCommand(plugin);
-		addCommand("save", "Save", ch);
-		addCommand("reload", "Reload", ch);
-		ch = new OpenCommand(plugin);
-		addCommand("open", "Open", ch);
-		addCommand("o", "Open", ch);
-		ch = new ReOpenCommand(plugin);
-		addCommand("reopen", "Reopen", ch);
-		addCommand("r", "Reopen", ch);
-		ch = new CloseCommand(plugin);
-		addCommand("close", "Close", ch);
-		addCommand("c", "Close", ch);
-		ch = new LogCommand(plugin);
-		addCommand("comment", "Log", ch);
-		addCommand("log", "Log", ch);
-		addCommand("l", "Log", ch);
-		ch = new ListCommand(plugin);
-		addCommand("list", "List", ch);
-		addCommand("listall", "List.All", ch);
-		ch = new ViewCommand(plugin);
-		addCommand("view", "View", ch);
-		addCommand("v", "View", ch);
-		ch = new WarpCommand(plugin);
-		addCommand("warp", "Warp", ch);
-		addCommand("w", "Warp", ch);
-		ch = new AssignCommand(plugin);
-		addCommand("assign", "Assign", ch);
-		addCommand("a", "Assign", ch);
-		ch = new UnAssignCommand(plugin);
-		addCommand("unassign", "Unassign", ch);
-		addCommand("u", "Unassign", ch);
+		CommandHelper commandhelper = new SaveCommand(plugin);
+		addCommand("save", "Save", commandhelper);
+		
+		commandhelper = new ReloadCommand(plugin);
+		addCommand("reload", "Reload", commandhelper);
+		
+		commandhelper = new OpenCommand(plugin);
+		addCommand("open", "Open", commandhelper);
+		addCommand("o", "Open", commandhelper);
+		
+		commandhelper = new ReOpenCommand(plugin);
+		addCommand("reopen", "Reopen", commandhelper);
+		addCommand("r", "Reopen", commandhelper);
+		
+		commandhelper = new CloseCommand(plugin);
+		addCommand("close", "Close", commandhelper);
+		addCommand("c", "Close", commandhelper);
+		
+		commandhelper = new LogCommand(plugin);
+		addCommand("comment", "Log", commandhelper);
+		addCommand("log", "Log", commandhelper);
+		addCommand("l", "Log", commandhelper);
+		
+		commandhelper = new ListCommand(plugin);
+		addCommand("list", "List", commandhelper);
+		addCommand("listall", "List.All", commandhelper);
+		
+		commandhelper = new ViewCommand(plugin);
+		addCommand("view", "View", commandhelper);
+		addCommand("v", "View", commandhelper);
+		
+		commandhelper = new WarpCommand(plugin);
+		addCommand("warp", "Warp", commandhelper);
+		addCommand("w", "Warp", commandhelper);
+		
+		commandhelper = new AssignCommand(plugin);
+		addCommand("assign", "Assign", commandhelper);
+		addCommand("a", "Assign", commandhelper);
+		
+		commandhelper = new UnAssignCommand(plugin);
+		addCommand("unassign", "Unassign", commandhelper);
+		addCommand("u", "Unassign", commandhelper);
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		this.sender = sender;
-		player = (sender instanceof Player) ? (Player) sender : null;
-
-		if (player == null) {
-			// TODO: Console Stuff
-		} else if (args.length == 0 || args[0].equals("help")) {
+		// TODO: Console Stuff
+		if (args.length == 0 || args[0].equals("help")) {
 			PrintHelp();
 			return true;
 		} else if (subcommands.get(args[0].toLowerCase()) == null) {
 			error("Unkown command: " + args[0].toLowerCase());
-		} else if (!(permNodes.get(args[0]).isEmpty() || player.hasPermission(plugin.getDescription().getName() + "." + permNodes.get(args[0])) || player.isOp())) {
+		} else if (!(permNodes.get(args[0]).isEmpty() || sender.hasPermission(plugin.getDescription().getName() + "." + permNodes
+				.get(args[0])) || sender.isOp())) {
 			error("You do not have access to that command!");
 			return true;
-		}
-
-		else {
+		} else {
 			List<String> largs = Arrays.asList(args);
 			String Command = largs.get(0);
 			largs = largs.subList(1, largs.size());
-			(subcommands.get(args[0].toLowerCase())).execute(sender, Command, (largs.size() > 0 ? largs.subList(0, largs.size()) : new ArrayList<String>()));
+			(subcommands.get(args[0].toLowerCase())).execute(sender, Command, (largs.size() > 0 ? largs.subList(0, largs.size())
+					: new ArrayList<String>()));
 		}
 		return true;
 	}
@@ -85,15 +92,16 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 	}
 
 	protected void print(String cmd, String values, String message) {
-		if (player.hasPermission("XcraftRegionMarket." + permNodes.get(cmd))) sender.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/ticket " + cmd + " " + values + ChatColor.DARK_AQUA + " - " + message);
+		if (sender.hasPermission("XcraftRegionMarket." + permNodes.get(cmd))) sender
+				.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/ticket " + cmd + " " + values + ChatColor.DARK_AQUA + " - " + message);
 	}
 
 	public void PrintHelp() {
 		sender.sendMessage(ChatColor.BLUE + "[" + plugin.getDescription().getFullName() + "] by INemesisI");
-		print("open/o", "<Nachricht>", "Öffnet ein neues Ticket");
+		print("open/o", "<Nachricht>", "ï¿½ffnet ein neues Ticket");
 		print("comment/log", "<#>", "Kommentiert ein Ticket");
 		print("close/c", "<#>", "Schliesst ein Ticket");
-		print("reopen/r", "<Typ>", "Ändert den Typ");
+		print("reopen/r", "<Typ>", "ï¿½ndert den Typ");
 		print("list", "", "Listet alle Tickets auf");
 		print("view/v", "<#>", "Zeigt alle Informationen eines Tickets");
 		print("warp/w", "<#>", "");

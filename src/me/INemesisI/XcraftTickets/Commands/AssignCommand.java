@@ -31,23 +31,30 @@ public class AssignCommand extends CommandHelper {
 		}
 		String assignee = null;
 		if (list.get(1).startsWith("g:")) {
-			String g = list.get(1).replace("g:", "");
+			String g = list.get(1).replace("g:", "").replace("G:", "");
 			for (String group : permission.getGroups()) {
 				if (group.equals(g)) assignee = group;
 			}
-			if (assignee != null && permission.groupHas((String) null, assignee, "XcraftTickets.Mod")) ticket.setAssignee("G:" + assignee);
+			if (assignee != null && permission.groupHas(ticket.getLoc().getWorld().getName(), assignee, "XcraftTickets.Mod")) {
+				assignee = "G:" + assignee;
+				ticket.setAssignee(assignee);
+			} else {
+				error("Die Gruppe " + assignee + " hat keine Permission oder existiert nicht!");
+				return;
+			}
 		} else {
 			OfflinePlayer p = plugin.getServer().getOfflinePlayer(list.get(1));
 			if (p == null) {
 				error("Ein Spieler mit diesem Namen existiert nicht!");
 				return;
 			} else {
-				System.out.print(permission.playerHas(player, "XcraftTickets.Mod"));
 				assignee = p.getName();
 				ticket.setAssignee(assignee);
 			}
 		}
 		sendToMods(ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
-		sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
+		sendToPlayer(
+				ticket.getOwner(),
+				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
 	}
 }
