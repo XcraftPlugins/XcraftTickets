@@ -19,10 +19,12 @@ public class ListCommand extends CommandHelper {
 		this.init(sender);
 		int counter = -1;
 		for (Ticket ticket : th.getTickets()) {
-			if (ticket.getOwner().equals(getName()) || getName().equals("Server") || (senderHasPermission("List.Other") && (ticket.getAssignee() == null 
-					|| ticket.getAssignee().equals(getName()) 
-					|| (ticket.getAssignee().startsWith("G:") && plugin.getPermission().playerInGroup((String) null, getName(), ticket.getAssignee().replace("G:", ""))))
-					|| (Command.equals("listall") && senderHasPermission("List.All")))) {
+			if (ticket.getOwner().equals(getName()) 
+					|| getName().equals("Server")
+					|| (senderHasPermission("List.Other") && (ticket.getAssignee() == null))
+					|| ticket.getAssignee().equals(getName())
+					|| (ticket.getAssignee().startsWith("G:") && plugin.getPermission().playerInGroup((String) null, getName(), ticket.getAssignee().replace("G:", "")))
+					|| (Command.equals("listall") && senderHasPermission("List.All"))) {
 				counter++;
 				String assignee = "";
 				if (ticket.getAssignee() != null) assignee = ChatColor.LIGHT_PURPLE + "->" + ChatColor.DARK_PURPLE + ticket

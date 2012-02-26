@@ -31,9 +31,8 @@ public class LogCommand extends CommandHelper {
 			error("Ein Ticket mit dieser Nummer existier nicht!");
 			return;
 		}
-		boolean isMod;
-		isMod = senderHasPermission("XcraftTickets.List.All");
-		if (!ticket.getOwner().equals(getName()) && !isMod) {
+
+		if (!ticket.getOwner().equals(getName()) && !senderHasPermission("XcraftTickets.List.All") && !ticket.getAssignee().equals(getName())) {
 			error("Du hast keine Rechte dieses Ticket kommentieren!" + ChatColor.GRAY + " \nEs ist nicht dein Ticket...");
 			return;
 		}

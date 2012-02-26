@@ -68,7 +68,7 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 		this.sender = sender;
 		// TODO: Console Stuff
 		if (args.length == 0 || args[0].equals("help")) {
-			PrintHelp();
+			PrintHelp(cmd.getName());
 			return true;
 		} else if (subcommands.get(args[0].toLowerCase()) == null) {
 			error("Unkown command: " + args[0].toLowerCase());
@@ -91,23 +91,23 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 		subcommands.put(command, commandclass);
 	}
 
-	protected void print(String cmd, String values, String message) {
-		if (sender.hasPermission("XcraftRegionMarket." + permNodes.get(cmd))) sender
-				.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/ticket " + cmd + " " + values + ChatColor.DARK_AQUA + " - " + message);
+	protected void print(String cmd, String command, String args, String message) {
+		if (sender.hasPermission(plugin.getDescription().getName() + "." + permNodes.get(command))) sender
+				.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/" + cmd + " " + command + " " + args + ChatColor.DARK_AQUA + " - " + message);
 	}
 
-	public void PrintHelp() {
+	public void PrintHelp(String cmd) {
 		sender.sendMessage(ChatColor.BLUE + "[" + plugin.getDescription().getFullName() + "] by INemesisI");
-		print("open/o", "<Nachricht>", "�ffnet ein neues Ticket");
-		print("comment/log", "<#>", "Kommentiert ein Ticket");
-		print("close/c", "<#>", "Schliesst ein Ticket");
-		print("reopen/r", "<Typ>", "�ndert den Typ");
-		print("list", "", "Listet alle Tickets auf");
-		print("view/v", "<#>", "Zeigt alle Informationen eines Tickets");
-		print("warp/w", "<#>", "");
-		print("assign/a", "<#>", "");
-		print("unassign/u", "<#>", "");
-		print("listall", "", "");
+		print(cmd, "open/o", "<Nachricht>", "Öffnet ein neues Ticket");
+		print(cmd, "comment/log", "<#>", "Kommentiert ein Ticket");
+		print(cmd, "close/c", "<#>", "Schliesst ein Ticket");
+		print(cmd, "reopen/r", "<Typ>", "Öffnet ein geschlossenes Ticket");
+		print(cmd, "list", "", "Listet deine Tickets auf");
+		print(cmd, "view/v", "<#>", "Zeigt alle Informationen eines Tickets");
+		print(cmd, "warp/w", "<#>", "Teleport zum Ticket");
+		print(cmd, "assign/a", "<#>", "Weiterleiten eines Tickets");
+		print(cmd, "unassign/u", "<#>", "Weiterleitung aufheben");
+		print(cmd, "listall", "", "listet ALLE offenen Tickets auf");
 	}
 
 	@Override

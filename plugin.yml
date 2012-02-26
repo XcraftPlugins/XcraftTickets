@@ -2,7 +2,7 @@ name: XcraftTickets
 
 main: me.INemesisI.XcraftTickets.XcraftTickets
 
-version: 1.0
+version: 1.1
 
 commands:
   ticket:
@@ -41,6 +41,7 @@ permissions:
             XcraftTickets.Close: true
             XcraftTickets.List: true
             XcraftTickets.View: true
+            XcraftTickets.Log: true
         default: true
         
     XcraftTickets.Save:

@@ -26,7 +26,7 @@ public abstract class CommandHelper {
 	}
 
 	protected boolean senderHasPermission(String perm) {
-		if (sender instanceof Player) return sender.hasPermission("XcraftTicket." + perm);
+		if (sender instanceof Player) return sender.hasPermission("XcraftTickets." + perm);
 		else return true;
 	}
 
