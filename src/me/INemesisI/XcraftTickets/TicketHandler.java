@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class TicketHandler {
 	XcraftTickets plugin;
@@ -25,7 +27,7 @@ public class TicketHandler {
 
 	public Ticket getTicket(int id) {
 		for (Ticket ticket : tickets) {
-			if (ticket.getId() == id) return ticket;
+			if (ticket.id == id) return ticket;
 		}
 		return null;
 	}
@@ -34,8 +36,27 @@ public class TicketHandler {
 		this.tickets = tickets;
 	}
 
-	public Ticket addTicket(String owner, Location loc) {
-		Ticket ticket = new Ticket(getNextID(), owner, date.format(new Date()), loc);
+	public void inform(Player player) {
+		int a = 0;
+		for (Ticket ticket : tickets) {
+			if (player.getName().equals(ticket.owner) || player.hasPermission(plugin.getDescription().getName() + "." + "Mod")) {
+				if (!ticket.watched.contains(player.getName()) && (ticket.assignee == null || ticket.assignee.equals(player.getName()))) a++;
+			}
+		}
+		if (a == 1) player.sendMessage(plugin.getCName() + "Du hast " + a + " ungelesenes Ticket offen " + ChatColor.GRAY + "/ticket list");
+		if (a > 1) player.sendMessage(plugin.getCName() + "Du hast " + a + " ungelesene Tickets offen " + ChatColor.GRAY + "/ticket list");
+		
+		List<String> list = plugin.configHandler.getReminder(player.getName());
+		if (list != null) {
+			for (String id : list)
+			player.sendMessage(plugin.getCName() + "Dein Ticket #" + id + " wurde geschlossen. Schau es dir bitte an! " + ChatColor.GRAY + "/ticket view " + id);
+		}
+	}
+
+	public Ticket addTicket(String owner, Location loc, String message) {
+		String cdate = date.format(new Date());
+		Log log = new Log(cdate, owner, Log.Type.OPEN, message);
+		Ticket ticket = new Ticket(getNextID(), owner, loc, log);
 		tickets.add(ticket);
 		setNextID(getNextID() + 1);
 		return ticket;
@@ -54,14 +75,18 @@ public class TicketHandler {
 		}
 	}
 
-	public void setArchivedTicket(Ticket ticket) {
+	public void setTicketArchived(Ticket ticket) {
 		tickets.remove(ticket);
 		plugin.configHandler.archiveTicket(ticket);
 	}
 
-	public void LogTicket(Ticket ticket, String player, String type, String message) {
-		String cdate = date.format(new Date());
-		ticket.log(cdate + " | " + type + " von " + player + ": " + message);
+	public void deleteTicket(Ticket ticket) {
+		tickets.remove(ticket);
+		plugin.configHandler.deleteTicket(ticket);
+	}
+
+	public String getCurrentDate() {
+		return date.format(new Date());
 	}
 
 	public int getNextID() {

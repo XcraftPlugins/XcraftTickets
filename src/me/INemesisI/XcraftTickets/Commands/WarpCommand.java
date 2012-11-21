@@ -21,24 +21,24 @@ public class WarpCommand extends CommandHelper {
 		this.init(sender);
 
 		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket warp <Nr>)");
+			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr>)");
 			return;
 		}
-		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));
+		int id = Integer.parseInt(list.get(0));
+		Ticket ticket = th.getTicket(id);
 		if (ticket == null) {
-			error("Ein Ticket mit dieser Nummer existier nicht!");
+			error("Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return;
 		}
-		Location loc = ticket.getLoc();
+		Location loc = ticket.loc;
 		if (loc != null) {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 				if (player != null) {
 					player.teleport(loc);
-					player.performCommand("/ticket view " + ticket.getId());
+					player.performCommand("ticket view " + ticket.id);
 				}
-			} else
-				error("Wie soll ich die Konsole teleportieren???!?");
+			} else error("Wie soll ich den Server teleportieren???!? :)");
 		} else {
 			error("Für dieses Ticket gibt es keinen Warp");
 		}

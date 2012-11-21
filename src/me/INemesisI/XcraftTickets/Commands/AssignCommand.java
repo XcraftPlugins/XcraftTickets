@@ -4,12 +4,14 @@ import java.util.List;
 
 import me.INemesisI.XcraftTickets.Ticket;
 import me.INemesisI.XcraftTickets.XcraftTickets;
+import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 public class AssignCommand extends CommandHelper {
+	Permission permission = null;
 
 	protected AssignCommand(XcraftTickets instance) {
 		super(instance);
@@ -20,13 +22,18 @@ public class AssignCommand extends CommandHelper {
 		this.init(sender);
 		permission = plugin.getPermission();
 
-		if (list.size() == 0 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket assign <#> <Name|G:Gruppe>)");
+		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
+			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket" + Command + " <Nr> <Name|G:Gruppe>)");
 			return;
 		}
-		Ticket ticket = plugin.ticketHandler.getTicket(Integer.parseInt(list.get(0)));
+		int id = Integer.parseInt(list.get(0));
+		Ticket ticket = th.getTicket(id);
 		if (ticket == null) {
-			error("Ein Ticket mit dieser nummer existier nicht!");
+			error("Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+			return;
+		}
+		if (list.size() < 2) {
+			error("Du hast keine(n) Namen/Gruppe eingeben! " + "\n" + ChatColor.GRAY + "(/ticket" + Command + " <Nr> <Name|G:Gruppe>)");
 			return;
 		}
 		String assignee = null;
@@ -35,11 +42,11 @@ public class AssignCommand extends CommandHelper {
 			for (String group : permission.getGroups()) {
 				if (group.equals(g)) assignee = group;
 			}
-			if (assignee != null && permission.groupHas(ticket.getLoc().getWorld().getName(), assignee, "XcraftTickets.Mod")) {
+			if (assignee != null && permission.groupHas(ticket.loc.getWorld().getName(), assignee, "XcraftTickets.Mod")) {
 				assignee = "G:" + assignee;
-				ticket.setAssignee(assignee);
+				ticket.assignee = assignee;
 			} else {
-				error("Die Gruppe " + assignee + " hat keine Permission oder existiert nicht!");
+				error("Die Gruppe " + assignee + " hat keine Rechte oder existiert nicht!");
 				return;
 			}
 		} else {
@@ -49,12 +56,12 @@ public class AssignCommand extends CommandHelper {
 				return;
 			} else {
 				assignee = p.getName();
-				ticket.setAssignee(assignee);
+				ticket.assignee = assignee;
 			}
 		}
-		sendToMods(ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
+		sendToMods(ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.id + ChatColor.GRAY + " wurde an " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
 		sendToPlayer(
-				ticket.getOwner(),
-				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
+				ticket.owner,
+				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.id + ChatColor.GRAY + " wurde an " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
 	}
 }

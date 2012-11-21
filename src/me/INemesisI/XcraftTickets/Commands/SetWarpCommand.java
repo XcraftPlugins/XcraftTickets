@@ -2,15 +2,18 @@ package me.INemesisI.XcraftTickets.Commands;
 
 import java.util.List;
 
+import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
 import me.INemesisI.XcraftTickets.XcraftTickets;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public class ViewCommand extends CommandHelper {
+public class SetWarpCommand extends CommandHelper {
 
-	protected ViewCommand(XcraftTickets instance) {
+	protected SetWarpCommand(XcraftTickets instance) {
 		super(instance);
 	}
 
@@ -24,21 +27,19 @@ public class ViewCommand extends CommandHelper {
 		}
 		int id = Integer.parseInt(list.get(0));
 		Ticket ticket = th.getTicket(id);
-		if (ticket == null) ticket = th.getArchivedTicket(Integer.parseInt(list.get(0)));
 		if (ticket == null) {
 			error("Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return;
 		}
-		if (!ticket.owner.equals(getName()) && !senderHasPermission("View.All")) {
-			error("Du hast keine Rechte dieses Ticket zu sehen!");
-			return;
+		if (!getName().equals(ticket.owner)) error("Du kannst den Warp nur für dein eigenes Ticket ändern!");
+		if (!(sender instanceof Player)) error("Das ist über die Konsole nicht möglich!");
+		else {
+			Player player = (Player) sender;
+			Location loc = player.getLocation();
+			ticket.loc = loc;
+			ticket.log.add(new Log(th.getCurrentDate(), player.getName(), Log.Type.COMMENT, "Der Warppunkt wurde aktualisiert"));
+			reply("Der Warp für Ticket #" + ticket.id + " wurde an deine derzeitige Position verlegt!");
 		}
-		reply(ChatColor.GREEN + "info für Ticket " + ChatColor.GOLD + "#" + ticket.id);
-		if (ticket.assignee != null) sender.sendMessage(ChatColor.GOLD + "Zugewiesen an: " + ChatColor.RED + ticket.assignee);
-		for (int i = 0; i < ticket.log.size(); i++) {
-			sender.sendMessage(ticket.log.get(i).format());
-		}
-		ticket.watched.add(getName());
-		plugin.configHandler.removeReminder(ticket.owner, ticket.id);
 	}
+
 }

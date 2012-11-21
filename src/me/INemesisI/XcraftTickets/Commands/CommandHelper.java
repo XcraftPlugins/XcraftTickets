@@ -4,7 +4,6 @@ import java.util.List;
 
 import me.INemesisI.XcraftTickets.TicketHandler;
 import me.INemesisI.XcraftTickets.XcraftTickets;
-import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -13,7 +12,6 @@ import org.bukkit.entity.Player;
 public abstract class CommandHelper {
 	protected XcraftTickets plugin = null;
 	protected CommandSender sender = null;
-	protected Permission permission = null;
 	protected TicketHandler th = null;
 
 	protected CommandHelper(XcraftTickets instance) {
@@ -26,22 +24,21 @@ public abstract class CommandHelper {
 	}
 
 	protected boolean senderHasPermission(String perm) {
-		if (sender instanceof Player) return sender.hasPermission("XcraftTickets." + perm);
+		if (sender instanceof Player) return sender.hasPermission(plugin.getDescription().getName() + "." + perm);
 		else return true;
 	}
 
 	protected void reply(String message) {
-		sender.sendMessage(plugin.getName() + message);
+		sender.sendMessage(plugin.getCName() + message);
 	}
 
 	protected void error(String message) {
-		sender.sendMessage(plugin.getName() + ChatColor.RED + message);
+		sender.sendMessage(ChatColor.RED + "Error: " + message);
 	}
 
 	protected String getName() {
 		if (sender instanceof Player) return ((Player) sender).getName();
-		else
-			return "Server";
+		else return "Server";
 	}
 
 	protected void sendToMods(String message) {

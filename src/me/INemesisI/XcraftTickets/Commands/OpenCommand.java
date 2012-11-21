@@ -21,17 +21,16 @@ public class OpenCommand extends CommandHelper {
 		this.init(sender);
 
 		if (list.size() < 1) {
-			sender.sendMessage(ChatColor.BLUE + plugin.getName() + ChatColor.RED + "Du hast keine Nachricht eingeben! " + "\n" + ChatColor.GRAY + "(/ticket open <Nachricht>)");
+			error("Du hast keine Nachricht eingeben! " + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nachricht>)");
 			return;
 		}
 
 		String message = list.subList(0, list.size()).toString().replace(",", "").replace("[", "").replace("]", "");
 		Location loc = null;
 		if (sender instanceof Player) loc = ((Player) sender).getLocation();
-		Ticket ticket = th.addTicket(getName(), loc);
-		ticket.getLog().add(message);
-		ticket.getWatched().add(ticket.getOwner());
-		reply("Vielen dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#" + ticket.getId());
-		sendToMods(ChatColor.GRAY + "Ein Ticket (Nr. " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + ") wurde von " + ChatColor.YELLOW + getName() + ChatColor.GRAY + " eröffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA + message);
+		Ticket ticket = th.addTicket(getName(), loc, message);
+		ticket.watched.add(ticket.owner);
+		reply("Vielen dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#" + ticket.id);
+		sendToMods(ChatColor.GRAY + "Ein Ticket (" + ChatColor.GOLD + "#" + ticket.id + ChatColor.GRAY + ") wurde von " + ChatColor.YELLOW + getName() + ChatColor.GRAY + " eröffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA + message);
 	}
 }

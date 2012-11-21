@@ -7,9 +7,9 @@ version: 1.1
 commands:
   ticket:
     usage:
-  t:
-    usage:
   pe:
+    usage:
+  t:
     usage:
     
 permissions:
@@ -28,9 +28,11 @@ permissions:
             XcraftTickets.Warp: true
             XcraftTickets.Assign: true
             XcraftTickets.Unassign: true
-            XcraftTickets.List.Other: true
-            XcraftTickets.List.All: true
-            XcraftTickets.View.Other: true
+            XcraftTickets.Listall: true
+            XcraftTickets.View.All: true
+            XcraftTickets.Log.All: true
+            XcraftTickets.Close.All: true
+            XcraftTickets.Reopen.All: true
         default: false
         
     XcraftTickets.User:
@@ -42,6 +44,8 @@ permissions:
             XcraftTickets.List: true
             XcraftTickets.View: true
             XcraftTickets.Log: true
+            XcraftTickets.Undo: true
+            XcraftTickets.SetWarp: true
         default: true
         
     XcraftTickets.Save:
@@ -50,24 +54,40 @@ permissions:
         description: Access to /ticket reload
     XcraftTickets.Open:
         description: Access to /ticket open
+        
     XcraftTickets.Reopen:
-        description: Access to /ticket reopen
+        description: Access to /ticket reopen your own ticket
+    XcraftTickets.Reopen.All:
+        description: Access to /ticket reopen all tickets
+        
     XcraftTickets.Close:
-        description: Access to /ticket close
+        description: Access to /ticket close your own ticket
+    XcraftTickets.Close.All:
+        description: Access to /ticket close all tickets
+        
     XcraftTickets.Log:
-        description: Access to /ticket log
+        description: Access to /ticket log your own ticket
+    XcraftTickets.Log.All:
+        description: Access to /ticket log all tickets
+        
+    XcraftTickets.Undo:
+        description: Access to /ticket undo
+        
     XcraftTickets.List:
-        description: Access to /ticket list
-    XcraftTickets.List.Other:
-        description: Access to /ticket list (shows other tickets)
-    XcraftTickets.List.All:
+        description: Access to /ticket list   
+    XcraftTickets.Listall:
         description: Access to /ticket listall (shows even assigned tickets)
+        
     XcraftTickets.View:
-        description: Access to /ticket view
-    XcraftTickets.View.Other:
-        description: Access to /ticket view (allows to see other tickets)S
+        description: Access to /ticket view your own tickets
+    XcraftTickets.View.All:
+        description: Access to /ticket view all tickets
+        
     XcraftTickets.Warp:
         description: Access to /ticket warp
+    XcraftTickets.SetWarp:
+        description: Access to /ticket setwarp
+        
     XcraftTickets.Assign:
         description: Access to /ticket assign
     XcraftTickets.Unassign:

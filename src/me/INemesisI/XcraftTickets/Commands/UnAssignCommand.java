@@ -19,14 +19,19 @@ public class UnAssignCommand extends CommandHelper {
 		this.init(sender);
 
 		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket unassign <Nr> )");
+			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/" + Command + list.get(0) + " <Nr> )");
 			return;
 		}
 		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));
-		ticket.setAssignee(null);
-		ticket.getWatched().clear();
-		ticket.getWatched().add(getName());
-		sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung für dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde entfernt!");
-		sendToMods(ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde entfernt!");
+		if (ticket == null) {
+			error("Ein Ticket mit der Nummer " + ChatColor.GOLD + Integer.parseInt(list.get(0)) + ChatColor.RED + " konnte nicht gefunden werden");
+			return;
+		}
+		ticket.assignee = null;
+		ticket.watched.clear();
+		ticket.watched.add(getName());
+		sendToPlayer(ticket.owner,
+				ChatColor.GRAY + "Die Zuweisung für dein Ticket " + ChatColor.GOLD + "#" + ticket.id + ChatColor.GRAY + " wurde entfernt!");
+		sendToMods(ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#" + ticket.id + ChatColor.GRAY + " wurde entfernt!");
 	}
 }

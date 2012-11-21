@@ -21,43 +21,53 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 		super(instance);
 		CommandHelper commandhelper = new SaveCommand(plugin);
 		addCommand("save", "Save", commandhelper);
-		
+
 		commandhelper = new ReloadCommand(plugin);
 		addCommand("reload", "Reload", commandhelper);
-		
+
 		commandhelper = new OpenCommand(plugin);
 		addCommand("open", "Open", commandhelper);
 		addCommand("o", "Open", commandhelper);
-		
+
 		commandhelper = new ReOpenCommand(plugin);
 		addCommand("reopen", "Reopen", commandhelper);
 		addCommand("r", "Reopen", commandhelper);
-		
+
 		commandhelper = new CloseCommand(plugin);
 		addCommand("close", "Close", commandhelper);
 		addCommand("c", "Close", commandhelper);
-		
+
 		commandhelper = new LogCommand(plugin);
 		addCommand("comment", "Log", commandhelper);
 		addCommand("log", "Log", commandhelper);
 		addCommand("l", "Log", commandhelper);
-		
+
+		commandhelper = new UndoCommand(plugin);
+		addCommand("undo", "Undo", commandhelper);
+		addCommand("u", "Undo", commandhelper);
+
 		commandhelper = new ListCommand(plugin);
 		addCommand("list", "List", commandhelper);
-		addCommand("listall", "List.All", commandhelper);
-		
+		addCommand("listall", "Listall", commandhelper);
+		addCommand("li", "Listall", commandhelper);
+		addCommand("la", "Listall", commandhelper);
+
 		commandhelper = new ViewCommand(plugin);
 		addCommand("view", "View", commandhelper);
 		addCommand("v", "View", commandhelper);
-		
+
 		commandhelper = new WarpCommand(plugin);
 		addCommand("warp", "Warp", commandhelper);
 		addCommand("w", "Warp", commandhelper);
-		
+
+		commandhelper = new SetWarpCommand(plugin);
+		addCommand("setwarp", "SetWarp", commandhelper);
+		addCommand("s", "SetWarp", commandhelper);
+
 		commandhelper = new AssignCommand(plugin);
 		addCommand("assign", "Assign", commandhelper);
 		addCommand("a", "Assign", commandhelper);
-		
+
 		commandhelper = new UnAssignCommand(plugin);
 		addCommand("unassign", "Unassign", commandhelper);
 		addCommand("u", "Unassign", commandhelper);
@@ -71,10 +81,10 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 			PrintHelp(cmd.getName());
 			return true;
 		} else if (subcommands.get(args[0].toLowerCase()) == null) {
-			error("Unkown command: " + args[0].toLowerCase());
-		} else if (!(permNodes.get(args[0]).isEmpty() || sender.hasPermission(plugin.getDescription().getName() + "." + permNodes
-				.get(args[0])) || sender.isOp())) {
-			error("You do not have access to that command!");
+			error("Unbekannter Befehl: " + args[0].toLowerCase());
+		} else if (!(permNodes.get(args[0]).isEmpty() || sender.hasPermission(plugin.getDescription().getName() + "." + permNodes.get(args[0])) || sender
+				.isOp())) {
+			error("Du hast keinen Zugriff auf diesen Befehl!");
 			return true;
 		} else {
 			List<String> largs = Arrays.asList(args);
@@ -92,21 +102,24 @@ public class CommandHandler extends CommandHelper implements CommandExecutor {
 	}
 
 	protected void print(String cmd, String command, String args, String message) {
-		if (sender.hasPermission(plugin.getDescription().getName() + "." + permNodes.get(command))) sender
-				.sendMessage(ChatColor.DARK_GRAY + "-->" + ChatColor.GREEN + "/" + cmd + " " + command + " " + args + ChatColor.DARK_AQUA + " - " + message);
+		if (sender.hasPermission(plugin.getDescription().getName() + "." + permNodes.get(command))) {
+			sender.sendMessage(ChatColor.DARK_GRAY + "->" + ChatColor.GREEN + "/" + cmd + " " + command + " " + args + ChatColor.DARK_AQUA + " - " + message);
+		}
 	}
 
 	public void PrintHelp(String cmd) {
 		sender.sendMessage(ChatColor.BLUE + "[" + plugin.getDescription().getFullName() + "] by INemesisI");
-		print(cmd, "open/o", "<Nachricht>", "Öffnet ein neues Ticket");
-		print(cmd, "comment/log", "<#>", "Kommentiert ein Ticket");
-		print(cmd, "close/c", "<#>", "Schliesst ein Ticket");
-		print(cmd, "reopen/r", "<Typ>", "Öffnet ein geschlossenes Ticket");
+		print(cmd, "open", "<Nachricht>", "Öffnet ein neues Ticket");
+		print(cmd, "log", "<#>", "Kommentiert ein Ticket");
+		print(cmd, "close", "<#>", "Schliesst ein Ticket");
+		print(cmd, "reopen", "<Typ>", "Öffnet ein geschlossenes Ticket");
+		print(cmd, "undo", "<Typ>", "Macht den letzten Befehl rückgängig");
 		print(cmd, "list", "", "Listet deine Tickets auf");
-		print(cmd, "view/v", "<#>", "Zeigt alle Informationen eines Tickets");
-		print(cmd, "warp/w", "<#>", "Teleport zum Ticket");
-		print(cmd, "assign/a", "<#>", "Weiterleiten eines Tickets");
-		print(cmd, "unassign/u", "<#>", "Weiterleitung aufheben");
+		print(cmd, "view", "<#>", "Zeigt alle Informationen eines Tickets");
+		print(cmd, "setwarp", "<#>", "Ändert den Warp eines Tickets");
+		print(cmd, "warp", "<#>", "Teleport zum Ticket");
+		print(cmd, "assign", "<#>", "Weiterleiten eines Tickets");
+		print(cmd, "unassign", "<#>", "Weiterleitung aufheben");
 		print(cmd, "listall", "", "listet ALLE offenen Tickets auf");
 	}
 
