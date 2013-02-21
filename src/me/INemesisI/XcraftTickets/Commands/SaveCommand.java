@@ -6,19 +6,19 @@ import me.INemesisI.XcraftTickets.XcraftTickets;
 
 import org.bukkit.command.CommandSender;
 
-public class SaveCommand extends CommandHelper {
+public class SaveCommand extends PluginCommand {
 
-	protected SaveCommand(XcraftTickets instance) {
-		super(instance);
+	protected SaveCommand(XcraftTickets instance, String permnode) {
+		super(instance, permnode);
 	}
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
 		this.init(sender);
 
-		plugin.configHandler.save();
+		plugin.configManager.save();
 
-		reply("Wurde erfolgreich gespeichert!");
+		this.reply("Wurde erfolgreich gespeichert!");
 		plugin.log.info(plugin.getDescription().getName() + "saved!");
 	}
 }

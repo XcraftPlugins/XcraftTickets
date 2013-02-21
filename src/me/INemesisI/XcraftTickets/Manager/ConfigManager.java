@@ -1,24 +1,30 @@
-package me.INemesisI.XcraftTickets;
+package me.INemesisI.XcraftTickets.Manager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.INemesisI.XcraftTickets.Log;
+import me.INemesisI.XcraftTickets.Ticket;
+import me.INemesisI.XcraftTickets.XcraftTickets;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class ConfigHandler {
-	XcraftTickets plugin;
-	File folder;
-	File archive;
-	FileConfiguration config;
-	File remFile;
-	FileConfiguration reminder;
 
-	public ConfigHandler(XcraftTickets instance) {
+public class ConfigManager {
+
+	XcraftTickets		plugin;
+	File				folder;
+	File				archive;
+	FileConfiguration	config;
+	File				remFile;
+	FileConfiguration	reminder;
+
+	public ConfigManager(XcraftTickets instance) {
 		plugin = instance;
 	}
 
@@ -26,7 +32,10 @@ public class ConfigHandler {
 		// initialization
 		folder = plugin.getDataFolder();
 		archive = new File(folder.getPath() + "/archive");
-		if (!archive.exists()) archive.mkdirs();
+		if (!archive.exists()) {
+			archive.mkdirs();
+		}
+		plugin.reloadConfig();
 		config = plugin.getConfig();
 		remFile = new File(folder, "reminder.yml");
 		reminder = YamlConfiguration.loadConfiguration(remFile);
@@ -34,24 +43,24 @@ public class ConfigHandler {
 		File[] files = folder.listFiles();
 		List<Ticket> tickets = new ArrayList<Ticket>();
 		for (File file : files) {
-			Ticket ticket = loadTicket(file);
+			Ticket ticket = this.loadTicket(file);
 			if (ticket != null) {
 				tickets.add(ticket);
 			}
 		}
-		plugin.ticketHandler.setTickets(tickets);
-		plugin.ticketHandler.setNextID(config.getInt("Next_Ticket_ID", 1));
+		plugin.ticketManager.setTickets(tickets);
+		plugin.ticketManager.setNextID(config.getInt("Next_Ticket_ID", 1));
 	}
 
 	public void save() {
-		config.set("Next_Ticket_ID", plugin.ticketHandler.getNextID());
+		config.set("Next_Ticket_ID", plugin.ticketManager.getNextID());
 		plugin.saveConfig();
 		try {
 			reminder.save(remFile);
 		} catch (IOException e) {
 		}
-		for (Ticket ticket : plugin.ticketHandler.getTickets()) {
-			saveTicket(folder, ticket);
+		for (Ticket ticket : plugin.ticketManager.getTickets()) {
+			this.saveTicket(folder, ticket);
 		}
 	}
 
@@ -64,46 +73,52 @@ public class ConfigHandler {
 			ConfigurationSection cs = temp.getConfigurationSection("Ticket");
 			List<Log> log = new ArrayList<Log>();
 			List<String> list = (List<String>) cs.getList("log");
-			if (list != null && !list.isEmpty()) {
+			if ((list != null) && !list.isEmpty()) {
 				for (int i = 0; i < list.size(); i++) {
 					String split[] = list.get(i).split("; ");
 					log.add(new Log(split[0], split[1], Log.Type.valueOf(split[2]), split[3]));
 				}
 			}
 			List<String> watched = (ArrayList<String>) cs.getList("watched");
-			if (watched == null) watched = new ArrayList<String>();
+			if (watched == null) {
+				watched = new ArrayList<String>();
+			}
 			String assignee = cs.getString("assignee");
-			if (assignee != null && assignee.equals("none")) assignee = null;
+			if ((assignee != null) && assignee.equals("none")) {
+				assignee = null;
+			}
 			cs = temp.getConfigurationSection("Ticket.location");
 			Location loc = null;
+			String world = null;
 			if (cs != null) {
-				World world = plugin.getServer().getWorld(cs.getString("world"));
-				loc = new Location(world, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
+				world = cs.getString("world");
+				World w = plugin.getServer().getWorld(world);
+				loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs
+						.getLong("yaw"));
 			}
-			return new Ticket(id, assignee, loc, watched, log);
-
+			return new Ticket(id, assignee, loc, world, watched, log);
 		}
 		return null;
 	}
 
 	public void saveTicket(File folder, Ticket ticket) {
-		File file = new File(folder, ticket.id + ".yml");
+		File file = new File(folder, ticket.getId() + ".yml");
 		FileConfiguration temp = YamlConfiguration.loadConfiguration(file);
-		temp.set("Ticket.assignee", ticket.assignee);
+		temp.set("Ticket.assignee", ticket.getAssignee());
 		List<String> list = new ArrayList<String>();
-		for (int i = 0; i < ticket.log.size(); i++) {
-			list.add(ticket.log.get(i).toString());
+		for (int i = 0; i < ticket.getLog().size(); i++) {
+			list.add(ticket.getLog().get(i).toString());
 		}
 		temp.set("Ticket.log", list);
-		temp.set("Ticket.watched", ticket.watched);
-		Location loc = ticket.loc;
-		if (loc != null) {
+		temp.set("Ticket.watched", ticket.getWatched());
+		Location loc = ticket.getLoc();
+		if (loc.getWorld() != null) {
 			temp.set("Ticket.location.x", loc.getX());
 			temp.set("Ticket.location.y", loc.getY());
 			temp.set("Ticket.location.z", loc.getZ());
 			temp.set("Ticket.location.pitch", loc.getPitch());
 			temp.set("Ticket.location.yaw", loc.getYaw());
-			temp.set("Ticket.location.world", loc.getWorld().getName());
+			temp.set("Ticket.location.world", ticket.getWorld());
 		}
 		try {
 			temp.save(file);
@@ -112,33 +127,39 @@ public class ConfigHandler {
 	}
 
 	public void archiveTicket(Ticket ticket) {
-		saveTicket(archive, ticket);
-		deleteTicket(ticket);
+		this.saveTicket(archive, ticket);
+		this.deleteTicket(ticket);
 	}
 
 	public void deleteTicket(Ticket ticket) {
-		File file = new File(folder, ticket.id + ".yml");
+		File file = new File(folder, ticket.getId() + ".yml");
 		file.delete();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void addReminder(String player, int id) {
 		List<String> list = (List<String>) reminder.getList(player);
-		if (list == null) list = new ArrayList<String>();
+		if (list == null) {
+			list = new ArrayList<String>();
+		}
 		list.add(String.valueOf(id));
-			reminder.set(player, list);
+		reminder.set(player, list);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public boolean removeReminder(String player, int id) {
 		String sid = String.valueOf(id);
 		List<String> list = (List<String>) reminder.getList(player);
 		if (list != null) {
-			return list.remove(sid);
+			if ((list.remove(sid) == true)) {
+				if (list.size() == 0) reminder.set(player, null);
+				return true;
+			} else return false;
+		} else {
+			return false;
 		}
-		else return false;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<String> getReminder(String player) {
 		return (List<String>) reminder.getList(player);

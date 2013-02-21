@@ -2,30 +2,33 @@ package me.INemesisI.XcraftTickets.Commands;
 
 import java.util.List;
 
-import me.INemesisI.XcraftTickets.TicketHandler;
 import me.INemesisI.XcraftTickets.XcraftTickets;
+import me.INemesisI.XcraftTickets.Manager.TicketManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public abstract class CommandHelper {
+public abstract class PluginCommand {
 	protected XcraftTickets plugin = null;
 	protected CommandSender sender = null;
-	protected TicketHandler th = null;
+	protected String permnode;
 
-	protected CommandHelper(XcraftTickets instance) {
+	protected PluginCommand(XcraftTickets instance, String permnode) {
 		plugin = instance;
+		this.permnode = plugin.getDescription().getName() + "." + permnode;
 	}
 
 	protected void init(CommandSender sender) {
 		this.sender = sender;
-		th = plugin.ticketHandler;
 	}
 
 	protected boolean senderHasPermission(String perm) {
-		if (sender instanceof Player) return sender.hasPermission(plugin.getDescription().getName() + "." + perm);
-		else return true;
+		if (sender instanceof Player) {
+			return sender.hasPermission(plugin.getName() + "." + perm);
+		} else {
+			return true;
+		}
 	}
 
 	protected void reply(String message) {
@@ -37,13 +40,22 @@ public abstract class CommandHelper {
 	}
 
 	protected String getName() {
-		if (sender instanceof Player) return ((Player) sender).getName();
-		else return "Server";
+		if (sender instanceof Player) {
+			return ((Player) sender).getName();
+		} else {
+			return "Server";
+		}
 	}
 
-	protected void sendToMods(String message) {
+	protected TicketManager getTM() {
+		return plugin.ticketManager;
+	}
+
+	protected void sendToMods(String owner, String message) {
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			if (player.hasPermission("XcraftTickets.Mod")) player.sendMessage(message);
+			if (player.hasPermission("XcraftTickets.Mod") && !player.getName().equals(owner)) {
+				player.sendMessage(message);
+			}
 		}
 	}
 
@@ -56,5 +68,5 @@ public abstract class CommandHelper {
 		return false;
 	}
 
-	protected abstract void execute(CommandSender sender, String Command, List<String> list);
+	protected abstract void execute(CommandSender sender, String Command, List<String> args);
 }

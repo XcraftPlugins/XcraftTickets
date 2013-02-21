@@ -6,19 +6,19 @@ import me.INemesisI.XcraftTickets.XcraftTickets;
 
 import org.bukkit.command.CommandSender;
 
-public class ReloadCommand extends CommandHelper {
+public class ReloadCommand extends PluginCommand {
 
-	protected ReloadCommand(XcraftTickets instance) {
-		super(instance);
+	protected ReloadCommand(XcraftTickets instance, String permnode) {
+		super(instance, permnode);
 	}
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
 		this.init(sender);
 
-		plugin.configHandler.load();
+		plugin.configManager.load();
 
-		reply("wurde erfolgreich neu geladen");
-		plugin.log.info(plugin.getDescription().getName() + "reloaded!");
+		this.reply("wurde erfolgreich neu geladen");
+		plugin.log.info(plugin.getDescription().getName() + " reloaded!");
 	}
 }

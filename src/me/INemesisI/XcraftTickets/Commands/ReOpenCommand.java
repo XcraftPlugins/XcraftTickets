@@ -9,36 +9,39 @@ import me.INemesisI.XcraftTickets.XcraftTickets;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class ReOpenCommand extends CommandHelper {
+public class ReOpenCommand extends PluginCommand {
 
-	protected ReOpenCommand(XcraftTickets instance) {
-		super(instance);
+	protected ReOpenCommand(XcraftTickets instance, String permnode) {
+		super(instance, permnode);
 	}
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
 		this.init(sender);
 
-		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr> <Nachricht>)");
+		if ((list.size() < 1) || !list.get(0).matches("\\d*")) {
+			this.error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr> <Nachricht>)");
 			return;
 		}
 		if (list.size() < 2) {
-			error("Du hast keine Nachricht eingeben! " + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr> <Nachricht>)");
+			this.error("Du hast keine Nachricht eingeben! " + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr> <Nachricht>)");
 			return;
 		}
 		int id = Integer.parseInt(list.get(0));
-		Ticket ticket = th.getArchivedTicket(id);
+		Ticket ticket = this.getTM().getArchivedTicket(id);
 		if (ticket == null) {
-			error("Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+			this.error("Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return;
 		}
 		String message = list.subList(1, list.size()).toString().replace(",", "").replace("[", "").replace("]", "");
-		th.addTicket(ticket);
-		ticket.log.add(new Log(th.getCurrentDate(), getName(), Log.Type.REOPEN, message));
-		ticket.watched.add(getName());
-		sendToPlayer(ticket.owner,
-				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde wieder eröffnet: " + ChatColor.AQUA + message);
-		sendToMods(ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde wieder eröffnet: " + ChatColor.AQUA + message);
+		this.getTM().addTicket(ticket);
+		ticket.getLog().add(new Log(this.getTM().getCurrentDate(), this.getName(), Log.Type.REOPEN, message));
+		ticket.getWatched().add(this.getName());
+		this.sendToPlayer(
+				ticket.getOwner(),
+				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName() + ChatColor.GRAY + " wieder eröffnet: " + ChatColor.AQUA + message);
+		this.sendToMods(
+				ticket.getOwner(),
+				ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName() + ChatColor.GRAY + " wieder eröffnet: " + ChatColor.AQUA + message);
 	}
 }

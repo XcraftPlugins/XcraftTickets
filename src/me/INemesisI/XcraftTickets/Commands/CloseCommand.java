@@ -8,48 +8,45 @@ import me.INemesisI.XcraftTickets.XcraftTickets;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class CloseCommand extends CommandHelper {
+public class CloseCommand extends PluginCommand {
 
-	protected CloseCommand(XcraftTickets instance) {
-		super(instance);
+	protected CloseCommand(XcraftTickets instance, String permnode) {
+		super(instance, permnode);
 	}
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
 		this.init(sender);
 
-		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr> <Nachricht>)");
+		if ((list.size() < 1) || !list.get(0).matches("\\d*")) {
+			this.error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr> <Nachricht>)");
 			return;
 		}
 		if (list.size() < 2) {
-			error("Du hast keine Nachricht eingeben! " + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr> <Nachricht>)");
+			this.error("Du hast keine Nachricht eingeben! " + "\n" + ChatColor.GRAY + "(/ticket " + Command + " <Nr> <Nachricht>)");
 			return;
 		}
 		int id = Integer.parseInt(list.get(0));
-		Ticket ticket = th.getTicket(id);
+		Ticket ticket = this.getTM().getTicket(id);
 		if (ticket == null) {
-			error("Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+			this.error("Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return;
 		}
-		if (!ticket.owner.equals(getName()) && !senderHasPermission("Close.All")) {
-			error("Du hast keine Rechte dieses Ticket schliessen! (Nr: " + id + ")");
+		if (!ticket.getOwner().equals(this.getName()) && !this.senderHasPermission("Close.All")) {
+			this.error("Du hast keine Rechte dieses Ticket schliessen! (Nr: " + id + ")");
 			return;
 		}
 		String message = list.subList(1, list.size()).toString().replace(",", "").replace("[", "").replace("]", "");
-		ticket.log.add(new Log(th.getCurrentDate(), getName(), Log.Type.CLOSE, message));
-		th.setTicketArchived(ticket);
-		sendToMods(ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde geschlossen: " + ChatColor.AQUA + message);
-		sendToPlayer(ticket.owner,
-				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde geschlossen: " + ChatColor.AQUA + message);
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			if (player.getName().equals(ticket.owner)) {
-				return;
-			}
-		}
-		plugin.configHandler.addReminder(ticket.owner, id);
+		ticket.getLog().add(new Log(this.getTM().getCurrentDate(), this.getName(), Log.Type.CLOSE, message));
+		this.getTM().setTicketArchived(ticket);
+		this.sendToMods(
+				ticket.getOwner(),
+				ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName() + ChatColor.GRAY + " geschlossen: " + ChatColor.AQUA + message);
+		this.sendToPlayer(
+				ticket.getOwner(),
+				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName() + ChatColor.GRAY + " geschlossen: " + ChatColor.AQUA + message);
+		plugin.configManager.addReminder(ticket.getOwner(), id);
 	}
 
 }

@@ -4,16 +4,16 @@ main: me.INemesisI.XcraftTickets.XcraftTickets
 
 version: 1.1
 
+load: POSTWORLD
+
 commands:
   ticket:
-    usage:
-  pe:
-    usage:
-  t:
+    aliases: t
+  tl:
     usage:
     
 permissions:
-    XcraftTicket.Admin:
+    XcraftTickets.Admin:
         description: Access to all /ticket commands this plugin provides
         children:
             XcraftTickets.Mod: true

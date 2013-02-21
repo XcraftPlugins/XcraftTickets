@@ -6,18 +6,20 @@ import java.util.List;
 import org.bukkit.Location;
 
 public class Ticket {
-	public int id;
-	public String owner;
-	public String assignee;
-	public Location loc;
-	public List<String> watched = new ArrayList<String>();
-	public List<Log> log = new ArrayList<Log>();
+	private int id;
+	private String owner;
+	private String assignee;
+	private Location loc;
+	private String world;
+	private List<String> watched = new ArrayList<String>();
+	private List<Log> log = new ArrayList<Log>();
 
-	public Ticket(int id, String assignee, Location loc, List<String> watched, List<Log> log) {
+	public Ticket(int id, String assignee, Location loc, String world, List<String> watched, List<Log> log) {
 		this.id = id;
-		this.owner = log.get(0).player;
+		owner = log.get(0).player;
 		this.assignee = assignee;
 		this.loc = loc;
+		this.world = world;
 		this.watched = watched;
 		this.log = log;
 	}
@@ -26,7 +28,64 @@ public class Ticket {
 		this.id = id;
 		this.owner = owner;
 		this.loc = loc;
+		this.world = loc.getWorld().getName();
 		this.watched = new ArrayList<String>();
 		this.log.add(log);
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	public String getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(String assignee) {
+		this.assignee = assignee;
+	}
+
+	public Location getLoc() {
+		return loc;
+	}
+
+	public void setLoc(Location loc) {
+		this.loc = loc;
+	}
+
+	public String getWorld() {
+		return world;
+	}
+
+	public void setWorld(String world) {
+		this.world = world;
+	}
+
+	public List<String> getWatched() {
+		return watched;
+	}
+
+	public void setWatched(List<String> watched) {
+		this.watched = watched;
+	}
+
+	public List<Log> getLog() {
+		return log;
+	}
+
+	public void setLog(List<Log> log) {
+		this.log = log;
 	}
 }

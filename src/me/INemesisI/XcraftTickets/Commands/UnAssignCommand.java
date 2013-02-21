@@ -8,30 +8,35 @@ import me.INemesisI.XcraftTickets.XcraftTickets;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-public class UnAssignCommand extends CommandHelper {
+public class UnAssignCommand extends PluginCommand {
 
-	protected UnAssignCommand(XcraftTickets instance) {
-		super(instance);
+	protected UnAssignCommand(XcraftTickets instance, String permnode) {
+		super(instance, permnode);
 	}
 
 	@Override
 	protected void execute(CommandSender sender, String Command, List<String> list) {
 		this.init(sender);
 
-		if (list.size() < 1 || !list.get(0).matches("\\d*")) {
-			error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/" + Command + list.get(0) + " <Nr> )");
+		if ((list.size() < 1) || !list.get(0).matches("\\d*")) {
+			this.error("Du hast keine Ticketnummer angegeben" + "\n" + ChatColor.GRAY + "(/" + Command + list.get(0) + " <Nr> )");
 			return;
 		}
-		Ticket ticket = th.getTicket(Integer.parseInt(list.get(0)));
+		Ticket ticket = this.getTM().getTicket(Integer.parseInt(list.get(0)));
 		if (ticket == null) {
-			error("Ein Ticket mit der Nummer " + ChatColor.GOLD + Integer.parseInt(list.get(0)) + ChatColor.RED + " konnte nicht gefunden werden");
+			this.error("Ein Ticket mit der Nummer " + ChatColor.GOLD + Integer.parseInt(list.get(0)) + ChatColor.RED + " konnte nicht gefunden werden");
 			return;
 		}
-		ticket.assignee = null;
-		ticket.watched.clear();
-		ticket.watched.add(getName());
-		sendToPlayer(ticket.owner,
-				ChatColor.GRAY + "Die Zuweisung für dein Ticket " + ChatColor.GOLD + "#" + ticket.id + ChatColor.GRAY + " wurde entfernt!");
-		sendToMods(ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#" + ticket.id + ChatColor.GRAY + " wurde entfernt!");
+		ticket.setAssignee(null);
+		ticket.getWatched().clear();
+		ticket.getWatched().add(this.getName());
+		this.sendToPlayer(
+				ticket.getOwner(),
+				ChatColor.GRAY + "Die Zuweisung für dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender
+						.getName() + ChatColor.GRAY + " entfernt!");
+		this.sendToMods(
+				ticket.getOwner(),
+				ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender
+						.getName() + ChatColor.GRAY + " entfernt!");
 	}
 }
