@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import me.INemesisI.XcraftTickets.Commands.CommandManager;
+import me.INemesisI.XcraftTickets.Manager.CommandManager;
 import me.INemesisI.XcraftTickets.Manager.ConfigManager;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
 import net.milkbowl.vault.permission.Permission;
@@ -12,6 +12,16 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+/***
+ * @author INemesisI
+ *        _____   __                         _      ____
+ *       /  _/ | / /__  ____ ___  ___  _____(_)____/  _/
+ *       / //  |/ / _ \/ __ `__ \/ _ \/ ___/ / ___// /  
+ *     _/ // /|  /  __/ / / / / /  __(__  ) (__  )/ /   
+ *    /___/_/ |_/\___/_/ /_/ /_/\___/____/_/____/___/   
+ *                                                      
+ */
 
 public class XcraftTickets extends JavaPlugin {
 

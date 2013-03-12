@@ -11,6 +11,7 @@ import java.util.Map;
 import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
 import me.INemesisI.XcraftTickets.XcraftTickets;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -50,14 +51,14 @@ public class TicketManager {
 		if (player.hasPermission(plugin.getDescription().getName() + "." + "Mod")) {
 			int x = 0;
 			for (Ticket ticket : tickets) {
-				if (!ticket.getWatched().contains(player))
+				if (!ticket.hasWatched(player.getName()))
 					x++;
 			}
 			player.sendMessage(plugin.getCName() + "Du hast noch " + ChatColor.YELLOW + x + plugin.getChatColor()
 					+ " ungelesene Tickets offen!");
 		} else {
 			for (Ticket ticket : tickets) {
-				if (ticket.getOwner().equals(player.getName()) && !ticket.getWatched().contains(player)) {
+				if (ticket.getOwner().equals(player.getName()) && !ticket.hasWatched(player.getName())) {
 					player.sendMessage(plugin.getCName() + "Du hast noch ungelesene Nachrichten in deinem Ticket "
 							+ ChatColor.GOLD + "#" + ticket.getId());
 				}
@@ -75,12 +76,12 @@ public class TicketManager {
 		}
 		for (Ticket ticket : tickets) {
 			OfflinePlayer owner = server.getOfflinePlayer(ticket.getOwner());
-			if (owner.isOnline() && !ticket.getWatched().contains(ticket.getOwner())) {
+			if (owner.isOnline() && !ticket.hasWatched(ticket.getOwner())) {
 				Player player = (Player) owner;
 				player.sendMessage(plugin.getCName() + "Du hast noch ungelesene Nachrichten in deinem Ticket "
 						+ ChatColor.GOLD + "#" + ticket.getId());
 				for (Player mod : mods.keySet()) {
-					if (!ticket.getWatched().contains(mod.getName())) {
+					if (!ticket.hasWatched(mod.getName())) {
 						mods.put(mod, mods.get(mod) + 1);
 					}
 				}
@@ -133,6 +134,26 @@ public class TicketManager {
 	public void deleteTicket(Ticket ticket) {
 		tickets.remove(ticket);
 		plugin.configManager.deleteTicket(ticket);
+	}
+
+	public String getTicketInfo(Ticket ticket) {
+		String assignee = "";
+		if (ticket.getAssignee() != null) {
+			assignee = ChatColor.LIGHT_PURPLE + "->" + ChatColor.DARK_PURPLE + ticket.getAssignee();
+		}
+		String id = ChatColor.GOLD + "#" + ticket.getId();
+		String marker = null;
+		if (plugin.getServer().getOfflinePlayer(ticket.getOwner()).isOnline()) {
+			marker = ChatColor.DARK_GREEN + "+";
+		} else {
+			marker = ChatColor.DARK_RED + "-";
+		}
+		String date = ChatColor.DARK_GRAY + ticket.getLog().get(0).date;
+		String name = ChatColor.WHITE + ticket.getOwner();
+		String text = ChatColor.GRAY + ticket.getLog().get(0).message;
+
+		return id + " " + date + " " + marker + name + assignee + ": " + text;
+
 	}
 
 	public String getCurrentDate() {

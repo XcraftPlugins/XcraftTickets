@@ -33,6 +33,26 @@ public class Ticket {
 		this.log.add(log);
 	}
 
+	public boolean hasWatched(String player) {
+		return watched.contains(player);
+	}
+
+	public void clearWatched() {
+		watched.clear();
+	}
+
+	public boolean addToWatched(String player) {
+		if (!watched.contains(player)) {
+			watched.add(player);
+			return true;
+		}
+		return false;
+	}
+
+	public List<String> getWatched() {
+		return watched;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -71,14 +91,6 @@ public class Ticket {
 
 	public void setWorld(String world) {
 		this.world = world;
-	}
-
-	public List<String> getWatched() {
-		return watched;
-	}
-
-	public void setWatched(List<String> watched) {
-		this.watched = watched;
 	}
 
 	public List<Log> getLog() {

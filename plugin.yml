@@ -2,7 +2,7 @@ name: XcraftTickets
 
 main: me.INemesisI.XcraftTickets.XcraftTickets
 
-version: 1.1
+version: 1.2
 
 load: POSTWORLD
 
@@ -45,7 +45,7 @@ permissions:
             XcraftTickets.View: true
             XcraftTickets.Log: true
             XcraftTickets.Undo: true
-            XcraftTickets.SetWarp: true
+            XcraftTickets.Setwarp: true
         default: true
         
     XcraftTickets.Save:
@@ -85,7 +85,7 @@ permissions:
         
     XcraftTickets.Warp:
         description: Access to /ticket warp
-    XcraftTickets.SetWarp:
+    XcraftTickets.Setwarp:
         description: Access to /ticket setwarp
         
     XcraftTickets.Assign:
