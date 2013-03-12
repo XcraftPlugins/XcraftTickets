@@ -1,7 +1,6 @@
 package me.INemesisI.XcraftTickets.Commands.User;
 
 import me.INemesisI.XcraftTickets.Ticket;
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -16,10 +15,6 @@ import org.bukkit.command.CommandSender;
 		usage = "/ticket view <#>",
 		desc = "Zeigt alle Informationen eines Tickets")
 public class ViewCommand extends Command {
-
-	protected ViewCommand(XcraftTickets instance) {
-		super(instance);
-	}
 
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
@@ -46,7 +41,7 @@ public class ViewCommand extends Command {
 			sender.sendMessage(ticket.getLog().get(i).format());
 		}
 		ticket.addToWatched(this.getName(sender));
-		plugin.configManager.removeReminder(ticket.getOwner(), ticket.getId());
+		manager.getPlugin().configManager.removeReminder(ticket.getOwner(), ticket.getId());
 		return true;
 	}
 }

@@ -21,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *       / //  |/ / _ \/ __ `__ \/ _ \/ ___/ / ___// /  
  *     _/ // /|  /  __/ / / / / /  __(__  ) (__  )/ /   
  *    /___/_/ |_/\___/_/ /_/ /_/\___/____/_/____/___/                                              
- */
+ */ 
 //@formatter:on
 
 public class XcraftTickets extends JavaPlugin {

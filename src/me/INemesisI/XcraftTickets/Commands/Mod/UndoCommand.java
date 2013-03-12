@@ -2,7 +2,6 @@ package me.INemesisI.XcraftTickets.Commands.Mod;
 
 import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -17,10 +16,6 @@ import org.bukkit.command.CommandSender;
 		usage = "/ticket unassign <#>",
 		desc = "Entfernt die Weiterleitung eines Tickets wieder")
 public class UndoCommand extends Command {
-
-	protected UndoCommand(XcraftTickets instance) {
-		super(instance);
-	}
 
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {

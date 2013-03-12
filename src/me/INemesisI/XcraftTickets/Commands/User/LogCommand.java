@@ -2,7 +2,6 @@ package me.INemesisI.XcraftTickets.Commands.User;
 
 import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -18,10 +17,6 @@ import org.bukkit.entity.Player;
 		usage = "/ticket log <#> <Nachricht>",
 		desc = "Kommentiert ein Ticket mit der angegebenen Nummer und der Nachricht")
 public class LogCommand extends Command {
-
-	protected LogCommand(XcraftTickets instance) {
-		super(instance);
-	}
 
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
@@ -52,16 +47,16 @@ public class LogCommand extends Command {
 		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.COMMENT, message));
 		ticket.clearWatched();
 		ticket.addToWatched(this.getName(sender));
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
+		for (Player player : manager.getPlugin().getServer().getOnlinePlayers()) {
 			if (!player.equals(this.getName(sender))
-					&& player.hasPermission(plugin.getDescription().getName() + "." + "Mod")) {
+					&& player.hasPermission(manager.getPlugin().getDescription().getName() + "." + "Mod")) {
 				ticket.addToWatched(player.getName());
 			}
 		}
-		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId()
 				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " kommentiert: " + ChatColor.AQUA + message);
-		this.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+		manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
 				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " kommentiert: \n" + ChatColor.AQUA + message + ChatColor.GRAY
 				+ "\n Nutze bitte /ticket log <nr> <nachricht> um darauf zu antworten!");

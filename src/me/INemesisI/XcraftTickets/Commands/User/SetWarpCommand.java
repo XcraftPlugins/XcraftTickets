@@ -2,7 +2,6 @@ package me.INemesisI.XcraftTickets.Commands.User;
 
 import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -19,10 +18,6 @@ import org.bukkit.entity.Player;
 		usage = "/ticket setwarp<#>",
 		desc = "Ändert den Ort, an dem das Ticket erstellt wurde ab")
 public class SetWarpCommand extends Command {
-
-	protected SetWarpCommand(XcraftTickets instance) {
-		super(instance);
-	}
 
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {

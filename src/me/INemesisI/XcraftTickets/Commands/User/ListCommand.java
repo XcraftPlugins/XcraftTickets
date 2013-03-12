@@ -1,7 +1,6 @@
 package me.INemesisI.XcraftTickets.Commands.User;
 
 import me.INemesisI.XcraftTickets.Ticket;
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -19,10 +18,6 @@ import org.bukkit.entity.Player;
 		desc = "Listet alle deine Tickets auf")
 public class ListCommand extends Command {
 
-	protected ListCommand(XcraftTickets instance) {
-		super(instance);
-	}
-
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
 		int counter = -1;
@@ -37,10 +32,10 @@ public class ListCommand extends Command {
 				// ticket is assigned to the player
 			|| (((ticket.getAssignee() != null) && ticket.getAssignee().equals(this.getName(sender)))
 				// or assignee is a group and player is in group
-			|| plugin.getPermission().playerInGroup((Player) sender, ticket.getAssignee()))) {
+			|| manager.getPlugin().getPermission().playerInGroup((Player) sender, ticket.getAssignee()))) {
 			//@formatter:on
 				if (counter == -1) {
-					sender.sendMessage(plugin.getCName() + "Ticketliste");
+					sender.sendMessage(manager.getPlugin().getCName() + "Ticketliste");
 				}
 				counter++;
 				int c = ticket.getLog().size() - 1;

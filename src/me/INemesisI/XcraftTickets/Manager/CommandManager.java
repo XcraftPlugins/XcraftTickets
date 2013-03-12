@@ -141,7 +141,6 @@ public class CommandManager implements CommandExecutor {
 		if (info == null) {
 			return;
 		}
-
 		try {
 			commands.put(info.pattern(), cmd.newInstance());
 		} catch (Exception e) {

@@ -2,7 +2,6 @@ package me.INemesisI.XcraftTickets.Commands.User;
 
 import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -17,10 +16,6 @@ import org.bukkit.command.CommandSender;
 		usage = "/ticket reopen <#> <Nachricht>",
 		desc = "�ffne ein geschlossenes Ticket wieder mit der angegebenen Nachricht")
 public class ReOpenCommand extends Command {
-
-	protected ReOpenCommand(XcraftTickets instance) {
-		super(instance);
-	}
 
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
@@ -52,12 +47,12 @@ public class ReOpenCommand extends Command {
 		manager.addTicket(ticket);
 		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.REOPEN, message));
 		ticket.addToWatched(this.getName(sender));
-		this.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id
+		manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id
 				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " wieder eröffnet: " + ChatColor.AQUA + message);
-		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY
-				+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " wieder eröffnet: "
-				+ ChatColor.AQUA + message);
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id
+				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
+				+ " wieder eröffnet: " + ChatColor.AQUA + message);
 		return true;
 	}
 }

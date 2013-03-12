@@ -19,7 +19,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 public class TicketManager {
-	XcraftTickets plugin;
+	private final XcraftTickets plugin;
 	private int nextID;
 	private List<Ticket> tickets = new ArrayList<Ticket>();
 	SimpleDateFormat date = new SimpleDateFormat();
@@ -105,6 +105,23 @@ public class TicketManager {
 		}
 	}
 
+	public void sendToMods(String owner, String message) {
+		for (Player player : plugin.getServer().getOnlinePlayers()) {
+			if (player.hasPermission("XcraftTickets.Mod") && !player.getName().equals(owner)) {
+				player.sendMessage(message);
+			}
+		}
+	}
+
+	public boolean sendToPlayer(String name, String message) {
+		Player player = plugin.getServer().getPlayer(name);
+		if (player != null) {
+			player.sendMessage(message);
+			return true;
+		}
+		return false;
+	}
+
 	public Ticket addTicket(String owner, Location loc, String message) {
 		String cdate = date.format(new Date());
 		Log log = new Log(cdate, owner, Log.Type.OPEN, message);
@@ -167,5 +184,9 @@ public class TicketManager {
 
 	public void setNextID(int nextID) {
 		this.nextID = nextID;
+	}
+
+	public XcraftTickets getPlugin() {
+		return plugin;
 	}
 }

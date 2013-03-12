@@ -1,6 +1,5 @@
 package me.INemesisI.XcraftTickets.Commands.Admin;
 
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -15,17 +14,13 @@ import org.bukkit.command.CommandSender;
 		desc = "Speichert alle nötigen Daten")
 public class SaveCommand extends Command {
 
-	protected SaveCommand(XcraftTickets instance) {
-		super(instance);
-	}
-
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
 
-		plugin.configManager.save();
+		manager.getPlugin().configManager.save();
 
 		this.reply(sender, "Wurde erfolgreich gespeichert!");
-		plugin.log.info(plugin.getDescription().getName() + "saved!");
+		manager.getPlugin().log.info(manager.getPlugin().getDescription().getName() + "saved!");
 		return true;
 	}
 }

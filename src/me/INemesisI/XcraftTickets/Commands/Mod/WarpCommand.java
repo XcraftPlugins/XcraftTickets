@@ -1,7 +1,6 @@
 package me.INemesisI.XcraftTickets.Commands.Mod;
 
 import me.INemesisI.XcraftTickets.Ticket;
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -20,10 +19,6 @@ import org.bukkit.entity.Player;
 		desc = "Teleportiert dich zu dem Ort, an dem das Ticket erstellt wurde!")
 public class WarpCommand extends Command {
 
-	protected WarpCommand(XcraftTickets instance) {
-		super(instance);
-	}
-
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
 		if ((args.length < 1) || !args[0].matches("\\d*")) {
@@ -39,16 +34,16 @@ public class WarpCommand extends Command {
 		}
 		Location loc = ticket.getLoc();
 		if (loc.getWorld() == null) {
-			loc.setWorld(plugin.getServer().createWorld(new WorldCreator(ticket.getWorld())));
+			loc.setWorld(manager.getPlugin().getServer().createWorld(new WorldCreator(ticket.getWorld())));
 		}
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (player != null) {
 				player.teleport(loc);
 				player.performCommand("ticket view " + ticket.getId());
-				this.sendToMods(ticket.getOwner(), ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
+				manager.sendToMods(ticket.getOwner(), ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 						+ " bearbeitet Ticket " + ChatColor.GOLD + "#" + id);
-				this.sendToPlayer(ticket.getOwner(), "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+				manager.sendToPlayer(ticket.getOwner(), "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
 						+ ChatColor.GRAY + " wird von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY
 						+ " bearbeitet!");
 				if (ticket.getAssignee() == null) {

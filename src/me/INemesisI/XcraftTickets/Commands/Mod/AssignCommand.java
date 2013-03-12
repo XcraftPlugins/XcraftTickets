@@ -1,7 +1,6 @@
 package me.INemesisI.XcraftTickets.Commands.Mod;
 
 import me.INemesisI.XcraftTickets.Ticket;
-import me.INemesisI.XcraftTickets.XcraftTickets;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -20,13 +19,9 @@ import org.bukkit.command.CommandSender;
 public class AssignCommand extends Command {
 	private Permission permission;
 
-	protected AssignCommand(XcraftTickets instance) {
-		super(instance);
-	}
-
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
-		permission = plugin.getPermission();
+		permission = manager.getPlugin().getPermission();
 		if ((args.length < 1) || !args[0].matches("\\d*")) {
 			this.error(sender, "Du hast keine Ticketnummer angegeben");
 			return false;
@@ -55,7 +50,7 @@ public class AssignCommand extends Command {
 				return true;
 			}
 		} else { // its not a group!
-			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[1]);
+			OfflinePlayer p = manager.getPlugin().getServer().getOfflinePlayer(args[1]);
 			if (!p.hasPlayedBefore()) {
 				this.error(sender, "Der Spieler " + assignee + " war noch nie auf diesem Server!");
 				return true;
@@ -67,10 +62,10 @@ public class AssignCommand extends Command {
 			}
 		}
 		ticket.setAssignee(assignee);
-		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId()
 				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " an "
 				+ ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
-		this.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+		manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
 				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " an "
 				+ ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
 		return false;
