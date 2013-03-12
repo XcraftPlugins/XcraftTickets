@@ -8,21 +8,21 @@ import java.util.List;
 import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
 import me.INemesisI.XcraftTickets.XcraftTickets;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-
 public class ConfigManager {
 
-	XcraftTickets		plugin;
-	File				folder;
-	File				archive;
-	FileConfiguration	config;
-	File				remFile;
-	FileConfiguration	reminder;
+	XcraftTickets plugin;
+	File folder;
+	File archive;
+	FileConfiguration config;
+	File remFile;
+	FileConfiguration reminder;
 
 	public ConfigManager(XcraftTickets instance) {
 		plugin = instance;
@@ -93,8 +93,8 @@ public class ConfigManager {
 			if (cs != null) {
 				world = cs.getString("world");
 				World w = plugin.getServer().getWorld(world);
-				loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs
-						.getLong("yaw"));
+				loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"),
+						cs.getLong("yaw"));
 			}
 			return new Ticket(id, assignee, loc, world, watched, log);
 		}
@@ -152,9 +152,13 @@ public class ConfigManager {
 		List<String> list = (List<String>) reminder.getList(player);
 		if (list != null) {
 			if ((list.remove(sid) == true)) {
-				if (list.size() == 0) reminder.set(player, null);
+				if (list.size() == 0) {
+					reminder.set(player, null);
+				}
 				return true;
-			} else return false;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}

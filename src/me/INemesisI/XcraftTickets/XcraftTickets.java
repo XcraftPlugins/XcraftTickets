@@ -13,15 +13,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+//@formatter:off
 /***
  * @author INemesisI
- *        _____   __                         _      ____
+ *     by _____   __                         _      ____
  *       /  _/ | / /__  ____ ___  ___  _____(_)____/  _/
  *       / //  |/ / _ \/ __ `__ \/ _ \/ ___/ / ___// /  
  *     _/ // /|  /  __/ / / / / /  __(__  ) (__  )/ /   
- *    /___/_/ |_/\___/_/ /_/ /_/\___/____/_/____/___/   
- *                                                      
+ *    /___/_/ |_/\___/_/ /_/ /_/\___/____/_/____/___/                                              
  */
+//@formatter:on
 
 public class XcraftTickets extends JavaPlugin {
 
@@ -89,7 +90,7 @@ public class XcraftTickets extends JavaPlugin {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				ticketManager.informPlayers(getServer());
+				ticketManager.informPlayers(XcraftTickets.this.getServer());
 				configManager.save();
 			}
 		};

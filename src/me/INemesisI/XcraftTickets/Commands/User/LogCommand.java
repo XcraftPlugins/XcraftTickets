@@ -46,25 +46,23 @@ public class LogCommand extends Command {
 			return true;
 		}
 		String message = "";
-		for (String m : args)
+		for (String m : args) {
 			message += " " + m;
+		}
 		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.COMMENT, message));
 		ticket.clearWatched();
-		ticket.addToWatched(getName(sender));
+		ticket.addToWatched(this.getName(sender));
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
 			if (!player.equals(this.getName(sender))
 					&& player.hasPermission(plugin.getDescription().getName() + "." + "Mod")) {
 				ticket.addToWatched(player.getName());
 			}
 		}
-		this.sendToMods(ticket.getOwner(),
-				ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this
-.getName(sender) + ChatColor.GRAY
+		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " kommentiert: " + ChatColor.AQUA + message);
-		this.sendToPlayer(
-				ticket.getOwner(),
-				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this
-.getName(sender) + ChatColor.GRAY
+		this.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " kommentiert: \n" + ChatColor.AQUA + message + ChatColor.GRAY
 				+ "\n Nutze bitte /ticket log <nr> <nachricht> um darauf zu antworten!");
 		return false;

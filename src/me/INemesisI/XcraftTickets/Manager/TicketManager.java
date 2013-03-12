@@ -51,8 +51,9 @@ public class TicketManager {
 		if (player.hasPermission(plugin.getDescription().getName() + "." + "Mod")) {
 			int x = 0;
 			for (Ticket ticket : tickets) {
-				if (!ticket.hasWatched(player.getName()))
+				if (!ticket.hasWatched(player.getName())) {
 					x++;
+				}
 			}
 			player.sendMessage(plugin.getCName() + "Du hast noch " + ChatColor.YELLOW + x + plugin.getChatColor()
 					+ " ungelesene Tickets offen!");

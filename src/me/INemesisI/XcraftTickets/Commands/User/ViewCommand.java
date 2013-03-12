@@ -45,7 +45,7 @@ public class ViewCommand extends Command {
 		for (int i = 0; i < ticket.getLog().size(); i++) {
 			sender.sendMessage(ticket.getLog().get(i).format());
 		}
-		ticket.addToWatched(getName(sender));
+		ticket.addToWatched(this.getName(sender));
 		plugin.configManager.removeReminder(ticket.getOwner(), ticket.getId());
 		return true;
 	}

@@ -45,18 +45,15 @@ public class CloseCommand extends Command {
 			return true;
 		}
 		String message = "";
-		for (String m : args)
+		for (String m : args) {
 			message += " " + m;
+		}
 		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.CLOSE, message));
 		manager.setTicketArchived(ticket);
-		this.sendToMods(
-				ticket.getOwner(),
- ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY
+		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY
 				+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " geschlossen: "
 				+ ChatColor.AQUA + message);
-		this.sendToPlayer(
-				ticket.getOwner(),
- ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id
+		this.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id
 				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " geschlossen: " + ChatColor.AQUA + message);
 		plugin.configManager.addReminder(ticket.getOwner(), id);

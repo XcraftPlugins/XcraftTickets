@@ -28,8 +28,8 @@ public class Ticket {
 		this.id = id;
 		this.owner = owner;
 		this.loc = loc;
-		this.world = loc.getWorld().getName();
-		this.watched = new ArrayList<String>();
+		world = loc.getWorld().getName();
+		watched = new ArrayList<String>();
 		this.log.add(log);
 	}
 

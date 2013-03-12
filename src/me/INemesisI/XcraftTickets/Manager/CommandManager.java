@@ -138,8 +138,9 @@ public class CommandManager implements CommandExecutor {
 
 	private void register(Class<? extends Command> cmd) {
 		CommandInfo info = this.getCommandInfo(cmd);
-		if (info == null)
+		if (info == null) {
 			return;
+		}
 
 		try {
 			commands.put(info.pattern(), cmd.newInstance());

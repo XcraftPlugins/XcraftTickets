@@ -36,16 +36,14 @@ public class UnAssignCommand extends Command {
 		}
 		ticket.setAssignee(null);
 		ticket.clearWatched();
-		ticket.addToWatched(getName(sender));
-		this.sendToPlayer(
-				ticket.getOwner(), //
- ChatColor.GRAY + "Die Zuweisung fuer dein Ticket " + ChatColor.GOLD + "#"
-				+ ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender
-						.getName() + ChatColor.GRAY + " entfernt!");
-		this.sendToMods(
-				ticket.getOwner(),
-				ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender
-						.getName() + ChatColor.GRAY + " entfernt!");
+		ticket.addToWatched(this.getName(sender));
+		this.sendToPlayer(ticket.getOwner(), //
+				ChatColor.GRAY + "Die Zuweisung fuer dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+						+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY
+						+ " entfernt!");
+		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#"
+				+ ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName()
+				+ ChatColor.GRAY + " entfernt!");
 		return false;
 	}
 }

@@ -45,20 +45,17 @@ public class ReOpenCommand extends Command {
 			return true;
 		}
 		String message = "";
-		for (String m : args)
+		for (String m : args) {
 			message += " " + m;
+		}
 
 		manager.addTicket(ticket);
 		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.REOPEN, message));
 		ticket.addToWatched(this.getName(sender));
-		this.sendToPlayer(
-				ticket.getOwner(),
- ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id
+		this.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id
 				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " wieder eröffnet: " + ChatColor.AQUA + message);
-		this.sendToMods(
-				ticket.getOwner(),
- ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY
+		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY
 				+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " wieder eröffnet: "
 				+ ChatColor.AQUA + message);
 		return true;

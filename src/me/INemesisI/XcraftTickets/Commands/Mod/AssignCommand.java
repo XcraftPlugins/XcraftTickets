@@ -24,7 +24,6 @@ public class AssignCommand extends Command {
 		super(instance);
 	}
 
-
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
 		permission = plugin.getPermission();
@@ -55,8 +54,7 @@ public class AssignCommand extends Command {
 				this.error(sender, "Die Gruppe " + assignee + " hat nicht die noetigen Rechte!");
 				return true;
 			}
-		}
- else { // its not a group!
+		} else { // its not a group!
 			OfflinePlayer p = plugin.getServer().getOfflinePlayer(args[1]);
 			if (!p.hasPlayedBefore()) {
 				this.error(sender, "Der Spieler " + assignee + " war noch nie auf diesem Server!");
@@ -69,12 +67,12 @@ public class AssignCommand extends Command {
 			}
 		}
 		ticket.setAssignee(assignee);
-		this.sendToMods(ticket.getOwner(),
-				ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender
-						.getName() + ChatColor.GRAY + " an " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
-		this.sendToPlayer(ticket.getOwner(),
-				ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender
-						.getName() + ChatColor.GRAY + " an " + ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
+		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " an "
+				+ ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
+		this.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " an "
+				+ ChatColor.DARK_PURPLE + assignee + ChatColor.GRAY + " zugewiesen!");
 		return false;
 	}
 }

@@ -19,7 +19,6 @@ public class SaveCommand extends Command {
 		super(instance);
 	}
 
-
 	@Override
 	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
 

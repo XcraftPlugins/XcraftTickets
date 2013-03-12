@@ -46,14 +46,11 @@ public class WarpCommand extends Command {
 			if (player != null) {
 				player.teleport(loc);
 				player.performCommand("ticket view " + ticket.getId());
-				this.sendToMods(
-						ticket.getOwner(),
- ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
+				this.sendToMods(ticket.getOwner(), ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 						+ " bearbeitet Ticket " + ChatColor.GOLD + "#" + id);
-				this.sendToPlayer(
-						ticket.getOwner(),
-						"Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wird von " + ChatColor.YELLOW + sender
-								.getName() + ChatColor.GRAY + " bearbeitet!");
+				this.sendToPlayer(ticket.getOwner(), "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
+						+ ChatColor.GRAY + " wird von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY
+						+ " bearbeitet!");
 				if (ticket.getAssignee() == null) {
 					ticket.setAssignee(player.getName());
 				}

@@ -30,8 +30,9 @@ public class OpenCommand extends Command {
 			return false;
 		}
 		String message = "";
-		for (String m : args)
+		for (String m : args) {
 			message += " " + m;
+		}
 		Location loc = null;
 		if (sender instanceof Player) {
 			loc = ((Player) sender).getLocation();
@@ -40,9 +41,8 @@ public class OpenCommand extends Command {
 		ticket.addToWatched(ticket.getOwner());
 		this.reply(sender, "Vielen dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#"
 				+ ticket.getId());
-		this.sendToMods(ticket.getOwner(),
-				ChatColor.GRAY + "Ein Ticket (" + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + ") wurde von " + ChatColor.YELLOW + this
-.getName(sender) + ChatColor.GRAY
+		this.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Ein Ticket (" + ChatColor.GOLD + "#" + ticket.getId()
+				+ ChatColor.GRAY + ") wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " eröffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA + message);
 		return true;
 	}

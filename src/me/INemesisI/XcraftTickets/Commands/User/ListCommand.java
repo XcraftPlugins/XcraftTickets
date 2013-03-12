@@ -51,8 +51,9 @@ public class ListCommand extends Command {
 					comments = ChatColor.DARK_AQUA + "[" + c + "]";
 				}
 				if (c == 0) {
-					if (!ticket.hasWatched(this.getName(sender)))
+					if (!ticket.hasWatched(this.getName(sender))) {
 						ticket.addToWatched(this.getName(sender));
+					}
 				}
 				sender.sendMessage(manager.getTicketInfo(ticket) + " " + comments);
 			}
