@@ -1,0 +1,15 @@
+Next_Ticket_ID: 1
+Assignee:
+- INemesisI
+- Admin
+- Mod
+Phrases:
+  done: Erledigt!
+  thanks: Vielen Dank!
+  gratulation: Herzlichen Glückwunsch!
+  ticket_log: Benutze bitte /ticket log <#> <Nachricht> um auf das Ticket zu antworten!
+  ticket_warp: Benutze bitte /ticket setwarp <#> dort, wo du Hilfe benötigst!
+  region_created: Deine Region wurde gesichert. Viel Spaß beim bauen!
+  region_expanded: Deine Region wurde erweitert. Viel Spaß!
+  assigned_admin: Ein Admin wird sich darum kümmern!
+  assigned_mod: Ein Mod wird sich darum kümmern!
