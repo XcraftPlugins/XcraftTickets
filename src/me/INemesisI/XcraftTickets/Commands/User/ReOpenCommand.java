@@ -35,8 +35,8 @@ public class ReOpenCommand extends Command {
 					+ " konnte nicht gefunden werden");
 			return true;
 		}
-		if (!ticket.getOwner().equals(this.getName(sender)) && sender.hasPermission("XcraftTickets.Close.All")) {
-			this.error(sender, "Du hast keine Rechte dieses Ticket zu schliessen!");
+		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.Reopen.All")) {
+			this.error(sender, "Du hast keine Rechte dieses Ticket wieder zu öffnen!");
 			return true;
 		}
 		String message = "";

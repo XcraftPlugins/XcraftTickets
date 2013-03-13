@@ -46,7 +46,7 @@ public class SetWarpCommand extends Command {
 			ticket.getLog().add(
 					new Log(manager.getCurrentDate(), player.getName(), Log.Type.COMMENT,
 							"Der Warppunkt wurde aktualisiert"));
-			this.reply(sender, "Der Warp für Ticket #" + ticket.getId()
+			this.reply(sender, "Der Warp fuer Ticket #" + ticket.getId()
 					+ " wurde an deine derzeitige Position verlegt!");
 		}
 		return true;

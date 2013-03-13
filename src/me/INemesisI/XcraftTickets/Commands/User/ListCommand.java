@@ -24,7 +24,7 @@ public class ListCommand extends Command {
 			//@formatter:off
 				// tickets from owner
 			if (ticket.getOwner().equals(this.getName(sender))
-			|| (args[0].matches("a.*") && sender.hasPermission("XcraftTickets.Listall"))
+			|| (args.length > 0 && args[0].matches("a.*") && sender.hasPermission("XcraftTickets.Listall"))
 				// player is allowed to see all tickets. except of assigned ones
 			|| (sender.hasPermission("XcraftTickets.View.All") && (ticket.getAssignee() == null))
 				// ticket is assigned to the player

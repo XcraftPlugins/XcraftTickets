@@ -1,5 +1,6 @@
 package me.INemesisI.XcraftTickets.Commands.Mod;
 
+import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
@@ -38,6 +39,8 @@ public class AssignCommand extends Command {
 			this.error(sender, "Das Ticket kann nicht an diese Person/Gruppe weitergeleitet werden!");
 			return true;
 		} else {
+
+			ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.ASSIGN, ""));
 			ticket.setAssignee(args[1]);
 			manager.sendToMods(ticket.getOwner(),
 					ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY

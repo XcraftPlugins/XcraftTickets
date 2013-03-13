@@ -5,11 +5,11 @@ Assignee:
 - Mod
 Phrases:
   done: Erledigt!
-  thanks: Vielen Dank!
+  danke: Vielen Dank!
   gratulation: Herzlichen Glückwunsch!
-  ticket_log: Benutze bitte /ticket log <#> <Nachricht> um auf das Ticket zu antworten!
-  ticket_warp: Benutze bitte /ticket setwarp <#> dort, wo du Hilfe benötigst!
-  region_created: Deine Region wurde gesichert. Viel Spaß beim bauen!
-  region_expanded: Deine Region wurde erweitert. Viel Spaß!
-  assigned_admin: Ein Admin wird sich darum kümmern!
-  assigned_mod: Ein Mod wird sich darum kümmern!
+  log: Benutze bitte /ticket log <#> <Nachricht> um auf das Ticket zu antworten!
+  warp: Benutze bitte /ticket setwarp <#> dort, wo du Hilfe benötigst!
+  gesichert: Deine Region wurde gesichert. Viel Spaß beim bauen!
+  erweitert: Deine Region wurde erweitert. Viel Spaß!
+  admin: Ein Admin wird sich darum kümmern!
+  mod: Ein Mod wird sich darum kümmern!

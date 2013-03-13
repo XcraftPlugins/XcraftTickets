@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 @CommandInfo(name = "log",
 		command = "ticket",
 		pattern = "l|lo.*",
-		permission = "XcraftTickets.log",
+		permission = "XcraftTickets.Log",
 		usage = "<#> <Nachricht>",
 		desc = "Antwortet auf ein Ticket")
 public class LogCommand extends Command {
@@ -35,7 +35,7 @@ public class LogCommand extends Command {
 					+ " konnte nicht gefunden werden");
 			return true;
 		}
-		if (!ticket.getOwner().equals(this.getName(sender)) && sender.hasPermission("XcraftTickets.Log.All")) {
+		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.Log.All")) {
 			this.error(sender, "Du hast keine Rechte dieses Ticket zu kommentieren!");
 			return true;
 		}

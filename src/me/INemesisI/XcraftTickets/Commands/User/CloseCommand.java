@@ -35,7 +35,7 @@ public class CloseCommand extends Command {
 					+ " konnte nicht gefunden werden");
 			return true;
 		}
-		if (!ticket.getOwner().equals(this.getName(sender)) && sender.hasPermission("XcraftTickets.Close.All")) {
+		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.Close.All")) {
 			this.error(sender, "Du hast keine Rechte dieses Ticket zu schliessen!");
 			return true;
 		}
@@ -64,7 +64,7 @@ public class CloseCommand extends Command {
 					ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
 							+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 							+ " geschlossen: \n" + ChatColor.AQUA + message + ChatColor.GRAY
-							+ "\n Nutze bitte /ticket reopen <nr> <nachricht> um es eventuell wieder zu öffnen!");
+							+ "\n Nutze bitte /ticket reopen <nr> <nachricht> um es eventuell wieder zu oeffnen!");
 		}
 		manager.getPlugin().configManager.addReminder(ticket.getOwner(), id);
 		return true;

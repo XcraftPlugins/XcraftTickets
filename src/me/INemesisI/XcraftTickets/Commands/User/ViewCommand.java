@@ -25,9 +25,12 @@ public class ViewCommand extends Command {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
-			return true;
+			ticket = manager.getArchivedTicket(id);
+			if (ticket == null) {
+				this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
+						+ " konnte nicht gefunden werden");
+				return true;
+			}
 		}
 		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.View.All")) {
 			this.error(sender, "Du hast keine Rechte dieses Ticket zu sehen!");

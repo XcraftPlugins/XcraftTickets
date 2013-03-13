@@ -34,11 +34,11 @@ public class OpenCommand extends Command {
 		}
 		Ticket ticket = manager.addTicket(this.getName(sender), loc, message);
 		ticket.addToWatched(ticket.getOwner());
-		this.reply(sender, "Vielen dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#"
+		this.reply(sender, " Vielen Dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#"
 				+ ticket.getId());
 		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Ein Ticket (" + ChatColor.GOLD + "#" + ticket.getId()
 				+ ChatColor.GRAY + ") wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-				+ " eröffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA + message);
+				+ " eroeffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA + message);
 		return true;
 	}
 }

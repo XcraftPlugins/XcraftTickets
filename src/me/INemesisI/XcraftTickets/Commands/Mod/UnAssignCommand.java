@@ -36,7 +36,7 @@ public class UnAssignCommand extends Command {
 				ChatColor.GRAY + "Die Zuweisung fuer dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
 						+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY
 						+ " entfernt!");
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#"
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung fuer Ticket " + ChatColor.GOLD + "#"
 				+ ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName()
 				+ ChatColor.GRAY + " entfernt!");
 		return true;

@@ -9,7 +9,7 @@ public class Log {
 	public Type type;
 
 	public enum Type {
-		OPEN, COMMENT, CLOSE, REOPEN;
+		OPEN, COMMENT, CLOSE, REOPEN, ASSIGN;
 	}
 
 	public Log(String date, String player, Type type, String message) {
@@ -36,8 +36,11 @@ public class Log {
 				return ChatColor.RED + "Geschlossen: " + ChatColor.DARK_GRAY + date + ChatColor.WHITE + " | "
 						+ ChatColor.YELLOW + player + ChatColor.WHITE + ": " + message;
 			case REOPEN :
-				return ChatColor.GREEN + "Geöffnet: " + ChatColor.DARK_GRAY + date + ChatColor.WHITE + " | "
+				return ChatColor.GREEN + "Geoeffnet: " + ChatColor.DARK_GRAY + date + ChatColor.WHITE + " | "
 						+ ChatColor.YELLOW + player + ChatColor.WHITE + ": " + message;
+			case ASSIGN :
+				return ChatColor.GREEN + "Weitergeleitet: " + ChatColor.DARK_GRAY + date + ChatColor.WHITE + " | von "
+						+ ChatColor.YELLOW + player + ChatColor.WHITE + " nach " + message;
 		}
 		return "";
 

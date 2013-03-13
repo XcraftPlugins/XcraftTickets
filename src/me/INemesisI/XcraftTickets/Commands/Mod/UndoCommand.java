@@ -36,7 +36,7 @@ public class UndoCommand extends Command {
 			Log log = ticket.getLog().get(ticket.getLog().size() - 1);
 			if (!log.player.equals(this.getName(sender))) {
 				this.error(sender,
-						"Jemand anders hat die letzte Antwort verfasst. Diese kannst du nicht rückgängig machen");
+						"Jemand anders hat die letzte Antwort verfasst. Diese kannst du nicht ruekgaengig machen");
 			} else {
 				switch (log.type) {
 					case OPEN :
@@ -57,7 +57,12 @@ public class UndoCommand extends Command {
 						ticket.getLog().remove(log);
 						manager.addTicket(ticket);
 						this.reply(sender,
-								"Deine letzte Antwort wurde geloescht und das Ticket wurde wieder geöffnet!");
+								"Deine letzte Antwort wurde geloescht und das Ticket wurde wieder geoeffnet!");
+						return true;
+					case ASSIGN :
+						ticket.getLog().remove(log);
+						ticket.setAssignee(null);
+						this.reply(sender, "Die Zuweisung wurde entfernt!");
 						return true;
 				}
 			}
