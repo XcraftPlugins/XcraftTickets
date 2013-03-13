@@ -176,7 +176,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 							for (Ticket ticket : manager.getTickets()) {
 								if (ticket.getOwner().equals(sender.getName())
 										|| (sender.hasPermission("XcraftTickets.View.All"))) {
-									if (token.equals("") || token.startsWith(String.valueOf(ticket.getId()))) {
+									if (token.equals("") || String.valueOf(ticket.getId()).startsWith(token)) {
 										if (ticket.getAssignee() != null
 												&& (ticket.getAssignee().equals(sender.getName()) || manager
 														.getPlugin().getPermission()
@@ -203,7 +203,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 							}
 						} else if (!usage.contains("<") && !usage.contains(">")) {
 							for (String key : usage.split("\\|")) {
-								list.add(key);
+								if (token.equals("") || key.toLowerCase().startsWith(token))
+									list.add(key);
 							}
 						} else if (usage.equals("")) {
 							for (Player player : manager.getPlugin().getServer().getOnlinePlayers()) {
