@@ -9,6 +9,7 @@ load: POSTWORLD
 commands:
   ticket:
     aliases: t
+  tl:
     
 permissions:
     XcraftTickets.Admin:

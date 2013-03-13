@@ -56,6 +56,7 @@ public class XcraftTickets extends JavaPlugin {
 		commandManager = new CommandManager(ticketManager);
 		this.getCommand("ticket").setExecutor(commandManager);
 		this.getCommand("t").setExecutor(commandManager);
+		this.getCommand("tl").setExecutor(commandManager);
 	}
 
 	private Boolean setupPermissions() {

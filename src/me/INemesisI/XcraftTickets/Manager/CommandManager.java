@@ -46,6 +46,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		// Grab the base and arguments.
 		String cmd = (args.length > 0 ? args[0] : "");
 		String last = (args.length > 0 ? args[args.length - 1] : "");
+		// /tl as shortcut for /ticket list
+		if (bcmd.getName().equals("tl")) {
+			commands.get(getCommandInfo(ListCommand.class).pattern()).execute(manager, sender, args);
+			return true;
+		}
 		// The help command is a little special
 		if (cmd.equals("") || cmd.equals("?") || cmd.equals("help")) {
 			this.showHelp(sender, bcmd.getName());
@@ -88,7 +93,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 			showUsage(sender, command);
 		return true;
 	}
-
 	private List<Command> getMatchingCommands(String cmd, String arg) {
 		List<Command> result = new ArrayList<Command>();
 		// Grab the commands that match the argument.
