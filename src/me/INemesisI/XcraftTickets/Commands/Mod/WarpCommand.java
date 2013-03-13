@@ -49,6 +49,8 @@ public class WarpCommand extends Command {
 				if (ticket.getAssignee() == null) {
 					ticket.setAssignee(player.getName());
 				}
+				// invulnerability for 10 secs
+				player.setNoDamageTicks(200);
 			}
 		} else {
 			this.error(sender, "Wie soll ich den Server teleportieren???!? :)");
