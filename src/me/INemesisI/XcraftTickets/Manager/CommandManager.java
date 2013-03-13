@@ -171,18 +171,21 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					if (usages.length > args.length - 2) {
 						String usage = usages[args.length - 2];
 						String token = args[args.length - 1].toLowerCase();
+
 						if (usage.equals("<#>")) {
 							for (Ticket ticket : manager.getTickets()) {
 								if (ticket.getOwner().equals(sender.getName())
 										|| (sender.hasPermission("XcraftTickets.View.All"))) {
 									if (token.equals("") || token.startsWith(String.valueOf(ticket.getId()))) {
 										if (ticket.getAssignee() != null
-												&& ticket.getAssignee().equals(sender.getName())
-												|| manager.getPlugin().getPermission()
-														.playerInGroup((Player) sender, ticket.getAssignee())) {
+												&& (ticket.getAssignee().equals(sender.getName()) || manager
+														.getPlugin().getPermission()
+														.playerInGroup((Player) sender, ticket.getAssignee()))) {
 											list.add(0, String.valueOf(ticket.getId()));
+											System.out.println("assigned " + ticket.getId());
 										} else {
 											list.add(String.valueOf(ticket.getId()));
+											System.out.println("not assigned " + ticket.getId());
 										}
 									}
 								}
