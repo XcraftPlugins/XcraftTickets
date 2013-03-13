@@ -25,7 +25,7 @@ public class OpenCommand extends Command {
 			return false;
 		}
 		String message = "";
-		for (int i = 1; i < args.length; i++) {
+		for (int i = 0; i < args.length; i++) {
 			message += " " + args[i];
 		}
 		Location loc = null;

@@ -40,7 +40,7 @@ public class AssignCommand extends Command {
 			return true;
 		} else {
 
-			ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.ASSIGN, ""));
+			ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.ASSIGN, args[1]));
 			ticket.setAssignee(args[1]);
 			manager.sendToMods(ticket.getOwner(),
 					ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY

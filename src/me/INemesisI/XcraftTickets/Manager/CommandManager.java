@@ -182,10 +182,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 														.getPlugin().getPermission()
 														.playerInGroup((Player) sender, ticket.getAssignee()))) {
 											list.add(0, String.valueOf(ticket.getId()));
-											System.out.println("assigned " + ticket.getId());
 										} else {
 											list.add(String.valueOf(ticket.getId()));
-											System.out.println("not assigned " + ticket.getId());
 										}
 									}
 								}
@@ -217,7 +215,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 					break;
 				} else if (args.length <= 1 && (args[0].equals("") || info.name().startsWith(args[0]))) {
 					list.add(info.name());
-					System.out.println(info.name());
 				}
 			}
 		}
