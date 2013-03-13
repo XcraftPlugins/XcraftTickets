@@ -123,7 +123,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		commands = new TreeMap<String, Command>();
 		// user Commands
 		this.register(OpenCommand.class);
-
+		this.register(LogCommand.class);
 		this.register(ListCommand.class);
 		this.register(ViewCommand.class);
 		this.register(CloseCommand.class);
@@ -138,8 +138,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		this.register(UnAssignCommand.class);
 		this.register(UndoCommand.class);
 		this.register(PhrasesCommand.class);
-
-		this.register(LogCommand.class);
 	}
 
 	private void register(Class<? extends Command> cmd) {

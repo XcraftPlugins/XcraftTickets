@@ -3,6 +3,7 @@ package me.INemesisI.XcraftTickets.Manager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,7 @@ public class ConfigManager {
 		reminder = YamlConfiguration.loadConfiguration(remFile);
 		// load tickets
 		File[] files = folder.listFiles();
+		Arrays.sort(files);
 		List<Ticket> tickets = new ArrayList<Ticket>();
 		for (File file : files) {
 			Ticket ticket = this.loadTicket(file);
