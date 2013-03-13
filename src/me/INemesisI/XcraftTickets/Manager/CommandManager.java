@@ -2,12 +2,12 @@ package me.INemesisI.XcraftTickets.Manager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
-import me.INemesisI.XcraftTickets.XcraftTickets;
+import me.INemesisI.XcraftTickets.Ticket;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
 import me.INemesisI.XcraftTickets.Commands.Admin.ReloadCommand;
@@ -20,6 +20,7 @@ import me.INemesisI.XcraftTickets.Commands.User.CloseCommand;
 import me.INemesisI.XcraftTickets.Commands.User.ListCommand;
 import me.INemesisI.XcraftTickets.Commands.User.LogCommand;
 import me.INemesisI.XcraftTickets.Commands.User.OpenCommand;
+import me.INemesisI.XcraftTickets.Commands.User.PhrasesCommand;
 import me.INemesisI.XcraftTickets.Commands.User.ReOpenCommand;
 import me.INemesisI.XcraftTickets.Commands.User.SetWarpCommand;
 import me.INemesisI.XcraftTickets.Commands.User.ViewCommand;
@@ -27,16 +28,16 @@ import me.INemesisI.XcraftTickets.Commands.User.ViewCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
-public class CommandManager implements CommandExecutor {
+public class CommandManager implements CommandExecutor, TabCompleter {
 
-	private final XcraftTickets plugin;
 	private final TicketManager manager;
 	private Map<String, Command> commands;
 
-	public CommandManager(XcraftTickets plugin) {
-		this.plugin = plugin;
-		manager = this.plugin.ticketManager;
+	public CommandManager(TicketManager manager) {
+		this.manager = manager;
 		this.registerCommands();
 	}
 
@@ -83,7 +84,8 @@ public class CommandManager implements CommandExecutor {
 		}
 		// Otherwise, execute the command!
 		String[] params = Arrays.copyOfRange(args, 1, args.length);
-		command.execute(manager, sender, params);
+		if (!command.execute(manager, sender, params))
+			showUsage(sender, command);
 		return true;
 	}
 
@@ -99,7 +101,8 @@ public class CommandManager implements CommandExecutor {
 	}
 
 	private void showHelp(CommandSender sender, String cmd) {
-		sender.sendMessage(ChatColor.DARK_AQUA + "Verfügbare Befehle:");
+		sender.sendMessage(ChatColor.GOLD + "Verfügbare Befehle für "
+				+ manager.getPlugin().getDescription().getFullName() + " By INemesisI :");
 		for (Command command : commands.values()) {
 			if (cmd.matches(this.getCommandInfo(command.getClass()).command())) {
 				this.showUsage(sender, command);
@@ -112,28 +115,31 @@ public class CommandManager implements CommandExecutor {
 		if (!sender.hasPermission(info.permission())) {
 			return;
 		}
-		sender.sendMessage(info.usage() + " " + ChatColor.YELLOW + info.desc());
+		sender.sendMessage(ChatColor.DARK_GRAY + "->" + ChatColor.GREEN + "/" + info.command() + " " + info.name()
+				+ " " + info.usage() + " " + ChatColor.DARK_AQUA + "- " + info.desc());
 	}
 
 	private void registerCommands() {
-		commands = new HashMap<String, Command>();
+		commands = new TreeMap<String, Command>();
+		// user Commands
+		this.register(OpenCommand.class);
+
+		this.register(ListCommand.class);
+		this.register(ViewCommand.class);
+		this.register(CloseCommand.class);
+		this.register(ReOpenCommand.class);
+		this.register(SetWarpCommand.class);
 		// Admin Commands
 		this.register(ReloadCommand.class);
 		this.register(SaveCommand.class);
 		// Mod Commands
+		this.register(WarpCommand.class);
 		this.register(AssignCommand.class);
 		this.register(UnAssignCommand.class);
 		this.register(UndoCommand.class);
-		this.register(WarpCommand.class);
-		// user Commands
-		this.register(CloseCommand.class);
-		this.register(ListCommand.class);
-		this.register(LogCommand.class);
-		this.register(OpenCommand.class);
-		this.register(ReOpenCommand.class);
-		this.register(SetWarpCommand.class);
-		this.register(ViewCommand.class);
+		this.register(PhrasesCommand.class);
 
+		this.register(LogCommand.class);
 	}
 
 	private void register(Class<? extends Command> cmd) {
@@ -150,5 +156,66 @@ public class CommandManager implements CommandExecutor {
 
 	public CommandInfo getCommandInfo(Class<? extends Command> cmd) {
 		return cmd.getAnnotation(CommandInfo.class);
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command bcmd, String alias, String[] args) {
+		List<String> list = new ArrayList<String>();
+		for (Command cmd : commands.values()) {
+			CommandInfo info = this.getCommandInfo(cmd.getClass());
+			if (bcmd.getName().matches(info.command()) && sender.hasPermission(info.permission())) {
+				if (args.length > 1 && args[0].matches(info.pattern())) {
+					String[] usages = info.usage().split(" ");
+					if (usages.length > args.length - 2) {
+						String usage = usages[args.length - 2];
+						String token = args[args.length - 1].toLowerCase();
+						if (usage.equals("<#>")) {
+							for (Ticket ticket : manager.getTickets()) {
+								if (ticket.getOwner().equals(sender.getName())
+										|| (sender.hasPermission("XcraftTickets.View.All"))) {
+									if (token.equals("") || token.startsWith(String.valueOf(ticket.getId()))) {
+										if (ticket.getAssignee() != null
+												&& ticket.getAssignee().equals(sender.getName())
+												|| manager.getPlugin().getPermission()
+														.playerInGroup((Player) sender, ticket.getAssignee())) {
+											list.add(0, String.valueOf(ticket.getId()));
+										} else {
+											list.add(String.valueOf(ticket.getId()));
+										}
+									}
+								}
+							}
+						} else if (usage.equals("<Nachricht>")) {
+							Map<String, String> phrases = manager.getPhrases();
+							for (String phrase : phrases.keySet()) {
+								if (phrase.equals("") || phrase.toLowerCase().startsWith(token)) {
+									list.add(phrase);
+								}
+							}
+						} else if (usage.equals("<Name|Gruppe>")) {
+							List<String> assignees = manager.getAssignees();
+							for (String assignee : assignees) {
+								if (token.equals("") || assignee.toLowerCase().startsWith(token))
+									list.add(assignee);
+							}
+						} else if (!usage.contains("<") && !usage.contains(">")) {
+							for (String key : usage.split("\\|")) {
+								list.add(key);
+							}
+						} else if (usage.equals("")) {
+							for (Player player : manager.getPlugin().getServer().getOnlinePlayers()) {
+								if (token.equals("") || player.getName().toLowerCase().startsWith(token))
+									list.add(player.getName());
+							}
+						}
+					}
+					break;
+				} else if (args.length <= 1 && (args[0].equals("") || info.name().startsWith(args[0]))) {
+					list.add(info.name());
+					System.out.println(info.name());
+				}
+			}
+		}
+		return list;
 	}
 }

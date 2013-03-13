@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import me.INemesisI.XcraftTickets.Log;
 import me.INemesisI.XcraftTickets.Ticket;
@@ -28,6 +29,7 @@ public class ConfigManager {
 		plugin = instance;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void load() {
 		// initialization
 		folder = plugin.getDataFolder();
@@ -50,8 +52,14 @@ public class ConfigManager {
 		}
 		plugin.ticketManager.setTickets(tickets);
 		plugin.ticketManager.setNextID(config.getInt("Next_Ticket_ID", 1));
+		List<String> assignees = ((List<String>) config.getList("Assignee"));
+		plugin.ticketManager.setAssignees(assignees);
+		ConfigurationSection cs = config.getConfigurationSection("Phrases");
+		Map<String, String> phrases = plugin.ticketManager.getPhrases();
+		for (String value : cs.getKeys(false)) {
+			phrases.put(value, cs.getString(value));
+		}
 	}
-
 	public void save() {
 		config.set("Next_Ticket_ID", plugin.ticketManager.getNextID());
 		plugin.saveConfig();

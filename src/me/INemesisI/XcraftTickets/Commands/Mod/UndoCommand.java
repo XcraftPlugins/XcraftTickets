@@ -9,12 +9,12 @@ import me.INemesisI.XcraftTickets.Manager.TicketManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-@CommandInfo(name = "Undo",
-		command = "ticket|t",
+@CommandInfo(name = "undo",
+		command = "ticket",
 		pattern = "und.*",
 		permission = "XcraftTickets.Undo",
-		usage = "/ticket unassign <#>",
-		desc = "Entfernt die Weiterleitung eines Tickets wieder")
+		usage = "<#>",
+		desc = "Entfernt die letzte Aktion eines Tickets")
 public class UndoCommand extends Command {
 
 	@Override

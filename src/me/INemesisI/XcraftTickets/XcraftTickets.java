@@ -29,6 +29,7 @@ public class XcraftTickets extends JavaPlugin {
 	private final EventListener eventlistener = new EventListener(this);
 	public ConfigManager configManager;
 	public TicketManager ticketManager;
+	public CommandManager commandManager;
 
 	private Permission permission = null;
 
@@ -42,18 +43,19 @@ public class XcraftTickets extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.getServer().getPluginManager().registerEvents(eventlistener, this);
-		this.registerCommands();
+
 		this.setupPermissions();
 		this.setupHandler();
-		configManager.load();
+		this.registerCommands();
+		this.configManager.load();
 		this.startScheduler();
+		this.getServer().getPluginManager().registerEvents(eventlistener, this);
 	} // End onEnable
 
 	private void registerCommands() {
-		CommandManager commandHandler = new CommandManager(this);
-		this.getCommand("ticket").setExecutor(commandHandler);
-		this.getCommand("t").setExecutor(commandHandler);
+		commandManager = new CommandManager(ticketManager);
+		this.getCommand("ticket").setExecutor(commandManager);
+		this.getCommand("t").setExecutor(commandManager);
 	}
 
 	private Boolean setupPermissions() {

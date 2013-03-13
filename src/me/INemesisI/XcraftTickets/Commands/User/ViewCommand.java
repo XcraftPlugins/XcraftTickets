@@ -8,11 +8,11 @@ import me.INemesisI.XcraftTickets.Manager.TicketManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-@CommandInfo(name = "View",
-		command = "ticket|t",
+@CommandInfo(name = "view",
+		command = "ticket",
 		pattern = "v.*",
 		permission = "XcraftTickets.View",
-		usage = "/ticket view <#>",
+		usage = "<#>",
 		desc = "Zeigt alle Informationen eines Tickets")
 public class ViewCommand extends Command {
 
@@ -23,7 +23,7 @@ public class ViewCommand extends Command {
 			return false;
 		}
 		int id = Integer.parseInt(args[0]);
-		Ticket ticket = manager.getArchivedTicket(id);
+		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
 			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
 					+ " konnte nicht gefunden werden");
@@ -33,7 +33,7 @@ public class ViewCommand extends Command {
 			this.error(sender, "Du hast keine Rechte dieses Ticket zu sehen!");
 			return true;
 		}
-		this.reply(sender, ChatColor.GREEN + "info für Ticket " + ChatColor.GOLD + "#" + ticket.getId());
+		this.reply(sender, ChatColor.GREEN + "info fuer Ticket " + ChatColor.GOLD + "#" + ticket.getId());
 		if (ticket.getAssignee() != null) {
 			sender.sendMessage(ChatColor.GOLD + "Zugewiesen an: " + ChatColor.RED + ticket.getAssignee());
 		}

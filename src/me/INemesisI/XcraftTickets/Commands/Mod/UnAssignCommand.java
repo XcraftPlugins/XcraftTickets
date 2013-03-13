@@ -8,12 +8,12 @@ import me.INemesisI.XcraftTickets.Manager.TicketManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-@CommandInfo(name = "Unassign",
-		command = "ticket|t",
+@CommandInfo(name = "unassign",
+		command = "ticket",
 		pattern = "una.*",
 		permission = "XcraftTickets.Unassign",
-		usage = "/ticket unassign <#>",
-		desc = "Entfernt die Weiterleitung eines Tickets wieder")
+		usage = "<#>",
+		desc = "Entfernt die Weiterleitung")
 public class UnAssignCommand extends Command {
 
 	@Override
@@ -39,6 +39,6 @@ public class UnAssignCommand extends Command {
 		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung für Ticket " + ChatColor.GOLD + "#"
 				+ ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName()
 				+ ChatColor.GRAY + " entfernt!");
-		return false;
+		return true;
 	}
 }

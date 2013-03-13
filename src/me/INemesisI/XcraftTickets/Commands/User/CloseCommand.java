@@ -9,12 +9,12 @@ import me.INemesisI.XcraftTickets.Manager.TicketManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-@CommandInfo(name = "Close",
-		command = "ticket|t",
+@CommandInfo(name = "close",
+		command = "ticket",
 		pattern = "c.*",
 		permission = "XcraftTickets.Close",
-		usage = "/ticket close <#> <Nachricht>",
-		desc = "Schließt ein Ticket mit der angegebenen Nachricht")
+		usage = "<#> <Nachricht>",
+		desc = "Schließt ein Ticket")
 public class CloseCommand extends Command {
 
 	@Override
@@ -40,17 +40,32 @@ public class CloseCommand extends Command {
 			return true;
 		}
 		String message = "";
-		for (String m : args) {
-			message += " " + m;
+		for (int i = 1; i < args.length; i++) {
+			message += " " + args[i];
+		}
+		if (sender.hasPermission("XcraftTickets.Phrases")) {
+			message = message.trim();
+			if (manager.getPhrases().containsKey(message)) {
+				message = manager.getPhrases().get(message);
+			}
 		}
 		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.CLOSE, message));
 		manager.setTicketArchived(ticket);
 		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id
 				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
 				+ " geschlossen: " + ChatColor.AQUA + message);
-		manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id
-				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-				+ " geschlossen: " + ChatColor.AQUA + message);
+		if (getName(sender).equals(ticket.getOwner())) {
+			manager.sendToPlayer(ticket.getOwner(),
+					ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+							+ " wurde von " + ChatColor.YELLOW + "dir" + ChatColor.GRAY + " geschlossen: \n"
+							+ ChatColor.AQUA + message);
+		} else {
+			manager.sendToPlayer(ticket.getOwner(),
+					ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+							+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
+							+ " geschlossen: \n" + ChatColor.AQUA + message + ChatColor.GRAY
+							+ "\n Nutze bitte /ticket reopen <nr> <nachricht> um es eventuell wieder zu öffnen!");
+		}
 		manager.getPlugin().configManager.addReminder(ticket.getOwner(), id);
 		return true;
 	}

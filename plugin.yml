@@ -9,8 +9,6 @@ load: POSTWORLD
 commands:
   ticket:
     aliases: t
-  tl:
-    usage:
     
 permissions:
     XcraftTickets.Admin:
@@ -33,6 +31,7 @@ permissions:
             XcraftTickets.Log.All: true
             XcraftTickets.Close.All: true
             XcraftTickets.Reopen.All: true
+            XcraftTickets.Phrases: true
         default: false
         
     XcraftTickets.User:
@@ -92,5 +91,8 @@ permissions:
         description: Access to /ticket assign
     XcraftTickets.Unassign:
         description: Access to /ticket unassign
+        
+    XcraftTickets.Phrases:
+        description: Access to predefined phrases
     
     

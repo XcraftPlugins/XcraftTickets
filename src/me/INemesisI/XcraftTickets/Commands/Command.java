@@ -11,7 +11,7 @@ public abstract class Command {
 	public abstract boolean execute(TicketManager manager, CommandSender sender, String[] args);
 
 	protected void reply(CommandSender sender, String message) {
-		sender.sendMessage(ChatColor.GRAY + "[XcraftTickets ]" + ChatColor.DARK_AQUA + message);
+		sender.sendMessage(ChatColor.GRAY + "[XcraftTickets] " + ChatColor.DARK_AQUA + message);
 	}
 
 	protected void error(CommandSender sender, String message) {

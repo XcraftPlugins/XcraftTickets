@@ -11,12 +11,12 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(name = "SetWarp",
-		command = "ticket|t",
+@CommandInfo(name = "setwarp",
+		command = "ticket",
 		pattern = "setw.*|sw",
 		permission = "XcraftTickets.Setwarp",
-		usage = "/ticket setwarp<#>",
-		desc = "Ändert den Ort, an dem das Ticket erstellt wurde ab")
+		usage = "<#>",
+		desc = "Ändert den Teleport des Tickets")
 public class SetWarpCommand extends Command {
 
 	@Override
@@ -26,7 +26,7 @@ public class SetWarpCommand extends Command {
 			return false;
 		}
 		int id = Integer.parseInt(args[0]);
-		Ticket ticket = manager.getArchivedTicket(id);
+		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
 			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
 					+ " konnte nicht gefunden werden");

@@ -11,12 +11,12 @@ import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(name = "Warp",
-		command = "ticket|t",
+@CommandInfo(name = "warp",
+		command = "ticket",
 		pattern = "w.*",
 		permission = "XcraftTickets.Warp",
-		usage = "/ticket warp <#>",
-		desc = "Teleportiert dich zu dem Ort, an dem das Ticket erstellt wurde!")
+		usage = "<#>",
+		desc = "Teleportiert dich zum Ticket!")
 public class WarpCommand extends Command {
 
 	@Override
@@ -53,6 +53,6 @@ public class WarpCommand extends Command {
 		} else {
 			this.error(sender, "Wie soll ich den Server teleportieren???!? :)");
 		}
-		return false;
+		return true;
 	}
 }

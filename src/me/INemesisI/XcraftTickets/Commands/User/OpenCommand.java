@@ -10,12 +10,12 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(name = "Open",
-		command = "ticket|t",
+@CommandInfo(name = "open",
+		command = "ticket",
 		pattern = "o.*",
 		permission = "XcraftTickets.Open",
-		usage = "/ticket open <Nachricht>",
-		desc = "Öffnet ein neues Ticket mit der angegebenen Bitte")
+		usage = "<Nachricht>",
+		desc = "Öffnet ein neues Ticket")
 public class OpenCommand extends Command {
 
 	@Override
@@ -25,8 +25,8 @@ public class OpenCommand extends Command {
 			return false;
 		}
 		String message = "";
-		for (String m : args) {
-			message += " " + m;
+		for (int i = 1; i < args.length; i++) {
+			message += " " + args[i];
 		}
 		Location loc = null;
 		if (sender instanceof Player) {

@@ -7,14 +7,13 @@ import me.INemesisI.XcraftTickets.Manager.TicketManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(name = "List",
-		command = "ticket|t",
+@CommandInfo(name = "list",
+		command = "ticket",
 		pattern = "li.*",
 		permission = "XcraftTickets.List",
-		usage = "/ticket list",
+		usage = "",
 		desc = "Listet alle deine Tickets auf")
 public class ListCommand extends Command {
 
@@ -25,8 +24,7 @@ public class ListCommand extends Command {
 			//@formatter:off
 				// tickets from owner
 			if (ticket.getOwner().equals(this.getName(sender))
-				// Command executed from console
-			|| (sender instanceof ConsoleCommandSender)
+			|| (args[0].matches("a.*") && sender.hasPermission("XcraftTickets.Listall"))
 				// player is allowed to see all tickets. except of assigned ones
 			|| (sender.hasPermission("XcraftTickets.View.All") && (ticket.getAssignee() == null))
 				// ticket is assigned to the player

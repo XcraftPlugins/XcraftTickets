@@ -7,11 +7,11 @@ import me.INemesisI.XcraftTickets.Manager.TicketManager;
 import org.bukkit.command.CommandSender;
 
 @CommandInfo(name = "reload",
-		command = "ticket|t",
+		command = "ticket",
 		pattern = "rel.*",
 		permission = "XcraftTickets.Reload",
-		usage = "/ticket reload",
-		desc = "Lädt alle Tickets aus den zuletzt gespeicherten Daten")
+		usage = "",
+		desc = "Lädt alle Daten neu")
 public class ReloadCommand extends Command {
 
 	@Override

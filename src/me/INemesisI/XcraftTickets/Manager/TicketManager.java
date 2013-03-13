@@ -22,7 +22,9 @@ public class TicketManager {
 	private final XcraftTickets plugin;
 	private int nextID;
 	private List<Ticket> tickets = new ArrayList<Ticket>();
-	SimpleDateFormat date = new SimpleDateFormat();
+	private Map<String, String> phrases = new HashMap<String, String>();
+	private List<String> assignees = new ArrayList<String>();
+	private final SimpleDateFormat date = new SimpleDateFormat();
 
 	public TicketManager(XcraftTickets instance) {
 		plugin = instance;
@@ -55,8 +57,10 @@ public class TicketManager {
 					x++;
 				}
 			}
-			player.sendMessage(plugin.getCName() + "Du hast noch " + ChatColor.YELLOW + x + plugin.getChatColor()
-					+ " ungelesene Tickets offen!");
+			if (x > 0) {
+				player.sendMessage(plugin.getCName() + "Du hast noch " + ChatColor.YELLOW + x + plugin.getChatColor()
+						+ " ungelesene Tickets offen!");
+			}
 		} else {
 			for (Ticket ticket : tickets) {
 				if (ticket.getOwner().equals(player.getName()) && !ticket.hasWatched(player.getName())) {
@@ -184,6 +188,22 @@ public class TicketManager {
 
 	public void setNextID(int nextID) {
 		this.nextID = nextID;
+	}
+
+	public Map<String, String> getPhrases() {
+		return phrases;
+	}
+
+	public void setPhrases(Map<String, String> map) {
+		this.phrases = map;
+	}
+
+	public List<String> getAssignees() {
+		return assignees;
+	}
+
+	public void setAssignees(List<String> assignees) {
+		this.assignees = assignees;
 	}
 
 	public XcraftTickets getPlugin() {

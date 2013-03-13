@@ -7,10 +7,10 @@ import me.INemesisI.XcraftTickets.Manager.TicketManager;
 import org.bukkit.command.CommandSender;
 
 @CommandInfo(name = "save",
-		command = "ticket|t",
-		pattern = "sav.*",
+		command = "ticket",
+		pattern = "s.*",
 		permission = "XcraftTickets.Save",
-		usage = "/ticket save",
+		usage = "",
 		desc = "Speichert alle nötigen Daten")
 public class SaveCommand extends Command {
 
