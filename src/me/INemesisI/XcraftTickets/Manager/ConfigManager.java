@@ -64,6 +64,8 @@ public class ConfigManager {
 	}
 	public void save() {
 		config.set("Next_Ticket_ID", plugin.ticketManager.getNextID());
+		config.set("Assignee", plugin.ticketManager.getAssignees());
+		config.set("Phrases", plugin.ticketManager.getPhrases());
 		plugin.saveConfig();
 		try {
 			reminder.save(remFile);
