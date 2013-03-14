@@ -40,7 +40,7 @@ public class Log {
 						+ ChatColor.YELLOW + player + ChatColor.WHITE + ": " + message;
 			case ASSIGN :
 				return ChatColor.GREEN + "Weitergeleitet: " + ChatColor.DARK_GRAY + date + ChatColor.WHITE + " | von "
-						+ ChatColor.YELLOW + player + ChatColor.WHITE + " nach " + message;
+						+ ChatColor.YELLOW + player + ChatColor.WHITE + " an " + ChatColor.DARK_PURPLE + message;
 		}
 		return "";
 
