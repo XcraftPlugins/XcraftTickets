@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 		command = "ticket",
 		pattern = "l|lo.*",
 		permission = "XcraftTickets.Log",
-		usage = "<#> <Nachricht>",
+		usage = "[#] [Nachricht]",
 		desc = "Antwortet auf ein Ticket")
 public class LogCommand extends Command {
 
@@ -31,8 +31,7 @@ public class LogCommand extends Command {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
+			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return true;
 		}
 		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.Log.All")) {
@@ -43,35 +42,27 @@ public class LogCommand extends Command {
 		for (int i = 1; i < args.length; i++) {
 			message += " " + args[i];
 		}
-		if (sender.hasPermission("XcraftTickets.Phrases")) {
-			message = message.trim();
-			if (manager.getPhrases().containsKey(message)) {
-				message = manager.getPhrases().get(message);
-			}
+		message = manager.checkPhrases(sender, message);
+		ticket.addToLog(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.COMMENT, message));
+		if (ticket.getId() == manager.getLastTicket(sender)) {
+			manager.setLastTicket(sender, -1);
 		}
-		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.COMMENT, message));
 		ticket.clearWatched();
 		ticket.addToWatched(this.getName(sender));
 		for (Player player : manager.getPlugin().getServer().getOnlinePlayers()) {
-			if (!player.equals(this.getName(sender))
-					&& player.hasPermission(manager.getPlugin().getDescription().getName() + "." + "Mod")) {
+			if (!player.equals(this.getName(sender)) && player.hasPermission(manager.getPlugin().getDescription().getName() + "." + "Mod")) {
 				ticket.addToWatched(player.getName());
 			}
 		}
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + ticket.getId()
-				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-				+ " kommentiert: " + ChatColor.AQUA + message);
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von "
+				+ ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " kommentiert: " + ChatColor.AQUA + message);
 		if (getName(sender).equals(ticket.getOwner())) {
-			manager.sendToPlayer(ticket.getOwner(),
-					ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-							+ " wurde von " + ChatColor.YELLOW + "dir" + ChatColor.GRAY + " kommentiert: \n"
-							+ ChatColor.AQUA + message);
+			manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+					+ " wurde von " + ChatColor.YELLOW + "dir" + ChatColor.GRAY + " kommentiert: \n" + ChatColor.AQUA + message);
 		} else {
-			manager.sendToPlayer(ticket.getOwner(),
-					ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-							+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-							+ " kommentiert: \n" + ChatColor.AQUA + message + ChatColor.GRAY
-							+ "\n Nutze bitte /ticket log <nr> <nachricht> um darauf zu antworten!");
+			manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+					+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " kommentiert: \n" + ChatColor.AQUA + message
+					+ ChatColor.GRAY + "\n Nutze bitte /ticket log <nr> <nachricht> um darauf zu antworten!");
 		}
 		return true;
 	}

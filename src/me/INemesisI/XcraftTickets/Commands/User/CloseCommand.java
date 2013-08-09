@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 		command = "ticket",
 		pattern = "c.*",
 		permission = "XcraftTickets.Close",
-		usage = "<#> <Nachricht>",
+		usage = "[#] [Nachricht]",
 		desc = "Schlieﬂt ein Ticket")
 public class CloseCommand extends Command {
 
@@ -31,8 +31,7 @@ public class CloseCommand extends Command {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
+			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return true;
 		}
 		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.Close.All")) {
@@ -43,31 +42,25 @@ public class CloseCommand extends Command {
 		for (int i = 1; i < args.length; i++) {
 			message += " " + args[i];
 		}
-		if (sender.hasPermission("XcraftTickets.Phrases")) {
-			message = message.trim();
-			if (manager.getPhrases().containsKey(message)) {
-				message = manager.getPhrases().get(message);
-			}
+		message = manager.checkPhrases(sender, message);
+		ticket.addToLog(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.CLOSE, message));
+		if (ticket.getId() == manager.getLastTicket(sender)) {
+			manager.setLastTicket(sender, -1);
 		}
-		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.CLOSE, message));
 		manager.setTicketArchived(ticket);
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id
-				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-				+ " geschlossen: " + ChatColor.AQUA + message);
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von "
+				+ ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " geschlossen: " + ChatColor.AQUA + message);
 		if (getName(sender).equals(ticket.getOwner())) {
-			manager.sendToPlayer(ticket.getOwner(),
-					ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-							+ " wurde von " + ChatColor.YELLOW + "dir" + ChatColor.GRAY + " geschlossen: \n"
-							+ ChatColor.AQUA + message);
+			manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+					+ " wurde von " + ChatColor.YELLOW + "dir" + ChatColor.GRAY + " geschlossen: \n" + ChatColor.AQUA + message);
 		} else {
-			manager.sendToPlayer(ticket.getOwner(),
-					ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-							+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-							+ " geschlossen: \n" + ChatColor.AQUA + message + ChatColor.GRAY
-							+ "\n Nutze bitte /ticket reopen <nr> <nachricht> um es eventuell wieder zu oeffnen!");
+			manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+					+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " geschlossen: \n" + ChatColor.AQUA + message
+					+ ChatColor.GRAY + "\n Nutze bitte /ticket reopen <nr> <nachricht> um es eventuell wieder zu oeffnen!");
 		}
-		manager.getPlugin().configManager.addReminder(ticket.getOwner(), id);
+		if (!sender.getName().equals(ticket.getOwner())) {
+			manager.getPlugin().configManager.addReminder(ticket.getOwner(), id);
+		}
 		return true;
 	}
-
 }

@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 		command = "ticket",
 		pattern = "v.*",
 		permission = "XcraftTickets.View",
-		usage = "<#>",
+		usage = "[#]",
 		desc = "Zeigt alle Informationen eines Tickets")
 public class ViewCommand extends Command {
 
@@ -27,8 +27,7 @@ public class ViewCommand extends Command {
 		if (ticket == null) {
 			ticket = manager.getArchivedTicket(id);
 			if (ticket == null) {
-				this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-						+ " konnte nicht gefunden werden");
+				this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 				return true;
 			}
 		}

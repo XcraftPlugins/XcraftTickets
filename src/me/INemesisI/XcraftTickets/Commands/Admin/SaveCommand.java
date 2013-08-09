@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 
 @CommandInfo(name = "save",
 		command = "ticket",
-		pattern = "s.*",
+		pattern = "save",
 		permission = "XcraftTickets.Save",
 		usage = "",
 		desc = "Speichert alle nötigen Daten")

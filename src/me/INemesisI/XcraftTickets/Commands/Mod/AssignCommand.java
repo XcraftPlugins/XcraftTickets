@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 		command = "ticket",
 		pattern = "a.*",
 		permission = "XcraftTickets.Assign",
-		usage = "<#> <Name|Gruppe>",
+		usage = "[#] [Name|Gruppe]",
 		desc = "Weiterleiten eines Tickets")
 public class AssignCommand extends Command {
 
@@ -30,8 +30,7 @@ public class AssignCommand extends Command {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
+			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return true;
 		}
 
@@ -40,16 +39,17 @@ public class AssignCommand extends Command {
 			return true;
 		} else {
 
-			ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.ASSIGN, args[1]));
+			ticket.addToLog(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.ASSIGN, args[1]));
+			if (ticket.getId() == manager.getLastTicket(sender)) {
+				manager.setLastTicket(sender, -1);
+			}
 			ticket.setAssignee(args[1]);
-			manager.sendToMods(ticket.getOwner(),
-					ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-							+ " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " an "
-							+ ChatColor.DARK_PURPLE + args[1] + ChatColor.GRAY + " zugewiesen!");
-			manager.sendToPlayer(ticket.getOwner(),
-					ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-							+ " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " an "
-							+ ChatColor.DARK_PURPLE + args[1] + ChatColor.GRAY + " zugewiesen!");
+			manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+					+ " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " an " + ChatColor.DARK_PURPLE + args[1]
+					+ ChatColor.GRAY + " zugewiesen!");
+			manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+					+ " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " an " + ChatColor.DARK_PURPLE + args[1]
+					+ ChatColor.GRAY + " zugewiesen!");
 			return true;
 		}
 	}

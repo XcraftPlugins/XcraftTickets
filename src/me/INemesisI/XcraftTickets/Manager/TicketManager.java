@@ -16,6 +16,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TicketManager {
@@ -23,6 +24,7 @@ public class TicketManager {
 	private int nextID;
 	private List<Ticket> tickets = new ArrayList<Ticket>();
 	private Map<String, String> phrases = new HashMap<String, String>();
+	private final Map<CommandSender, Integer> lastTicket = new HashMap<CommandSender, Integer>();
 	private List<String> assignees = new ArrayList<String>();
 	private final SimpleDateFormat date = new SimpleDateFormat();
 
@@ -49,8 +51,7 @@ public class TicketManager {
 	}
 
 	public void informPlayer(Player player) {
-
-		if (player.hasPermission(plugin.getDescription().getName() + "." + "Mod")) {
+		if (player.hasPermission("XcraftTickets.Mod")) {
 			int x = 0;
 			for (Ticket ticket : tickets) {
 				if (!ticket.hasWatched(player.getName())) {
@@ -58,14 +59,13 @@ public class TicketManager {
 				}
 			}
 			if (x > 0) {
-				player.sendMessage(plugin.getCName() + "Du hast noch " + ChatColor.YELLOW + x + plugin.getChatColor()
-						+ " ungelesene Tickets offen!");
+				player.sendMessage(plugin.getCName() + "Du hast noch " + ChatColor.YELLOW + x + plugin.getChatColor() + " ungelesene Tickets offen!");
 			}
 		} else {
 			for (Ticket ticket : tickets) {
 				if (ticket.getOwner().equals(player.getName()) && !ticket.hasWatched(player.getName())) {
-					player.sendMessage(plugin.getCName() + "Du hast noch ungelesene Nachrichten in deinem Ticket "
-							+ ChatColor.GOLD + "#" + ticket.getId());
+					player.sendMessage(plugin.getCName() + "Du hast noch ungelesene Nachrichten in deinem Ticket " + ChatColor.GOLD + "#"
+							+ ticket.getId());
 				}
 			}
 		}
@@ -83,8 +83,8 @@ public class TicketManager {
 			OfflinePlayer owner = server.getOfflinePlayer(ticket.getOwner());
 			if (owner.isOnline() && !ticket.hasWatched(ticket.getOwner())) {
 				Player player = (Player) owner;
-				player.sendMessage(plugin.getCName() + "Du hast noch ungelesene Nachrichten in deinem Ticket "
-						+ ChatColor.GOLD + "#" + ticket.getId());
+				player.sendMessage(plugin.getCName() + "Du hast noch ungelesene Nachrichten in deinem Ticket " + ChatColor.GOLD + "#"
+						+ ticket.getId());
 				for (Player mod : mods.keySet()) {
 					if (!ticket.hasWatched(mod.getName())) {
 						mods.put(mod, mods.get(mod) + 1);
@@ -94,16 +94,16 @@ public class TicketManager {
 		}
 		for (Player mod : mods.keySet()) {
 			if (mods.get(mod) > 0) {
-				mod.sendMessage(plugin.getCName() + "Du hast noch " + ChatColor.YELLOW + mods.get(mod)
-						+ plugin.getChatColor() + " ungelesene Tickets offen!");
+				mod.sendMessage(plugin.getCName() + "Du hast noch " + ChatColor.YELLOW + mods.get(mod) + plugin.getChatColor()
+						+ " ungelesene Tickets offen!");
 			}
 		}
 		for (Player player : server.getOnlinePlayers()) {
 			List<String> list = plugin.configManager.getReminder(player.getName());
 			if (list != null) {
 				for (String id : list) {
-					player.sendMessage(plugin.getCName() + "Dein Ticket #" + id
-							+ " wurde geschlossen. Schau es dir bitte an! " + ChatColor.GRAY + "/ticket view " + id);
+					player.sendMessage(plugin.getCName() + "Dein Ticket #" + id + " wurde geschlossen. Schau es dir bitte an! " + ChatColor.GRAY
+							+ "/ticket view " + id);
 				}
 			}
 		}
@@ -206,7 +206,31 @@ public class TicketManager {
 		this.assignees = assignees;
 	}
 
+	public int getLastTicket(CommandSender sender) {
+		if (lastTicket.containsKey(sender)) {
+			return lastTicket.get(sender);
+		} else {
+			return -1;
+		}
+	}
+
+	public void setLastTicket(CommandSender sender, int id) {
+		this.lastTicket.put(sender, id);
+	}
+
 	public XcraftTickets getPlugin() {
 		return plugin;
+	}
+
+	public String checkPhrases(CommandSender sender, String message) {
+		message.trim();
+		if (sender.hasPermission("XcraftTickets.Phrases")) {
+			for (String s : this.getPhrases().keySet()) {
+				if (message.contains(s)) {
+					message = message.replace(s, this.getPhrases().get(s));
+				}
+			}
+		}
+		return message;
 	}
 }

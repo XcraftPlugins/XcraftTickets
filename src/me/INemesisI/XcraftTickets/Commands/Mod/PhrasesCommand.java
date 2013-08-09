@@ -1,4 +1,4 @@
-package me.INemesisI.XcraftTickets.Commands.User;
+package me.INemesisI.XcraftTickets.Commands.Mod;
 
 import java.util.Map;
 
@@ -13,8 +13,8 @@ import org.bukkit.command.CommandSender;
 		command = "ticket",
 		pattern = "p.*",
 		permission = "XcraftTickets.Phrases",
-		usage = "list|add|remove",
-		desc = "Zeigt alle Ticket-Phrasen")
+		usage = "list|add|remove|append <Phrase> [Message]",
+		desc = "bearbeiten aller Ticket-Phrasen")
 public class PhrasesCommand extends Command {
 
 	@Override
@@ -40,6 +40,19 @@ public class PhrasesCommand extends Command {
 			String key = args[1];
 			if (manager.getPhrases().remove(key) != null) {
 				reply(sender, "Successuflly removed the phrase");
+			} else {
+				error(sender, "Could not find a phrase with that name");
+			}
+		} else if (args[0].equals("append")) {
+			String key = args[1];
+			String msg = "";
+			for (int i = 2; i < args.length; i++) {
+				msg += args[i] + " ";
+			}
+			msg.trim();
+			if (manager.getPhrases().containsKey(key)) {
+				manager.getPhrases().put(key, manager.getPhrases().get(key) + msg);
+				reply(sender, "Successuflly edited the phrase: " + ChatColor.GRAY + manager.getPhrases().get(key));
 			} else {
 				error(sender, "Could not find a phrase with that name");
 			}

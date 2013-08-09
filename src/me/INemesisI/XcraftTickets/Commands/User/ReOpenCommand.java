@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
 
 @CommandInfo(name = "reopen",
 		command = "ticket",
-		pattern = "reo.*",
+		pattern = "reo.*|ro",
 		permission = "XcraftTickets.Reopen",
-		usage = "<#> <Nachricht>",
+		usage = "[#] [Nachricht]",
 		desc = "Eröffnet ein Ticket wieder")
 public class ReOpenCommand extends Command {
 
@@ -31,8 +31,7 @@ public class ReOpenCommand extends Command {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getArchivedTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
+			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return true;
 		}
 		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.Reopen.All")) {
@@ -43,21 +42,14 @@ public class ReOpenCommand extends Command {
 		for (int i = 1; i < args.length; i++) {
 			message += " " + args[i];
 		}
-		if (sender.hasPermission("XcraftTickets.Phrases")) {
-			message = message.trim();
-			if (manager.getPhrases().containsKey(message)) {
-				message = manager.getPhrases().get(message);
-			}
-		}
+		message = manager.checkPhrases(sender, message);
 		manager.addTicket(ticket);
-		ticket.getLog().add(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.REOPEN, message));
+		ticket.addToLog(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.REOPEN, message));
 		ticket.addToWatched(this.getName(sender));
-		manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id
-				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-				+ " wieder eroeffnet: " + ChatColor.AQUA + message);
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id
-				+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-				+ " wieder eroeffnet: " + ChatColor.AQUA + message);
+		manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von "
+				+ ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " wieder eroeffnet: " + ChatColor.AQUA + message);
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von "
+				+ ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " wieder eroeffnet: " + ChatColor.AQUA + message);
 		return true;
 	}
 }

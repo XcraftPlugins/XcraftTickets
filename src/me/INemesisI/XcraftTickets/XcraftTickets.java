@@ -43,21 +43,11 @@ public class XcraftTickets extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-
 		this.setupPermissions();
-		this.setupHandler();
-		this.registerCommands();
-		this.configManager.load();
+		this.setupManager();
 		this.startScheduler();
 		this.getServer().getPluginManager().registerEvents(eventlistener, this);
 	} // End onEnable
-
-	private void registerCommands() {
-		commandManager = new CommandManager(ticketManager);
-		this.getCommand("ticket").setExecutor(commandManager);
-		this.getCommand("t").setExecutor(commandManager);
-		this.getCommand("tl").setExecutor(commandManager);
-	}
 
 	private Boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> permissionProvider = this.getServer().getServicesManager()
@@ -68,9 +58,18 @@ public class XcraftTickets extends JavaPlugin {
 		return permission != null;
 	}
 
-	private void setupHandler() {
+	private void setupManager() {
 		configManager = new ConfigManager(this);
 		ticketManager = new TicketManager(this);
+		configManager.load();
+		commandManager = new CommandManager(ticketManager);
+		registerCommands();
+	}
+
+	private void registerCommands() {
+		this.getCommand("ticket").setExecutor(commandManager);
+		this.getCommand("t").setExecutor(commandManager);
+		this.getCommand("tl").setExecutor(commandManager);
 	}
 
 	public Permission getPermission() {
@@ -97,8 +96,7 @@ public class XcraftTickets extends JavaPlugin {
 				configManager.save();
 			}
 		};
-		this.getServer().getScheduler()
-				.runTaskTimerAsynchronously(this, task, ((min * 60) + sec) * 20, 60 * delay * 20);
+		this.getServer().getScheduler().runTaskTimerAsynchronously(this, task, ((min * 60) + sec) * 20, 60 * delay * 20);
 
 	}
 

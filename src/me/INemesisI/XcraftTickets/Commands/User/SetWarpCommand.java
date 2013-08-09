@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 		command = "ticket",
 		pattern = "setw.*|sw",
 		permission = "XcraftTickets.Setwarp",
-		usage = "<#>",
+		usage = "[#]",
 		desc = "Ändert den Teleport des Tickets")
 public class SetWarpCommand extends Command {
 
@@ -28,8 +28,7 @@ public class SetWarpCommand extends Command {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
+			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return true;
 		}
 
@@ -43,13 +42,10 @@ public class SetWarpCommand extends Command {
 			Player player = (Player) sender;
 			Location loc = player.getLocation();
 			ticket.setLoc(loc);
-			ticket.getLog().add(
-					new Log(manager.getCurrentDate(), player.getName(), Log.Type.COMMENT,
-							"Der Warppunkt wurde aktualisiert"));
-			this.reply(sender, "Der Warp fuer Ticket #" + ticket.getId()
-					+ " wurde an deine derzeitige Position verlegt!");
+			ticket.addToLog(new Log(manager.getCurrentDate(), player.getName(), Log.Type.COMMENT, "Der Warppunkt wurde aktualisiert"));
+			this.reply(sender, "Der Warp fuer Ticket #" + ticket.getId() + " wurde an deine derzeitige Position verlegt!");
+			ticket.clearWatched();
 		}
 		return true;
 	}
-
 }

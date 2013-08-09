@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 		command = "ticket",
 		pattern = "una.*",
 		permission = "XcraftTickets.Unassign",
-		usage = "<#>",
+		usage = "[#]",
 		desc = "Entfernt die Weiterleitung")
 public class UnAssignCommand extends Command {
 
@@ -25,20 +25,17 @@ public class UnAssignCommand extends Command {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
+			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return true;
 		}
 		ticket.setAssignee(null);
 		ticket.clearWatched();
 		ticket.addToWatched(this.getName(sender));
 		manager.sendToPlayer(ticket.getOwner(), //
-				ChatColor.GRAY + "Die Zuweisung fuer dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
-						+ ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY
-						+ " entfernt!");
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung fuer Ticket " + ChatColor.GOLD + "#"
-				+ ticket.getId() + ChatColor.GRAY + " wurde von " + ChatColor.YELLOW + sender.getName()
-				+ ChatColor.GRAY + " entfernt!");
+				ChatColor.GRAY + "Die Zuweisung fuer dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von "
+						+ ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " entfernt!");
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung fuer Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+				+ " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " entfernt!");
 		return true;
 	}
 }

@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 		pattern = "rel.*",
 		permission = "XcraftTickets.Reload",
 		usage = "",
-		desc = "Lädt alle Daten neu")
+		desc = "bearbeiten aller mögl. Assignees")
 public class ReloadCommand extends Command {
 
 	@Override

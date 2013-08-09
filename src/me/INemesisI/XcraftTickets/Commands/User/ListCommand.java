@@ -10,12 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-@CommandInfo(name = "list",
-		command = "ticket",
-		pattern = "li.*",
-		permission = "XcraftTickets.List",
-		usage = "",
-		desc = "Listet alle deine Tickets auf")
+@CommandInfo(name = "list", command = "ticket", pattern = "li.*", permission = "XcraftTickets.List", usage = "", desc = "Listet alle deine Tickets auf")
 public class ListCommand extends Command {
 
 	@Override
@@ -25,7 +20,7 @@ public class ListCommand extends Command {
 			//@formatter:off
 				// tickets from owner
 			if (ticket.getOwner().equals(this.getName(sender))
-			|| (args.length > 0 && args[0].matches("a.*") && sender.hasPermission("XcraftTickets.Listall"))
+			|| (args.length > 0 && args[0].matches("a.*") && sender.hasPermission("XcraftTickets.List.All"))
 				// sender is console...
 			|| (sender instanceof ConsoleCommandSender)
 				// player is allowed to see all tickets. except of assigned ones

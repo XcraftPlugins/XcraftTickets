@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 		command = "ticket",
 		pattern = "und.*",
 		permission = "XcraftTickets.Undo",
-		usage = "<#>",
+		usage = "[#]",
 		desc = "Entfernt die letzte Aktion eines Tickets")
 public class UndoCommand extends Command {
 
@@ -29,14 +29,12 @@ public class UndoCommand extends Command {
 			ticket = manager.getArchivedTicket(id);
 		}
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
+			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return true;
 		} else {
 			Log log = ticket.getLog().get(ticket.getLog().size() - 1);
 			if (!log.player.equals(this.getName(sender))) {
-				this.error(sender,
-						"Jemand anders hat die letzte Antwort verfasst. Diese kannst du nicht ruekgaengig machen");
+				this.error(sender, "Jemand anders hat die letzte Antwort verfasst. Diese kannst du nicht ruekgaengig machen");
 			} else {
 				switch (log.type) {
 					case OPEN :
@@ -50,14 +48,12 @@ public class UndoCommand extends Command {
 					case REOPEN :
 						ticket.getLog().remove(log);
 						manager.setTicketArchived(ticket);
-						this.reply(sender,
-								"Deine letzte Antwort wurde geloescht und das Ticket wurde wieder geschlossen!");
+						this.reply(sender, "Deine letzte Antwort wurde geloescht und das Ticket wurde wieder geschlossen!");
 						return true;
 					case CLOSE :
 						ticket.getLog().remove(log);
 						manager.addTicket(ticket);
-						this.reply(sender,
-								"Deine letzte Antwort wurde geloescht und das Ticket wurde wieder geoeffnet!");
+						this.reply(sender, "Deine letzte Antwort wurde geloescht und das Ticket wurde wieder geoeffnet!");
 						return true;
 					case ASSIGN :
 						ticket.getLog().remove(log);

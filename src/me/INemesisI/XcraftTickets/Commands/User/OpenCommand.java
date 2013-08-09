@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 		command = "ticket",
 		pattern = "o.*",
 		permission = "XcraftTickets.Open",
-		usage = "<Nachricht>",
+		usage = "[Nachricht]",
 		desc = "Öffnet ein neues Ticket")
 public class OpenCommand extends Command {
 
@@ -34,11 +34,10 @@ public class OpenCommand extends Command {
 		}
 		Ticket ticket = manager.addTicket(this.getName(sender), loc, message);
 		ticket.addToWatched(ticket.getOwner());
-		this.reply(sender, " Vielen Dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#"
-				+ ticket.getId());
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Ein Ticket (" + ChatColor.GOLD + "#" + ticket.getId()
-				+ ChatColor.GRAY + ") wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-				+ " eroeffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA + message);
+		this.reply(sender, " Vielen Dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#" + ticket.getId());
+		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Ein Ticket (" + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
+				+ ") wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " eroeffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA
+				+ message);
 		return true;
 	}
 }

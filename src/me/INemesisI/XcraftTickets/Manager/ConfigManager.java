@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -99,16 +100,21 @@ public class ConfigManager {
 			if ((assignee != null) && assignee.equals("none")) {
 				assignee = null;
 			}
+			long processed = 0;
+			if (cs.isLong("processed")) {
+				processed = cs.getLong("processed");
+			} else {
+				processed = new Date().getTime();
+			}
 			cs = temp.getConfigurationSection("Ticket.location");
 			Location loc = null;
 			String world = null;
 			if (cs != null) {
 				world = cs.getString("world");
 				World w = plugin.getServer().getWorld(world);
-				loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"),
-						cs.getLong("yaw"));
+				loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
 			}
-			return new Ticket(id, assignee, loc, world, watched, log);
+			return new Ticket(id, assignee, loc, world, processed, watched, log);
 		}
 		return null;
 	}
@@ -121,6 +127,7 @@ public class ConfigManager {
 		for (int i = 0; i < ticket.getLog().size(); i++) {
 			list.add(ticket.getLog().get(i).toString());
 		}
+		temp.set("Ticket.processed", ticket.getProcessed());
 		temp.set("Ticket.log", list);
 		temp.set("Ticket.watched", ticket.getWatched());
 		Location loc = ticket.getLoc();

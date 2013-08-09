@@ -1,5 +1,7 @@
 package me.INemesisI.XcraftTickets.Commands.Mod;
 
+import java.util.Date;
+
 import me.INemesisI.XcraftTickets.Ticket;
 import me.INemesisI.XcraftTickets.Commands.Command;
 import me.INemesisI.XcraftTickets.Commands.CommandInfo;
@@ -15,7 +17,7 @@ import org.bukkit.entity.Player;
 		command = "ticket",
 		pattern = "w.*",
 		permission = "XcraftTickets.Warp",
-		usage = "<#>",
+		usage = "[#]",
 		desc = "Teleportiert dich zum Ticket!")
 public class WarpCommand extends Command {
 
@@ -28,8 +30,7 @@ public class WarpCommand extends Command {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED
-					+ " konnte nicht gefunden werden");
+			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
 			return true;
 		}
 		Location loc = ticket.getLoc();
@@ -41,14 +42,15 @@ public class WarpCommand extends Command {
 			if (player != null) {
 				player.teleport(loc);
 				player.performCommand("ticket view " + ticket.getId());
-				manager.sendToMods(ticket.getOwner(), ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY
-						+ " bearbeitet Ticket " + ChatColor.GOLD + "#" + id);
-				manager.sendToPlayer(ticket.getOwner(), "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId()
-						+ ChatColor.GRAY + " wird von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY
-						+ " bearbeitet!");
+				manager.sendToMods(ticket.getOwner(), ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " bearbeitet Ticket "
+						+ ChatColor.GOLD + "#" + id);
+				manager.sendToPlayer(ticket.getOwner(), "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wird von "
+						+ ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " bearbeitet!");
 				if (ticket.getAssignee() == null) {
 					ticket.setAssignee(player.getName());
 				}
+				manager.setLastTicket(sender, ticket.getId());
+				ticket.setProcessed(new Date().getTime());
 				// invulnerability for 10 secs
 				player.setNoDamageTicks(200);
 			}
