@@ -1,28 +1,27 @@
 package de.xcraft.INemesisI.XcraftTickets.Commands.User;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "open",
-		command = "ticket",
-		pattern = "o.*",
-		permission = "XcraftTickets.Open",
-		usage = "[Nachricht]",
-		desc = "Öffnet ein neues Ticket")
-public class OpenCommand extends Command {
+public class OpenCommand extends XcraftCommand {
+
+	public OpenCommand() {
+		super("ticket", "open", "o.*", "<MESSAGE> ...", Msg.COMMAND_OPEN.toString(), "XcraftTickets.Open");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		if (args.length == 0) {
-			this.error(sender, "Du hast keine Nachricht eingeben! ");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_MESSAGE.toString(), true);
 			return false;
 		}
 		String message = "";
@@ -33,12 +32,11 @@ public class OpenCommand extends Command {
 		if (sender instanceof Player) {
 			loc = ((Player) sender).getLocation();
 		}
-		Ticket ticket = manager.addTicket(this.getName(sender), loc, message);
+		Ticket ticket = manager.addTicket(sender.getName(), loc, message);
 		ticket.addToWatched(ticket.getOwner());
-		this.reply(sender, " Vielen Dank! Dein Ticket wurde erstellt. Deine Ticketnummer ist " + ChatColor.GOLD + "#" + ticket.getId());
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Ein Ticket (" + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-				+ ") wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " eroeffnet " + ChatColor.GRAY + ": " + ChatColor.AQUA
-				+ message);
+
+		pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_BROADCAST_OPEN.toString(Replace.ID(ticket.getId()), Replace.NAME(sender.getName())), true);
+		manager.inform(ticket, Msg.COMMAND_OPEN_SUCCESSFUL.toString(Replace.ID(ticket.getId()), Replace.NAME(sender.getName())), true);
 		return true;
 	}
 }

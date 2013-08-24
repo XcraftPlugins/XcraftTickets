@@ -8,40 +8,36 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import de.xcraft.INemesisI.Utils.Manager.XcraftConfigManager;
 import de.xcraft.INemesisI.XcraftTickets.Log;
+import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
 import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
 
-public class ConfigManager {
+public class ConfigManager extends XcraftConfigManager {
 
-	XcraftTickets plugin;
+	TicketManager tmanager;
 	File folder;
 	File archive;
-	FileConfiguration config;
 	File remFile;
 	FileConfiguration reminder;
 
-	public ConfigManager(XcraftTickets instance) {
-		plugin = instance;
+	public ConfigManager(XcraftTickets plugin) {
+		super(plugin);
+		tmanager = (TicketManager) plugin.pluginManager;
+		tmanager.cManager = this;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void load() {
-		// initialization
 		folder = plugin.getDataFolder();
-		archive = new File(folder.getPath() + "/archive");
-		if (!archive.exists()) {
-			archive.mkdirs();
-		}
-		plugin.reloadConfig();
-		config = plugin.getConfig();
 		remFile = new File(folder, "reminder.yml");
 		reminder = YamlConfiguration.loadConfiguration(remFile);
 		// load tickets
@@ -49,75 +45,80 @@ public class ConfigManager {
 		Arrays.sort(files);
 		List<Ticket> tickets = new ArrayList<Ticket>();
 		for (File file : files) {
-			Ticket ticket = this.loadTicket(file);
-			if (ticket != null) {
-				tickets.add(ticket);
-			}
+			Ticket ticket = loadTicket(file);
+			if (ticket != null) tickets.add(ticket);
 		}
-		plugin.ticketManager.setTickets(tickets);
-		plugin.ticketManager.setNextID(config.getInt("Next_Ticket_ID", 1));
+		tmanager.setTickets(tickets);
+		tmanager.setNextID(config.getInt("Next_Ticket_ID", 1));
+		tmanager.getDate().applyPattern(
+				config.getString("DateFormat", "dd.MM HH:mm"));
 		List<String> assignees = ((List<String>) config.getList("Assignee"));
-		plugin.ticketManager.setAssignees(assignees);
+		tmanager.setAssignees(assignees);
 		ConfigurationSection cs = config.getConfigurationSection("Phrases");
-		Map<String, String> phrases = plugin.ticketManager.getPhrases();
+		Map<String, String> phrases = tmanager.getPhrases();
 		for (String value : cs.getKeys(false)) {
 			phrases.put(value, cs.getString(value));
 		}
 	}
+
+	@Override
 	public void save() {
-		config.set("Next_Ticket_ID", plugin.ticketManager.getNextID());
-		config.set("Assignee", plugin.ticketManager.getAssignees());
-		config.set("Phrases", plugin.ticketManager.getPhrases());
+		config.set("Next_Ticket_ID", tmanager.getNextID());
+		config.set("Assignee", tmanager.getAssignees());
+		config.set("Phrases", tmanager.getPhrases());
 		plugin.saveConfig();
 		try {
 			reminder.save(remFile);
 		} catch (IOException e) {
 		}
-		for (Ticket ticket : plugin.ticketManager.getTickets()) {
+		for (Ticket ticket : tmanager.getTickets()) {
 			this.saveTicket(folder, ticket);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public Ticket loadTicket(File ticket) {
-		String filename = ticket.getAbsoluteFile().getName();
-		if (!filename.equals("config.yml") && !filename.equals("archive") && !filename.equals("reminder.yml")) {
-			int id = Integer.parseInt(filename.replace(".yml", ""));
-			FileConfiguration temp = YamlConfiguration.loadConfiguration(ticket);
-			ConfigurationSection cs = temp.getConfigurationSection("Ticket");
-			List<Log> log = new ArrayList<Log>();
-			List<String> list = (List<String>) cs.getList("log");
-			if ((list != null) && !list.isEmpty()) {
-				for (int i = 0; i < list.size(); i++) {
-					String split[] = list.get(i).split("; ");
-					log.add(new Log(split[0], split[1], Log.Type.valueOf(split[2]), split[3]));
-				}
+		String filename = ticket.getAbsoluteFile().getName().replace(".yml", "");
+		if (!filename.matches("\\d*"))
+			return null;
+		int id = Integer.parseInt(filename);
+		FileConfiguration temp = YamlConfiguration.loadConfiguration(ticket);
+		ConfigurationSection cs = temp.getConfigurationSection("Ticket");
+		Log log = new Log(tmanager.getDate());
+		List<String> list = (List<String>) cs.getList("log");
+		if ((list != null) && !list.isEmpty()) {
+			for (int i = 0; i < list.size(); i++) {
+				String split[] = list.get(i).split("; ");
+				long time = split[0].matches("\\d*") ? Long.valueOf(split[0])
+						: 0;
+				log.add(time, EntryType.valueOf(split[2]), split[1], split[3]);
 			}
-			List<String> watched = (ArrayList<String>) cs.getList("watched");
-			if (watched == null) {
-				watched = new ArrayList<String>();
-			}
-			String assignee = cs.getString("assignee");
-			if ((assignee != null) && assignee.equals("none")) {
-				assignee = null;
-			}
-			long processed = 0;
-			if (cs.isLong("processed")) {
-				processed = cs.getLong("processed");
-			} else {
-				processed = new Date().getTime();
-			}
-			cs = temp.getConfigurationSection("Ticket.location");
-			Location loc = null;
-			String world = null;
-			if (cs != null) {
-				world = cs.getString("world");
-				World w = plugin.getServer().getWorld(world);
-				loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
-			}
-			return new Ticket(id, assignee, loc, world, processed, watched, log);
 		}
-		return null;
+		List<String> watched = (ArrayList<String>) cs.getList("watched");
+		if (watched == null) {
+			watched = new ArrayList<String>();
+		}
+		String assignee = cs.getString("assignee");
+		if ((assignee != null) && assignee.equals("none")) {
+			assignee = null;
+		}
+		long processed = 0;
+		if (cs.isLong("processed")) {
+			processed = cs.getLong("processed");
+		} else {
+			processed = new Date().getTime();
+		}
+		cs = temp.getConfigurationSection("Ticket.location");
+		Location loc = null;
+		String world = null;
+		if (cs != null) {
+			world = cs.getString("world");
+			World w = plugin.getServer().getWorld(world);
+			loc = new Location(w, cs.getLong("x"), cs.getLong("y"),
+					cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
+		}
+		return new Ticket(id, assignee, loc, world, processed, watched, log);
+
 	}
 
 	public void saveTicket(File folder, Ticket ticket) {
@@ -126,7 +127,7 @@ public class ConfigManager {
 		temp.set("Ticket.assignee", ticket.getAssignee());
 		List<String> list = new ArrayList<String>();
 		for (int i = 0; i < ticket.getLog().size(); i++) {
-			list.add(ticket.getLog().get(i).toString());
+			list.add(ticket.getLog().getEntry(i).toString());
 		}
 		temp.set("Ticket.processed", ticket.getProcessed());
 		temp.set("Ticket.log", list);

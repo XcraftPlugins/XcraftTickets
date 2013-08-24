@@ -2,39 +2,39 @@ package de.xcraft.INemesisI.XcraftTickets.Commands.Admin;
 
 import java.util.List;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "mod",
-		command = "ticket",
-		pattern = "m.*",
-		permission = "XcraftTickets.Asignee",
-		usage = "add|remove|list",
-		desc = "bearbeiten aller mögl. Mods/Gruppen")
-public class ModCommand extends Command {
+public class ModCommand extends XcraftCommand {
+
+	public ModCommand() {
+		super("ticket", "mod", "m.*", "<add/remove/list>", Msg.COMMAND_MOD.toString(), "XcraftTickets.Asignee");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		List<String> assignees = manager.getAssignees();
 		if (args.length < 1)
 			return false;
 		if (args[0].equals("list")) {
-			reply(sender, ChatColor.DARK_AQUA + "Current assignees: " + ChatColor.GRAY + assignees.toString());
+			pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_MOD_LIST.toString(Replace.MISC(assignees.toString())), true);
 		} else if (args[0].equals("add")) {
 			if (assignees.add(args[1]))
-				reply(sender, "Successuflly added the assignee" + args[1]);
+				pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_MOD_ADD.toString(Replace.NAME(args[1])), true);
 		} else if (args[0].equals("remove")) {
 			if (assignees.remove(args[1])) {
-				reply(sender, "Successuflly removed the assignee");
+				pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_MOD_REMOVE.toString(Replace.NAME(args[1])), true);
 			} else {
-				error(sender, "Could not find a assignee with that name");
+				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_MOD_NOT_FOUND.toString(Replace.NAME(args[1])), true);
 			}
 		}
 		return true;
 	}
+
 }

@@ -1,8 +1,8 @@
 name: XcraftTickets
 
-main: me.INemesisI.XcraftTickets.XcraftTickets
+main: de.xcraft.INemesisI.XcraftTickets.XcraftTickets
 
-version: 1.3
+version: 1.4
 
 load: POSTWORLD
 

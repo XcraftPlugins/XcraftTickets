@@ -1,26 +1,26 @@
 package de.xcraft.INemesisI.XcraftTickets.Commands.User;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
+import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "view",
-		command = "ticket",
-		pattern = "v.*",
-		permission = "XcraftTickets.View",
-		usage = "[#]",
-		desc = "Zeigt alle Informationen eines Tickets")
-public class ViewCommand extends Command {
+public class ViewCommand extends XcraftCommand {
+
+	public ViewCommand() {
+		super("ticket", "view", "v.*|i.*", "<ID> [all]", Msg.COMMAND_VIEW.toString(), "XcraftTickets.View");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			this.error(sender, "Du hast keine Ticketnummer angegeben");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_TICKET_ID.toString(), false);
 			return false;
 		}
 		int id = Integer.parseInt(args[0]);
@@ -28,23 +28,34 @@ public class ViewCommand extends Command {
 		if (ticket == null) {
 			ticket = manager.getArchivedTicket(id);
 			if (ticket == null) {
-				this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), false);
 				return true;
 			}
 		}
-		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.View.All")) {
-			this.error(sender, "Du hast keine Rechte dieses Ticket zu sehen!");
+		if (!ticket.getOwner().equals(sender.getName()) && !sender.hasPermission("XcraftTickets.View.All")) {
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(Replace.ID(id)), false);
 			return true;
 		}
-		this.reply(sender, ChatColor.GREEN + "info fuer Ticket " + ChatColor.GOLD + "#" + ticket.getId());
-		if (ticket.getAssignee() != null) {
-			sender.sendMessage(ChatColor.GOLD + "Zugewiesen an: " + ChatColor.RED + ticket.getAssignee());
+		String assignee = "";
+		if (ticket.isAssigned()) {
+			assignee = Msg.TICKET_ASSIGNEE.toString(Replace.NAME(ticket.getAssignee()));
 		}
-		for (int i = 0; i < ticket.getLog().size(); i++) {
-			sender.sendMessage(ticket.getLog().get(i).format());
+		Replace[] replace = { Replace.ID(id), Replace.NAME(ticket.getOwner()), Replace.ASSIGNEE(assignee) };
+		pManager.plugin.messenger.sendInfo(sender, "", false);
+		pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_VIEW_INFO.toString(replace), false);
+
+		String[] entries = ticket.getLog().getEntries();
+		int start = 0;
+		if (args.length < 2 && entries.length > 5) {
+			start = entries.length - 4;
+			pManager.plugin.messenger.sendInfo(sender, entries[0], false);
+			pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_VIEW_BREAK.toString(), false);
 		}
-		ticket.addToWatched(this.getName(sender));
-		manager.getPlugin().configManager.removeReminder(ticket.getOwner(), ticket.getId());
+		for (int i = start; i < entries.length; i++) {
+			sender.sendMessage(entries[i]);
+		}
+		ticket.addToWatched(sender.getName());
+		((ConfigManager) manager.getPlugin().configManager).removeReminder(ticket.getOwner(), ticket.getId());
 		return true;
 	}
 }

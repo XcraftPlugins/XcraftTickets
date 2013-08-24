@@ -10,31 +10,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-
 import org.bukkit.command.CommandSender;
 
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "stats",
-		command = "ticket",
-		pattern = "st.*",
-		permission = "XcraftTickets.Stats",
-		usage = "",
-		desc = "Zeigt Bearbeitungsstats aller bearbeiteten Tickets")
-public class StatsCommand extends Command {
+public class StatsCommand extends XcraftCommand {
+
+	public StatsCommand() {
+		super("ticket", "mod", "m.*", "<add/remove/list>", Msg.COMMAND_MOD.toString(), "XcraftTickets.Assignee");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		File root;
 		try {
 			root = new File(XcraftTickets.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
 			root = root.getParentFile();
 			File f = new File(root, "XcraftTickets/archive");
-			System.out.println(root.getPath());
-			System.out.println(f.getPath());
 
 			Map<String, Integer> list = new HashMap<String, Integer>();
 
@@ -83,9 +80,9 @@ public class StatsCommand extends Command {
 			ValueComparator bvc = new ValueComparator(map);
 			Map<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
 			sorted_map.putAll(map);
-			reply(sender, "XcraftTickets Stats:");
+			pManager.plugin.messenger.sendInfo(sender, "XcraftTickets Stats:", true);
 			for (String key : sorted_map.keySet()) {
-				reply(sender, "    " + key + ": " + map.get(key));
+				pManager.plugin.messenger.sendInfo(sender, "    " + key + ": " + map.get(key), true);
 			}
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();

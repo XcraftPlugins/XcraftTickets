@@ -8,8 +8,8 @@ import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import de.xcraft.INemesisI.Utils.XcraftPlugin;
 import de.xcraft.INemesisI.XcraftTickets.Manager.CommandManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -25,30 +25,23 @@ import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
  */ 
 //@formatter:on
 
-public class XcraftTickets extends JavaPlugin {
-
-	private final EventListener eventlistener = new EventListener(this);
-	public ConfigManager configManager;
-	public TicketManager ticketManager;
-	public CommandManager commandManager;
-
+public class XcraftTickets extends XcraftPlugin {
 	private Permission permission = null;
 
 	public Logger log = Logger.getLogger("Minecraft");
 	private boolean logging;
 
 	@Override
-	public void onDisable() {
-		configManager.save();
-	}
-
-	@Override
-	public void onEnable() {
+	protected void setup() {
+		Msg.init(this);
+		pluginManager = new TicketManager(this);
+		configManager = new ConfigManager(this);
+		eventListener = new EventManager(this);
+		commandManager = new CommandManager(this);
 		this.setupPermissions();
-		this.setupManager();
 		this.startScheduler();
-		this.getServer().getPluginManager().registerEvents(eventlistener, this);
-	} // End onEnable
+		configManager.load();
+	}
 
 	private Boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> permissionProvider = this.getServer().getServicesManager()
@@ -57,20 +50,6 @@ public class XcraftTickets extends JavaPlugin {
 			permission = permissionProvider.getProvider();
 		}
 		return permission != null;
-	}
-
-	private void setupManager() {
-		configManager = new ConfigManager(this);
-		ticketManager = new TicketManager(this);
-		configManager.load();
-		commandManager = new CommandManager(ticketManager);
-		registerCommands();
-	}
-
-	private void registerCommands() {
-		this.getCommand("ticket").setExecutor(commandManager);
-		this.getCommand("t").setExecutor(commandManager);
-		this.getCommand("tl").setExecutor(commandManager);
 	}
 
 	public Permission getPermission() {
@@ -93,7 +72,7 @@ public class XcraftTickets extends JavaPlugin {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				ticketManager.informPlayers(XcraftTickets.this.getServer());
+				((TicketManager) pluginManager).informPlayers(XcraftTickets.this.getServer());
 				configManager.save();
 			}
 		};
@@ -122,4 +101,5 @@ public class XcraftTickets extends JavaPlugin {
 	public void setLogging(boolean logging) {
 		this.logging = logging;
 	}
+
 }

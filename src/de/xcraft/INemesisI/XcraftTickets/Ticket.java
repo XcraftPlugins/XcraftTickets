@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,11 +18,11 @@ public class Ticket {
 	private String world;
 	private long processed;
 	private List<String> watched = new ArrayList<String>();
-	private List<Log> log = new ArrayList<Log>();
+	private Log log;
 
-	public Ticket(int id, String assignee, Location loc, String world, long processed, List<String> watched, List<Log> log) {
+	public Ticket(int id, String assignee, Location loc, String world, long processed, List<String> watched, Log log) {
 		this.id = id;
-		this.owner = log.get(0).player;
+		this.owner = log.getEntry(0).player;
 		this.assignee = assignee;
 		this.loc = loc;
 		this.world = world;
@@ -39,12 +38,7 @@ public class Ticket {
 		this.world = loc.getWorld().getName();
 		this.processed = new Date().getTime();
 		this.watched = new ArrayList<String>();
-		this.log.add(log);
-	}
-
-	public void addToLog(Log log) {
-		this.log.add(log);
-		this.processed = new Date().getTime();
+		this.log = log;
 	}
 
 	public boolean hasWatched(String player) {
@@ -65,7 +59,8 @@ public class Ticket {
 
 	public boolean isAssignee(CommandSender player, TicketManager manager) {
 		if (this.assignee != null
-				&& (this.assignee.equals(player.getName()) || manager.getPlugin().getPermission().playerInGroup((Player) player, this.assignee))) {
+				&& (this.assignee.equals(player.getName()) || ((XcraftTickets) manager.getPlugin()).getPermission().playerInGroup((Player) player,
+						this.assignee))) {
 			return true;
 		} else
 			return false;
@@ -127,11 +122,11 @@ public class Ticket {
 		this.processed = processed;
 	}
 
-	public List<Log> getLog() {
+	public Log getLog() {
 		return log;
 	}
 
-	public void setLog(List<Log> log) {
+	public void setLog(Log log) {
 		this.log = log;
 	}
 }

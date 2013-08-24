@@ -1,42 +1,42 @@
 package de.xcraft.INemesisI.XcraftTickets.Commands.User;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.XcraftTickets.Log;
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
+import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "close",
-		command = "ticket",
-		pattern = "c.*",
-		permission = "XcraftTickets.Close",
-		usage = "[#] [Nachricht]",
-		desc = "Schlieﬂt ein Ticket")
-public class CloseCommand extends Command {
+public class CloseCommand extends XcraftCommand {
+
+	public CloseCommand() {
+		super("ticket", "close", "c.*", "<ID> <MESSAGE> ...", Msg.COMMAND_CLOSE.toString(), "XcraftTickets.Close");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			this.error(sender, "Du hast keine Ticketnummer angegeben");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_TICKET_ID.toString(), true);
 			return false;
 		}
 
 		if (args.length < 2) {
-			this.error(sender, "Du hast keine Nachricht eingeben! ");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_MESSAGE.toString(), true);
 			return false;
 		}
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
-		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.Close.All")) {
-			this.error(sender, "Du hast keine Rechte dieses Ticket zu schliessen!");
+		if (!ticket.getOwner().equals(sender.getName()) && !sender.hasPermission("XcraftTickets.Close.All")) {
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;
 		}
 		String message = "";
@@ -44,23 +44,15 @@ public class CloseCommand extends Command {
 			message += " " + args[i];
 		}
 		message = manager.checkPhrases(sender, message);
-		ticket.addToLog(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.CLOSE, message));
+		ticket.getLog().add(EntryType.CLOSE, sender.getName(), message);
 		if (ticket.getId() == manager.getLastTicket(sender)) {
 			manager.setLastTicket(sender, -1);
 		}
 		manager.setTicketArchived(ticket);
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von "
-				+ ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " geschlossen: " + ChatColor.AQUA + message);
-		if (getName(sender).equals(ticket.getOwner())) {
-			manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-					+ " wurde von " + ChatColor.YELLOW + "dir" + ChatColor.GRAY + " geschlossen: \n" + ChatColor.AQUA + message);
-		} else {
-			manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-					+ " wurde von " + ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " geschlossen: \n" + ChatColor.AQUA + message
-					+ ChatColor.GRAY + "\n Nutze bitte /ticket reopen <nr> <nachricht> um es eventuell wieder zu oeffnen!");
-		}
+		Replace[] replace = {Replace.NAME(sender.getName()), Replace.ID(id), Replace.MESSAGE(message)};
+		manager.inform(ticket, Msg.TICKET_BROADCAST_CLOSE.toString(replace), true);
 		if (!sender.getName().equals(ticket.getOwner())) {
-			manager.getPlugin().configManager.addReminder(ticket.getOwner(), id);
+			((ConfigManager) manager.getPlugin().configManager).addReminder(ticket.getOwner(), id);
 		}
 		return true;
 	}

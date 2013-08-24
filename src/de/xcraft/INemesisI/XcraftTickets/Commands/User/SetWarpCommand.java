@@ -1,50 +1,57 @@
 package de.xcraft.INemesisI.XcraftTickets.Commands.User;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.xcraft.INemesisI.XcraftTickets.Log;
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "setwarp",
-		command = "ticket",
-		pattern = "setw.*|sw",
-		permission = "XcraftTickets.Setwarp",
-		usage = "[#]",
-		desc = "Ändert den Teleport des Tickets")
-public class SetWarpCommand extends Command {
+public class SetWarpCommand extends XcraftCommand {
+
+	public SetWarpCommand() {
+		super("ticket", "setwarp", "se.*|sw", "<ID> [MESSAGE] ...", Msg.COMMAND_SETWARP.toString(), "XcraftTickets.Setwarp");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			this.error(sender, "Du hast keine Ticketnummer angegeben");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_TICKET_ID.toString(), true);
 			return false;
 		}
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
 
-		if (!this.getName(sender).equals(ticket.getOwner())) {
-			this.error(sender, "Du kannst den Warp nur fuer dein eigenes Ticket Aendern!");
+		if (!sender.getName().equals(ticket.getOwner())) {
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;
 		}
 		if (!(sender instanceof Player)) {
-			this.error(sender, "Das ist ueber die Konsole nicht moeglich!");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NOT_FROM_CONSOLE.toString(), true);
 		} else {
 			Player player = (Player) sender;
 			Location loc = player.getLocation();
 			ticket.setLoc(loc);
-			ticket.addToLog(new Log(manager.getCurrentDate(), player.getName(), Log.Type.COMMENT, "Der Warppunkt wurde aktualisiert"));
-			this.reply(sender, "Der Warp fuer Ticket #" + ticket.getId() + " wurde an deine derzeitige Position verlegt!");
+
+			String message = "";
+			for (int i = 1; i < args.length; i++) {
+				message += " " + args[i];
+			}
+			message = manager.checkPhrases(sender, message);
+
+			ticket.getLog().add(EntryType.SETWARP, sender.getName(), message);
+
+			manager.inform(ticket, Msg.TICKET_BROADCAST_SETWARP.toString(Replace.ID(id), Replace.NAME(sender.getName())), true);
 			ticket.clearWatched();
 		}
 		return true;

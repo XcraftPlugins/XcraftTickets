@@ -1,42 +1,36 @@
 package de.xcraft.INemesisI.XcraftTickets.Commands.Mod;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "unassign",
-		command = "ticket",
-		pattern = "una.*",
-		permission = "XcraftTickets.Unassign",
-		usage = "[#]",
-		desc = "Entfernt die Weiterleitung")
-public class UnAssignCommand extends Command {
+public class UnAssignCommand extends XcraftCommand {
+
+	public UnAssignCommand() {
+		super("ticket", "unassign", "una.*", "<ID>", Msg.COMMAND_UNASSIGN.toString(), "XcraftTickets.Unassign");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			this.error(sender, "Du hast keine Ticketnummer angegeben");
 			return false;
 		}
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
 		ticket.setAssignee(null);
 		ticket.clearWatched();
-		ticket.addToWatched(this.getName(sender));
-		manager.sendToPlayer(ticket.getOwner(), //
-				ChatColor.GRAY + "Die Zuweisung fuer dein Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY + " wurde von "
-						+ ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " entfernt!");
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Die Zuweisung fuer Ticket " + ChatColor.GOLD + "#" + ticket.getId() + ChatColor.GRAY
-				+ " wurde von " + ChatColor.YELLOW + sender.getName() + ChatColor.GRAY + " entfernt!");
+		ticket.addToWatched(sender.getName());
+		manager.inform(ticket, Msg.TICKET_BROADCAST_UNASSIGN.toString(Replace.ID(id)), true);
 		return true;
 	}
 }

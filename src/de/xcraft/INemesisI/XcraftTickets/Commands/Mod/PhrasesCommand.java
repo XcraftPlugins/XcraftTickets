@@ -2,31 +2,31 @@ package de.xcraft.INemesisI.XcraftTickets.Commands.Mod;
 
 import java.util.Map;
 
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "phrases",
-		command = "ticket",
-		pattern = "p.*",
-		permission = "XcraftTickets.Phrases",
-		usage = "list|add|remove|append <Phrase> [Message]",
-		desc = "bearbeiten aller Ticket-Phrasen")
-public class PhrasesCommand extends Command {
+public class PhrasesCommand extends XcraftCommand { // TODO: workaround TEXT?
+
+	public PhrasesCommand() {
+		super("ticket", "phrases", "p.*", "<list/add/remove/append> <MESSAGE> <Text>", Msg.COMMAND_PHRASES.toString(), "XcraftTickets.Phrases");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		Map<String, String> map = manager.getPhrases();
 		if (args.length < 1)
 			return false;
 		if (args[0].equals("list")) {
-			reply(sender, ChatColor.DARK_AQUA + "Predefined Phrases: ");
+			pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_PHRASES_LIST.toString(), true);
 			for (String key : map.keySet()) {
-				reply(sender, ChatColor.DARK_AQUA + key + ": " + ChatColor.DARK_GRAY + map.get(key));
+				pManager.plugin.messenger.sendInfo(sender, ChatColor.DARK_AQUA + key + ": " + ChatColor.DARK_GRAY + map.get(key), true);
 			}
 		} else if (args[0].equals("add")) {
 			String key = args[1];
@@ -36,13 +36,14 @@ public class PhrasesCommand extends Command {
 			}
 			msg.trim();
 			manager.getPhrases().put(key, msg);
-			reply(sender, "Successuflly added the phrase (" + key + " = " + msg + ")");
+			pManager.plugin.messenger.sendInfo(sender, "Successuflly added the phrase (" + key + " = " + msg + ")", true);
+			pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_PHRASES_ADD.toString(Replace.NAME(key), Replace.MESSAGE(msg)), true);
 		} else if (args[0].equals("remove")) {
 			String key = args[1];
 			if (manager.getPhrases().remove(key) != null) {
-				reply(sender, "Successuflly removed the phrase");
+				pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_PHRASES_REMOVE.toString(Replace.NAME(key)), true);
 			} else {
-				error(sender, "Could not find a phrase with that name");
+				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_PHRASE_NOT_FOUND.toString(Replace.NAME(key)), true);
 			}
 		} else if (args[0].equals("append")) {
 			String key = args[1];
@@ -53,9 +54,9 @@ public class PhrasesCommand extends Command {
 			msg.trim();
 			if (manager.getPhrases().containsKey(key)) {
 				manager.getPhrases().put(key, manager.getPhrases().get(key) + msg);
-				reply(sender, "Successuflly edited the phrase: " + ChatColor.GRAY + manager.getPhrases().get(key));
+				pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_PHRASES_APPEND.toString(Replace.NAME(key), Replace.MESSAGE(msg)), true);
 			} else {
-				error(sender, "Could not find a phrase with that name");
+				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_PHRASE_NOT_FOUND.toString(Replace.NAME(key)), true);
 			}
 		}
 		return true;

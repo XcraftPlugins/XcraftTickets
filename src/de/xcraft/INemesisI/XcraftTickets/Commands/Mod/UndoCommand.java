@@ -1,27 +1,25 @@
 package de.xcraft.INemesisI.XcraftTickets.Commands.Mod;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.XcraftTickets.Log;
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Log.LogEntry;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "undo",
-		command = "ticket",
-		pattern = "und.*",
-		permission = "XcraftTickets.Undo",
-		usage = "[#]",
-		desc = "Entfernt die letzte Aktion eines Tickets")
-public class UndoCommand extends Command {
+public class UndoCommand extends XcraftCommand {
+
+	public UndoCommand() {
+		super("ticket", "undo", "und.*", "<ID>", Msg.COMMAND_UNDO.toString(), "XcraftTickets.Undo");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			this.error(sender, "Du hast keine Ticketnummer angegeben");
 			return false;
 		}
 		int id = Integer.parseInt(args[0]);
@@ -30,37 +28,42 @@ public class UndoCommand extends Command {
 			ticket = manager.getArchivedTicket(id);
 		}
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		} else {
-			Log log = ticket.getLog().get(ticket.getLog().size() - 1);
-			if (!log.player.equals(this.getName(sender))) {
-				this.error(sender, "Jemand anders hat die letzte Antwort verfasst. Diese kannst du nicht ruekgaengig machen");
+			LogEntry entry = ticket.getLog().getEntry(ticket.getLog().size());
+			if (!entry.player.equals(sender.getName())) {
+				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_UNDO_IMPOSSIBLE.toString(), true);
 			} else {
-				switch (log.type) {
+				boolean done = false;
+				switch (entry.type) {
 					case OPEN :
 						manager.deleteTicket(ticket);
-						this.reply(sender, "Dein Ticket wurde wieder geloescht!");
-						return true;
+						done = true;
 					case COMMENT :
-						ticket.getLog().remove(log);
-						this.reply(sender, "Deine letzte Antwort wurde geloescht!");
-						return true;
+						ticket.getLog().remove(entry);
+						done = true;
 					case REOPEN :
-						ticket.getLog().remove(log);
+						ticket.getLog().remove(entry);
 						manager.setTicketArchived(ticket);
-						this.reply(sender, "Deine letzte Antwort wurde geloescht und das Ticket wurde wieder geschlossen!");
-						return true;
+						done = true;
 					case CLOSE :
-						ticket.getLog().remove(log);
+						ticket.getLog().remove(entry);
 						manager.addTicket(ticket);
-						this.reply(sender, "Deine letzte Antwort wurde geloescht und das Ticket wurde wieder geoeffnet!");
-						return true;
+						done = true;
 					case ASSIGN :
-						ticket.getLog().remove(log);
+						ticket.getLog().remove(entry);
 						ticket.setAssignee(null);
-						this.reply(sender, "Die Zuweisung wurde entfernt!");
+						done = true;
+					case SETWARP :
+						pManager.plugin.messenger.sendInfo(sender, Msg.ERR_UNDO_IMPOSSIBLE.toString(), true);
 						return true;
+				}
+				if (done) {
+					pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_UNDO_SUCCESSFUL.toString(), true);
+					return true;
+				} else {
+					return false;
 				}
 			}
 		}

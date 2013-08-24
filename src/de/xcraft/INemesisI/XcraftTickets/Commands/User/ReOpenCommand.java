@@ -1,42 +1,41 @@
 package de.xcraft.INemesisI.XcraftTickets.Commands.User;
 
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.XcraftTickets.Log;
+import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
+import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
+import de.xcraft.INemesisI.XcraftTickets.Msg;
+import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Command;
-import de.xcraft.INemesisI.XcraftTickets.Commands.CommandInfo;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
-@CommandInfo(name = "reopen",
-		command = "ticket",
-		pattern = "reo.*|ro",
-		permission = "XcraftTickets.Reopen",
-		usage = "[#] [Nachricht]",
-		desc = "Eröffnet ein Ticket wieder")
-public class ReOpenCommand extends Command {
+public class ReOpenCommand extends XcraftCommand {
+
+	public ReOpenCommand() {
+		super("ticket", "reopen", "reo.*|ro", "<ID> <MESAGE> ...", Msg.COMMAND_REOPEN.toString(), "XcraftTickets.Reopen");
+	}
 
 	@Override
-	public boolean execute(TicketManager manager, CommandSender sender, String[] args) {
+	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
+		TicketManager manager = (TicketManager) pManager;
 		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			this.error(sender, "Du hast keine Ticketnummer angegeben");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_TICKET_ID.toString(), true);
 			return false;
 		}
 
 		if (args.length < 2) {
-			this.error(sender, "Du hast keine Nachricht eingeben! ");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_MESSAGE.toString(), true);
 			return false;
 		}
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getArchivedTicket(id);
 		if (ticket == null) {
-			this.error(sender, "Ein Ticket mit der Nummer " + ChatColor.GOLD + id + ChatColor.RED + " konnte nicht gefunden werden");
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
-		if (!ticket.getOwner().equals(this.getName(sender)) && !sender.hasPermission("XcraftTickets.Reopen.All")) {
-			this.error(sender, "Du hast keine Rechte dieses Ticket wieder zu öffnen!");
+		if (!ticket.getOwner().equals(sender.getName()) && !sender.hasPermission("XcraftTickets.Reopen.All")) {
+			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;
 		}
 		String message = "";
@@ -45,12 +44,10 @@ public class ReOpenCommand extends Command {
 		}
 		message = manager.checkPhrases(sender, message);
 		manager.addTicket(ticket);
-		ticket.addToLog(new Log(manager.getCurrentDate(), this.getName(sender), Log.Type.REOPEN, message));
-		ticket.addToWatched(this.getName(sender));
-		manager.sendToPlayer(ticket.getOwner(), ChatColor.GRAY + "Dein Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von "
-				+ ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " wieder eroeffnet: " + ChatColor.AQUA + message);
-		manager.sendToMods(ticket.getOwner(), ChatColor.GRAY + "Das Ticket " + ChatColor.GOLD + "#" + id + ChatColor.GRAY + " wurde von "
-				+ ChatColor.YELLOW + this.getName(sender) + ChatColor.GRAY + " wieder eroeffnet: " + ChatColor.AQUA + message);
+		ticket.getLog().add(EntryType.REOPEN, sender.getName(), message);
+		ticket.addToWatched(sender.getName());
+		Replace[] replace = {Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.MESSAGE(message)};
+		manager.inform(ticket, Msg.TICKET_BROADCAST_REOPEN.toString(replace), true);
 		return true;
 	}
 }
