@@ -59,6 +59,7 @@ public class ListCommand extends XcraftCommand {
 				}
 				Replace[] replace = {Replace.ID(ticket.getId()), Replace.TIME(log.getDate()), Replace.MISC(misc), Replace.NAME(ticket.getOwner()),
 						Replace.ASSIGNEE(assignee), Replace.MESSAGE(log.getEntry(0).message)};
+				pManager.plugin.messenger.sendInfo(sender, "", false);
 				pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_LIST.toString(replace), false);
 			}
 		}

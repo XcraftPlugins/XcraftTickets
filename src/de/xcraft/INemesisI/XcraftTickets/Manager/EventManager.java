@@ -1,4 +1,4 @@
-package de.xcraft.INemesisI.XcraftTickets;
+package de.xcraft.INemesisI.XcraftTickets.Manager;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -6,7 +6,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import de.xcraft.INemesisI.Utils.XcraftEventListener;
 import de.xcraft.INemesisI.Utils.XcraftPlugin;
-import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
 public class EventManager extends XcraftEventListener {
 	TicketManager tManager;

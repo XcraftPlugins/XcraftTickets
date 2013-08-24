@@ -124,7 +124,7 @@ public class TicketManager extends XcraftPluginManager {
 	public String checkPhrases(CommandSender sender, String message) {
 		if (sender.hasPermission("XcraftTickets.Phrases")) {
 			for (String s : this.getPhrases().keySet()) {
-				if (message.contains(s)) {
+				if (message.contains(" " + s + " ")) {
 					message = message.replace(s, "$[" + s + "]$");
 				}
 			}
@@ -142,6 +142,7 @@ public class TicketManager extends XcraftPluginManager {
 		log.add(EntryType.OPEN, owner, message);
 		Ticket ticket = new Ticket(this.getNextID(), owner, loc, log);
 		tickets.add(ticket);
+		cManager.saveTicket(cManager.folder, ticket);
 		this.setNextID(this.getNextID() + 1);
 		return ticket;
 	}

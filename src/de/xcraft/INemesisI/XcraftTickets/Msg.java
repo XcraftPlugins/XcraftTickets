@@ -202,7 +202,11 @@ public enum Msg {
 			file.createNewFile();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			for (Msg m : Msg.values()) {
-				bw.write(m.name() + ": " + m.get());
+				String msg = m.get();
+				if (msg.contains("\n")) {
+					msg = msg.replace("\n", "\\n");
+				}
+				bw.write(m.name() + ": " + msg);
 				bw.newLine();
 			}
 			bw.close();

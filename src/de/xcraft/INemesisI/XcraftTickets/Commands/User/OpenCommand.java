@@ -34,9 +34,9 @@ public class OpenCommand extends XcraftCommand {
 		}
 		Ticket ticket = manager.addTicket(sender.getName(), loc, message);
 		ticket.addToWatched(ticket.getOwner());
-
-		pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_BROADCAST_OPEN.toString(Replace.ID(ticket.getId()), Replace.NAME(sender.getName())), true);
-		manager.inform(ticket, Msg.COMMAND_OPEN_SUCCESSFUL.toString(Replace.ID(ticket.getId()), Replace.NAME(sender.getName())), true);
+		Replace[] replace = {Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.MESSAGE(message)};
+		pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_OPEN_SUCCESSFUL.toString(replace), true);
+		manager.inform(ticket, Msg.TICKET_BROADCAST_OPEN.toString(replace), true);
 		return true;
 	}
 }

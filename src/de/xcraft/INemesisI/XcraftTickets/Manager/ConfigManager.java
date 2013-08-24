@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,10 +56,11 @@ public class ConfigManager extends XcraftConfigManager {
 		List<String> assignees = ((List<String>) config.getList("Assignee"));
 		tmanager.setAssignees(assignees);
 		ConfigurationSection cs = config.getConfigurationSection("Phrases");
-		Map<String, String> phrases = tmanager.getPhrases();
+		Map<String, String> phrases = new HashMap<String, String>();
 		for (String value : cs.getKeys(false)) {
 			phrases.put(value, cs.getString(value));
 		}
+		tmanager.setPhrases(phrases);
 	}
 
 	@Override
@@ -89,9 +91,8 @@ public class ConfigManager extends XcraftConfigManager {
 		if ((list != null) && !list.isEmpty()) {
 			for (int i = 0; i < list.size(); i++) {
 				String split[] = list.get(i).split("; ");
-				long time = split[0].matches("\\d*") ? Long.valueOf(split[0])
-						: 0;
-				log.add(time, EntryType.valueOf(split[2]), split[1], split[3]);
+				long time = split[0].matches("\\d*") ? Long.valueOf(split[0]) : 0;
+				log.add(time, EntryType.valueOf(split[2]), split[1], split.length >= 4 ? split[3] : "");
 			}
 		}
 		List<String> watched = (ArrayList<String>) cs.getList("watched");

@@ -12,6 +12,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import de.xcraft.INemesisI.Utils.XcraftPlugin;
 import de.xcraft.INemesisI.XcraftTickets.Manager.CommandManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
+import de.xcraft.INemesisI.XcraftTickets.Manager.EventManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
 //@formatter:off
@@ -73,7 +74,6 @@ public class XcraftTickets extends XcraftPlugin {
 			@Override
 			public void run() {
 				((TicketManager) pluginManager).informPlayers(XcraftTickets.this.getServer());
-				configManager.save();
 			}
 		};
 		this.getServer().getScheduler().runTaskTimerAsynchronously(this, task, ((min * 60) + sec) * 20, 60 * delay * 20);

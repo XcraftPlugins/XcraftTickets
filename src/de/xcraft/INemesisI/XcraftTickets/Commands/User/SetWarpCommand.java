@@ -50,8 +50,8 @@ public class SetWarpCommand extends XcraftCommand {
 			message = manager.checkPhrases(sender, message);
 
 			ticket.getLog().add(EntryType.SETWARP, sender.getName(), message);
-
-			manager.inform(ticket, Msg.TICKET_BROADCAST_SETWARP.toString(Replace.ID(id), Replace.NAME(sender.getName())), true);
+			Replace[] replace = {Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.MESSAGE(message)};
+			manager.inform(ticket, Msg.TICKET_BROADCAST_SETWARP.toString(replace), true);
 			ticket.clearWatched();
 		}
 		return true;

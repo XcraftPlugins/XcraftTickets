@@ -1,24 +1,23 @@
-Next_Ticket_ID: 1
+Next_Ticket_ID: 5280
 Assignee:
 - INemesisI
 - Engelier
 - Lymira
-- IshtarStar
-- Drowcraft
+- Nyphatonic
+- Bronweg
+- Umbrax
 - Lerkus
 - Markistar
-- LarsStosch
 - Admin
 - Mod
 Phrases:
-  keine_antwort: 'Keine Antwort... das Ticket wird erstmal geschlossen! '
-  erledigt: Erledigt!
-  gesichert: Deine Region wurde gesichert. Viel Spass beim bauen!
-  admin_weitergeleitet: Ein Admin wird sich darum kuemmern!
-  mod_weitergeleitet: Ein Mod wird sich darum kuemmern!
-  hinzugefuegt: Dein Freund wurde zu der Region hinzugefuegt!
-  setwarp: Benutze bitte /ticket setwarp <#> dort, wo du Hilfe benoetigst!
-  danke: Vielen Dank!
-  log_benutzen: Benutze bitte /ticket log <#> <Nachricht> um auf das Ticket zu antworten!
-  gratulation: Herzlichen Glueckwunsch!
-  erweitert: Deine Region wurde erweitert. Viel Spass!
+  keine_antwort: 'Du hast lange nicht mehr auf das Ticket geantwortet... deshalb wird es erstmal geschlossen!'
+  erledigt: 'Erledigt!'
+  done: 'Erledigt!'
+  gesichert: 'Deine Region wurde gesichert. Viel Spass beim bauen!'
+  hinzugefuegt: 'Dein Mitspieler wurde zu der Region hinzugefuegt!'
+  setwarp: 'Benutze bitte /ticket setwarp <#> dort, wo du Hilfe benoetigst!'
+  danke: 'Vielen Dank!'
+  log_benutzen: 'Benutze bitte /ticket log <#> <Nachricht> um auf das Ticket zu antworten!'
+  gratulation: 'Herzlichen Glueckwunsch!'
+  erweitert: 'Deine Region wurde erweitert. Viel Spass!'

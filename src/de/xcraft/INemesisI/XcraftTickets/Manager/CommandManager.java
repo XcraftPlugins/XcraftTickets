@@ -14,6 +14,7 @@ import de.xcraft.INemesisI.XcraftTickets.Commands.Admin.StatsCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.AssignCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.PhrasesCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.UnAssignCommand;
+import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.UndoCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.WarpCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.User.CloseCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.User.ListCommand;
@@ -48,6 +49,7 @@ public class CommandManager extends XcraftCommandManager {
 		this.registerCommand(new WarpCommand());
 		this.registerCommand(new AssignCommand());
 		this.registerCommand(new UnAssignCommand());
+		this.registerCommand(new UndoCommand());
 		this.registerCommand(new PhrasesCommand());
 		// Admin Commands
 		this.registerCommand(new ModCommand());
