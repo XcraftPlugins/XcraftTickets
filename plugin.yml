@@ -1,8 +1,9 @@
 name: XcraftTickets
-version: 1.4.2
-author: INemesisI
 
 main: de.xcraft.INemesisI.XcraftTickets.XcraftTickets
+
+version: 1.41
+
 load: POSTWORLD
 
 commands:
