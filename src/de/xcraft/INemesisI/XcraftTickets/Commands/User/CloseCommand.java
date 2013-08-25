@@ -2,8 +2,8 @@ package de.xcraft.INemesisI.XcraftTickets.Commands.User;
 
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
@@ -39,11 +39,7 @@ public class CloseCommand extends XcraftCommand {
 			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;
 		}
-		String message = "";
-		for (int i = 1; i < args.length; i++) {
-			message += " " + args[i];
-		}
-		message = manager.checkPhrases(sender, message);
+		String message = manager.getMessage(sender, args);
 		ticket.getLog().add(EntryType.CLOSE, sender.getName(), message);
 		if (ticket.getId() == manager.getLastTicket(sender)) {
 			manager.setLastTicket(sender, -1);

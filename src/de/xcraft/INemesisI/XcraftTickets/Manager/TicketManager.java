@@ -14,8 +14,7 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.xcraft.INemesisI.Utils.XcraftPlugin;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Log;
 import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
@@ -121,13 +120,18 @@ public class TicketManager extends XcraftPluginManager {
 		}
 	}
 
-	public String checkPhrases(CommandSender sender, String message) {
+	public String getMessage(CommandSender sender, String[] args) {
+		String message = " ";
+		for (int i = 1; i < args.length; i++) {
+			message += args[i] + " ";
+		}
 		if (sender.hasPermission("XcraftTickets.Phrases")) {
 			for (String s : this.getPhrases().keySet()) {
 				if (message.contains(" " + s + " ")) {
 					message = message.replace(s, "$[" + s + "]$");
 				}
 			}
+			message = message.trim();
 			for (String s : this.getPhrases().keySet()) {
 				if (message.contains("$[" + s + "]$")) {
 					message = message.replace("$[" + s + "]$", this.getPhrases().get(s));
@@ -215,7 +219,7 @@ public class TicketManager extends XcraftPluginManager {
 	}
 
 	@Override
-	public XcraftPlugin getPlugin() {
-		return plugin;
+	public XcraftTickets getPlugin() {
+		return (XcraftTickets) plugin;
 	}
 }

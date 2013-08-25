@@ -7,8 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 
-import de.xcraft.INemesisI.Utils.XcraftPlugin;
-import de.xcraft.INemesisI.Utils.Message.Messenger;
+import de.xcraft.INemesisI.Library.XcraftPlugin;
+import de.xcraft.INemesisI.Library.Message.Messenger;
 
 public enum Msg {
 	//@formatter:off
@@ -96,7 +96,8 @@ public enum Msg {
 	//@formatter:on
 
 	public enum Replace {
-		$NAME$("Name a Player"), $ID$("ID of a ticket"), $MESSAGE$("Message provided in a command"), $TIME$("timesamp for a ticket"), $ASSIGNEE$(
+		$NAME$("Name of a Player"), $ID$("ID of a ticket"), $MESSAGE$(
+				"Message provided in a command"), $TIME$("timesamp for a ticket"), $ASSIGNEE$(
 				"Assignee of a ticket"), $MISC$("Miscellaneous stuff");
 
 		private String key;

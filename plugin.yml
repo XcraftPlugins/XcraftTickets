@@ -1,9 +1,12 @@
 name: XcraftTickets
-version: 1.4.2
+version: 1.4.3
 author: INemesisI
 
 main: de.xcraft.INemesisI.XcraftTickets.XcraftTickets
 load: POSTWORLD
+
+depend: [XcraftLibrary]
+softdepend: [Vault]
 
 commands:
   ticket:

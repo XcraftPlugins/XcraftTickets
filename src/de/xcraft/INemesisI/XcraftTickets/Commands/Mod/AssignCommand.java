@@ -2,8 +2,8 @@ package de.xcraft.INemesisI.XcraftTickets.Commands.Mod;
 
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
@@ -39,7 +39,8 @@ public class AssignCommand extends XcraftCommand {
 				manager.setLastTicket(sender, -1);
 			}
 			ticket.setAssignee(args[1]);
-			Replace[] replace = {Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.ASSIGNEE(args[1])};
+			Replace[] replace = { Replace.ID(ticket.getId()), Replace.NAME(args[1]),
+					Replace.ASSIGNEE(args[1]) };
 			manager.inform(ticket, Msg.TICKET_BROADCAST_ASSIGN.toString(replace), true);
 			return true;
 		}

@@ -3,7 +3,7 @@ package de.xcraft.INemesisI.XcraftTickets.Manager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.Utils.Manager.XcraftCommandManager;
+import de.xcraft.INemesisI.Library.Manager.XcraftCommandManager;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
 import de.xcraft.INemesisI.XcraftTickets.Commands.AssigneeUsage;

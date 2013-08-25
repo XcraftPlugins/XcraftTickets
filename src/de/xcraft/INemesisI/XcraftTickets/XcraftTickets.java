@@ -9,7 +9,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import de.xcraft.INemesisI.Utils.XcraftPlugin;
+import de.xcraft.INemesisI.Library.XcraftPlugin;
 import de.xcraft.INemesisI.XcraftTickets.Manager.CommandManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.EventManager;

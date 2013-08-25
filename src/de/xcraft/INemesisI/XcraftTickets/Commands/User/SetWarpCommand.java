@@ -4,8 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
@@ -43,12 +43,7 @@ public class SetWarpCommand extends XcraftCommand {
 			Location loc = player.getLocation();
 			ticket.setLoc(loc);
 
-			String message = "";
-			for (int i = 1; i < args.length; i++) {
-				message += " " + args[i];
-			}
-			message = manager.checkPhrases(sender, message);
-
+			String message = manager.getMessage(sender, args);
 			ticket.getLog().add(EntryType.SETWARP, sender.getName(), message);
 			Replace[] replace = {Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.MESSAGE(message)};
 			manager.inform(ticket, Msg.TICKET_BROADCAST_SETWARP.toString(replace), true);

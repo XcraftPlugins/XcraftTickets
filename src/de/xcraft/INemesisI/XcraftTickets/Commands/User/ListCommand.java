@@ -4,8 +4,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Log;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
@@ -38,6 +38,7 @@ public class ListCommand extends XcraftCommand {
 			|| ((XcraftTickets) manager.getPlugin()).getPermission().playerInGroup((Player) sender, ticket.getAssignee())))) {
 			//@formatter:on
 				if (counter == -1) {
+					pManager.plugin.messenger.sendInfo(sender, "", false);
 					pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_LIST_HEAD.toString(), true);
 				}
 				counter++;
@@ -59,7 +60,6 @@ public class ListCommand extends XcraftCommand {
 				}
 				Replace[] replace = {Replace.ID(ticket.getId()), Replace.TIME(log.getDate()), Replace.MISC(misc), Replace.NAME(ticket.getOwner()),
 						Replace.ASSIGNEE(assignee), Replace.MESSAGE(log.getEntry(0).message)};
-				pManager.plugin.messenger.sendInfo(sender, "", false);
 				pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_LIST.toString(replace), false);
 			}
 		}

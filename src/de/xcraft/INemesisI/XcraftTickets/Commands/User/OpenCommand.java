@@ -4,8 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
@@ -24,10 +24,7 @@ public class OpenCommand extends XcraftCommand {
 			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_MESSAGE.toString(), true);
 			return false;
 		}
-		String message = "";
-		for (int i = 0; i < args.length; i++) {
-			message += " " + args[i];
-		}
+		String message = manager.getMessage(sender, args);
 		Location loc = null;
 		if (sender instanceof Player) {
 			loc = ((Player) sender).getLocation();

@@ -5,8 +5,8 @@ import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -14,7 +14,7 @@ import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 public class PhrasesCommand extends XcraftCommand { // TODO: workaround TEXT?
 
 	public PhrasesCommand() {
-		super("ticket", "phrases", "p.*", "<list/add/remove/append> <MESSAGE> <Text>", Msg.COMMAND_PHRASES.toString(), "XcraftTickets.Phrases");
+		super("ticket", "phrases", "p.*", "<list/add/remove/append> [MESSAGE] [Text]", Msg.COMMAND_PHRASES.toString(), "XcraftTickets.Phrases");
 	}
 
 	@Override

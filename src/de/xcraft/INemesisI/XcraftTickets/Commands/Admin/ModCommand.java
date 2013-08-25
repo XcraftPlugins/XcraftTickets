@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -13,7 +13,7 @@ import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 public class ModCommand extends XcraftCommand {
 
 	public ModCommand() {
-		super("ticket", "mod", "m.*", "<add/remove/list>", Msg.COMMAND_MOD.toString(), "XcraftTickets.Asignee");
+		super("ticket", "mod", "m.*", "<add/remove/list> [Assignee]", Msg.COMMAND_MOD.toString(), "XcraftTickets.Asignee");
 	}
 
 	@Override

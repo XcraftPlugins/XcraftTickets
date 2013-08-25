@@ -2,8 +2,8 @@ package de.xcraft.INemesisI.XcraftTickets.Commands.User;
 
 import org.bukkit.command.CommandSender;
 
-import de.xcraft.INemesisI.Utils.Command.XcraftCommand;
-import de.xcraft.INemesisI.Utils.Manager.XcraftPluginManager;
+import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
@@ -49,7 +49,8 @@ public class ViewCommand extends XcraftCommand {
 		if (args.length < 2 && entries.length > 5) {
 			start = entries.length - 4;
 			pManager.plugin.messenger.sendInfo(sender, entries[0], false);
-			pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_VIEW_BREAK.toString(), false);
+			pManager.plugin.messenger.sendInfo(sender,
+					Msg.TICKET_VIEW_BREAK.toString(Replace.ID(id)), false);
 		}
 		for (int i = start; i < entries.length; i++) {
 			sender.sendMessage(entries[i]);

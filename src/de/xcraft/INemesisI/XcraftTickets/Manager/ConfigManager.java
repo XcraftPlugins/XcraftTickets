@@ -15,7 +15,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import de.xcraft.INemesisI.Utils.Manager.XcraftConfigManager;
+import de.xcraft.INemesisI.Library.Manager.XcraftConfigManager;
 import de.xcraft.INemesisI.XcraftTickets.Log;
 import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
@@ -47,18 +47,20 @@ public class ConfigManager extends XcraftConfigManager {
 		List<Ticket> tickets = new ArrayList<Ticket>();
 		for (File file : files) {
 			Ticket ticket = loadTicket(file);
-			if (ticket != null) tickets.add(ticket);
+			if (ticket != null)
+				tickets.add(ticket);
 		}
 		tmanager.setTickets(tickets);
+		// load cfg
 		tmanager.setNextID(config.getInt("Next_Ticket_ID", 1));
-		tmanager.getDate().applyPattern(
-				config.getString("DateFormat", "dd.MM HH:mm"));
-		List<String> assignees = ((List<String>) config.getList("Assignee"));
-		tmanager.setAssignees(assignees);
-		ConfigurationSection cs = config.getConfigurationSection("Phrases");
+		tmanager.getDate().applyPattern(config.getString("DateFormat", "dd.MM HH:mm"));
+		tmanager.setAssignees((List<String>) config.getList("Assignee"));
 		Map<String, String> phrases = new HashMap<String, String>();
-		for (String value : cs.getKeys(false)) {
-			phrases.put(value, cs.getString(value));
+		if (config.isConfigurationSection("Phrases")) {
+			ConfigurationSection cs = config.getConfigurationSection("Phrases");
+			for (String key : cs.getKeys(false)) {
+				phrases.put(key, cs.getString(key));
+			}
 		}
 		tmanager.setPhrases(phrases);
 	}
@@ -92,7 +94,8 @@ public class ConfigManager extends XcraftConfigManager {
 			for (int i = 0; i < list.size(); i++) {
 				String split[] = list.get(i).split("; ");
 				long time = split[0].matches("\\d*") ? Long.valueOf(split[0]) : 0;
-				log.add(time, EntryType.valueOf(split[2]), split[1], split.length >= 4 ? split[3] : "");
+				log.add(time, EntryType.valueOf(split[2]), split[1], split.length >= 4 ? split[3]
+						: "");
 			}
 		}
 		List<String> watched = (ArrayList<String>) cs.getList("watched");
@@ -115,8 +118,8 @@ public class ConfigManager extends XcraftConfigManager {
 		if (cs != null) {
 			world = cs.getString("world");
 			World w = plugin.getServer().getWorld(world);
-			loc = new Location(w, cs.getLong("x"), cs.getLong("y"),
-					cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
+			loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"),
+					cs.getLong("pitch"), cs.getLong("yaw"));
 		}
 		return new Ticket(id, assignee, loc, world, processed, watched, log);
 
