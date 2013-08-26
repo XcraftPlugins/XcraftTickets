@@ -20,14 +20,12 @@ public class OpenCommand extends XcraftCommand {
 	@Override
 	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
 		TicketManager manager = (TicketManager) pManager;
-		if (args.length == 0) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_MESSAGE.toString(), true);
-			return false;
-		}
 		String message = manager.getMessage(sender, args);
 		Location loc = null;
 		if (sender instanceof Player) {
 			loc = ((Player) sender).getLocation();
+		} else {
+			loc = manager.plugin.getServer().getWorlds().get(0).getSpawnLocation();
 		}
 		Ticket ticket = manager.addTicket(sender.getName(), loc, message);
 		ticket.addToWatched(ticket.getOwner());

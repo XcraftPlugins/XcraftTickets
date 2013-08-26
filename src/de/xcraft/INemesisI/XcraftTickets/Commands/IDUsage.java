@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import de.xcraft.INemesisI.Library.Command.XcraftUsage;
-import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
@@ -14,13 +13,24 @@ import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 public class IDUsage extends XcraftUsage {
 	TicketManager tManager;
 
-	public IDUsage() {
+	public IDUsage(TicketManager tManager) {
 		super("ID", Msg.USAGE_ID.toString());
+		this.tManager = tManager;
+	}
+
+
+	@Override
+	public boolean validate(String arg) {
+		return arg.matches("\\d.*");
 	}
 
 	@Override
-	public List<String> onTabComplete(XcraftPluginManager pManager, List<String> list, CommandSender sender, String token) {
-		TicketManager tManager = (TicketManager) pManager;
+	public String getFailMessage() {
+		return Msg.USAGE_NO_TICKET_ID.toString();
+	}
+
+	@Override
+	public List<String> onTabComplete(List<String> list, CommandSender sender, String token) {
 		int lastTicket = tManager.getLastTicket(sender);
 		List<Ticket> ticketsUnassigned = new ArrayList<Ticket>();
 		List<Ticket> ticketsAssigned = new ArrayList<Ticket>();

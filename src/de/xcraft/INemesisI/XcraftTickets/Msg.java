@@ -13,16 +13,9 @@ import de.xcraft.INemesisI.Library.Message.Messenger;
 public enum Msg {
 	//@formatter:off
 	//general stuff
-	HELP("&eAvaliable commands:"), 
 	NONE("none"),
-	ERR_NO_ACCESS("&cYou don't have access to this command."), 
 	ERR_NOT_FROM_CONSOLE("&cYou can't use this command from the console."), 
-	ERR_MULTIPLE_MATCHES("&cDid you mean one of these commands?"), 
-	ERR_NO_MATCHES("&cCommand $MISC$ not found."), 
-	ERR_USAGE("&cUsage: "),
 	//Plugin specific errors
-	ERR_NO_TICKET_ID("You need to provide a ticket-id."),
-	ERR_NO_MESSAGE("You need to provide a message."), 
 	ERR_TICKET_NOT_FOUND("Could not find a ticket with the id $ID$!"),
 	ERR_TICKET_NO_PERMISSION("You dont have permission to access that ticket!"),
 	ERR_MOD_NOT_FOUND("Could not find an assignee with that name: $NAME$."),
@@ -30,10 +23,6 @@ public enum Msg {
 	ERR_PHRASE_NOT_FOUND("Could not find an phrase with that name: $NAME$."),
 	ERR_UNDO_IMPOSSIBLE("This undo is impossible, sorry."),
 	//Admin Commands
-	COMMAND_SAVE("Save all data to disc."),
-	COMMAND_SAVE_SUCCESSFUL("Successfully saved to disc"),
-	COMMAND_RELOAD("Load all data from disc."),
-	COMMAND_RELOAD_SUCCESSFUL("Successfully loaded from disc."), 
 	COMMAND_MOD("Edit all assignees."),
 	COMMAND_MOD_LIST("current assignees: $MISC$."),
 	COMMAND_MOD_ADD("Successfully added the assignee $NAME$."),
@@ -55,14 +44,17 @@ public enum Msg {
 	COMMAND_LIST("List all tickets."),
 	COMMAND_LOG("Comment to a ticket."),
 	COMMAND_OPEN("Open a ticket."),
-	COMMAND_OPEN_SUCCESSFUL("Thank you, $name$! Your ticket-id is #$ID$! A Admin/Mod will deal with you ticket soon!"),
+	COMMAND_OPEN_SUCCESSFUL("Thank you, $NAME$! Your ticket-id is #$ID$! A Admin/Mod will deal with you ticket soon!"),
 	COMMAND_REOPEN("Re-open a closed ticket."),
 	COMMAND_SETWARP("Change the warp of a ticket."),
 	COMMAND_VIEW("Show all information of a ticket."),
 	//Command usage
 	USAGE_ID("#"),
+	USAGE_NO_TICKET_ID("&cYou need to provide a ticket-id."),
 	USAGE_MESSAGE("Message"),
+	USAGE_NO_MESSAGE("&cYou need to provide a message."),
 	USAGE_ASSIGNEE("Name/Group"),
+	USAGE_NO_ASSIGNEE("&cYou need to provide a assignee"),
 	//Ticket broadcast
 	TICKET_BROADCAST_ASSIGN("Ticket #$ID$ was assigned to $NAME$"),
 	TICKET_BROADCAST_UNASSIGN("The assignment of ticket #$ID$ has been removed!"),
@@ -74,6 +66,7 @@ public enum Msg {
 	TICKET_BROADCAST_SETWARP("The warp of Ticket #$ID$ was updated by $NAME$"),
 	//Ticket Info display
 	TICKET_VIEW_INFO("&3Info for ticket &6#$ID$ &3from &e$NAME$ &3$ASSIGNEE$"),
+	TICKET_VIEW_ASSIGNEE("assigned to &5$NAME$"),
 	TICKET_VIEW_BREAK("--------------------------------------------------"),
 	TICKET_VIEW_OPEN("&8$TIME$&f | &aopened &fby &e$NAME$&f: $MESSAGE$"),
 	TICKET_VIEW_COMMENT("&8$TIME$&f | &e$NAME$&f: $MESSAGE$"),
@@ -86,19 +79,23 @@ public enum Msg {
 	TICKET_LIST_EMTPY("There are no open tickets..."),
 	TICKET_LIST_MISC_ONLINE("&f[&2+&f]"),
 	TICKET_LIST_MISC_OFFLINE("&f[&4-&f]"),
+	TICKET_LIST_COMMENT_READ("&8[&7$COMMENTS$ comments&8]"),
+	TICKET_LIST_COMMENT_UNREAD("&8[&b$COMMENTS$ comments&8]"),
+	TICKET_LIST_ASSIGNEE("assigned to &5$NAME$"),
 	TICKET_LIST("&6#$ID$ &8$TIME$ $MISC$ &e$NAME$ &7$ASSIGNEE$&f\n&f&o$MESSAGE$"),
+	
 	//Remind...
 	TICKET_REMIND_CLOSE("Your ticket $ID$ was closed. Please revisit! (/ticket view $ID$)"),
 	TICKET_REMIND_UNREAD("You have unread messages in you Ticket $ID$! (/ticket view $ID$)"),
 	TICKET_REMIND_UNREAD_LIST("You have $MISC$ unread Tickets! (/ticket list)"),
-
-	TICKET_ASSIGNEE("assigned to &5$NAME$");
+	;
+	
 	//@formatter:on
 
 	public enum Replace {
 		$NAME$("Name of a Player"), $ID$("ID of a ticket"), $MESSAGE$(
 				"Message provided in a command"), $TIME$("timesamp for a ticket"), $ASSIGNEE$(
-				"Assignee of a ticket"), $MISC$("Miscellaneous stuff");
+				"Assignee of a ticket"), $COMMENTS$("comments.."), $MISC$("Miscellaneous stuff");
 
 		private String key;
 
@@ -137,6 +134,11 @@ public enum Msg {
 		public static Replace ASSIGNEE(String replace) {
 			$ASSIGNEE$.set(replace);
 			return $ASSIGNEE$;
+		}
+		
+		public static Replace COMMENTS(String replace) {
+			$COMMENTS$.set(replace);
+			return $COMMENTS$;
 		}
 
 		public static Replace MISC(String replace) {

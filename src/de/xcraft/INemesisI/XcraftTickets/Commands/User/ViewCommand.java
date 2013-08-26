@@ -19,10 +19,6 @@ public class ViewCommand extends XcraftCommand {
 	@Override
 	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
 		TicketManager manager = (TicketManager) pManager;
-		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_TICKET_ID.toString(), false);
-			return false;
-		}
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
@@ -38,7 +34,7 @@ public class ViewCommand extends XcraftCommand {
 		}
 		String assignee = "";
 		if (ticket.isAssigned()) {
-			assignee = Msg.TICKET_ASSIGNEE.toString(Replace.NAME(ticket.getAssignee()));
+			assignee = Msg.TICKET_VIEW_ASSIGNEE.toString(Replace.NAME(ticket.getAssignee()));
 		}
 		Replace[] replace = { Replace.ID(id), Replace.NAME(ticket.getOwner()), Replace.ASSIGNEE(assignee) };
 		pManager.plugin.messenger.sendInfo(sender, "", false);

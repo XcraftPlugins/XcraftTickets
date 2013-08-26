@@ -13,21 +13,12 @@ import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 public class ReOpenCommand extends XcraftCommand {
 
 	public ReOpenCommand() {
-		super("ticket", "reopen", "reo.*|ro", "<ID> <MESAGE> ...", Msg.COMMAND_REOPEN.toString(), "XcraftTickets.Reopen");
+		super("ticket", "reopen", "reo.*|ro", "<ID> <MESSAGE> ...", Msg.COMMAND_REOPEN.toString(), "XcraftTickets.Reopen");
 	}
 
 	@Override
 	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
 		TicketManager manager = (TicketManager) pManager;
-		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_TICKET_ID.toString(), true);
-			return false;
-		}
-
-		if (args.length < 2) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NO_MESSAGE.toString(), true);
-			return false;
-		}
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getArchivedTicket(id);
 		if (ticket == null) {

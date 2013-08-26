@@ -18,9 +18,6 @@ public class UnAssignCommand extends XcraftCommand {
 	@Override
 	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
 		TicketManager manager = (TicketManager) pManager;
-		if ((args.length < 1) || !args[0].matches("\\d*")) {
-			return false;
-		}
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {

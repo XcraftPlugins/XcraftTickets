@@ -19,16 +19,12 @@ public class AssignCommand extends XcraftCommand {
 	@Override
 	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
 		TicketManager manager = (TicketManager) pManager;
-		if ((args.length < 2) || !args[0].matches("\\d*")) {
-			return false;
-		}
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
 			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
-
 		if (!manager.getAssignees().contains(args[1])) {
 			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_ASSIGNEE_NOT_FOUND.toString(Replace.NAME(args[1])), true);
 			return true;
@@ -39,8 +35,7 @@ public class AssignCommand extends XcraftCommand {
 				manager.setLastTicket(sender, -1);
 			}
 			ticket.setAssignee(args[1]);
-			Replace[] replace = { Replace.ID(ticket.getId()), Replace.NAME(args[1]),
-					Replace.ASSIGNEE(args[1]) };
+			Replace[] replace = { Replace.ID(ticket.getId()), Replace.NAME(args[1]), Replace.ASSIGNEE(args[1]) };
 			manager.inform(ticket, Msg.TICKET_BROADCAST_ASSIGN.toString(replace), true);
 			return true;
 		}

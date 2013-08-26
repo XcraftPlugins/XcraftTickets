@@ -1,5 +1,5 @@
 name: XcraftTickets
-version: 1.4.3
+version: 1.4.5
 author: INemesisI
 
 main: de.xcraft.INemesisI.XcraftTickets.XcraftTickets
@@ -21,7 +21,6 @@ permissions:
             XcraftTickets.Save: true
             XcraftTickets.Reload: true
             XcraftTickets.Assignee: true
-            XcraftTickets.Stats: true
         default: op
         
     XcraftTickets.Mod:
@@ -37,6 +36,7 @@ permissions:
             XcraftTickets.Close.All: true
             XcraftTickets.Reopen.All: true
             XcraftTickets.Phrases: true
+            XcraftTickets.Stats: true
         default: false
         
     XcraftTickets.User:

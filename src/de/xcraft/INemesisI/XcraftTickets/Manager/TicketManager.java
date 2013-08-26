@@ -27,8 +27,8 @@ public class TicketManager extends XcraftPluginManager {
 	private int nextID;
 	private List<Ticket> tickets = new ArrayList<Ticket>();
 	private Map<String, String> phrases = new HashMap<String, String>();
-	private final Map<CommandSender, Integer> lastTicket = new HashMap<CommandSender, Integer>();
 	private List<String> assignees = new ArrayList<String>();
+	private final Map<CommandSender, Integer> lastTicket = new HashMap<CommandSender, Integer>();
 	private final SimpleDateFormat date = new SimpleDateFormat();
 
 	public TicketManager(XcraftTickets plugin) {
@@ -122,7 +122,10 @@ public class TicketManager extends XcraftPluginManager {
 
 	public String getMessage(CommandSender sender, String[] args) {
 		String message = " ";
-		for (int i = 1; i < args.length; i++) {
+		int start = 0;
+		if (args[0].matches("\\d.*"))
+			start = 1;
+		for (int i = start; i < args.length; i++) {
 			message += args[i] + " ";
 		}
 		if (sender.hasPermission("XcraftTickets.Phrases")) {
@@ -144,10 +147,10 @@ public class TicketManager extends XcraftPluginManager {
 	public Ticket addTicket(String owner, Location loc, String message) {
 		Log log = new Log(date);
 		log.add(EntryType.OPEN, owner, message);
-		Ticket ticket = new Ticket(this.getNextID(), owner, loc, log);
+		Ticket ticket = new Ticket(this.nextID, owner, loc, log);
 		tickets.add(ticket);
-		cManager.saveTicket(cManager.folder, ticket);
-		this.setNextID(this.getNextID() + 1);
+		cManager.saveTicket(cManager.ticketFolder, ticket);
+		this.nextID++;
 		return ticket;
 	}
 
@@ -190,8 +193,8 @@ public class TicketManager extends XcraftPluginManager {
 		return phrases;
 	}
 
-	public void setPhrases(Map<String, String> map) {
-		this.phrases = map;
+	public void setPhrases(Map<String, String> phrases) {
+		this.phrases = phrases;
 	}
 
 	public List<String> getAssignees() {

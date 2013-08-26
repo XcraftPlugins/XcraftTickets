@@ -10,9 +10,9 @@ import de.xcraft.INemesisI.XcraftTickets.Commands.AssigneeUsage;
 import de.xcraft.INemesisI.XcraftTickets.Commands.IDUsage;
 import de.xcraft.INemesisI.XcraftTickets.Commands.MessageUsage;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Admin.ModCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Admin.StatsCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.AssignCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.PhrasesCommand;
+import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.StatsCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.UnAssignCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.UndoCommand;
 import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.WarpCommand;
@@ -29,12 +29,11 @@ public class CommandManager extends XcraftCommandManager {
 
 	public CommandManager(XcraftTickets plugin) {
 		super(plugin);
-		tManager = (TicketManager) plugin.pluginManager;
-		// TODO: /tl command
 	}
 
 	@Override
 	protected void registerCommands() {
+		tManager = (TicketManager) plugin.pluginManager;
 		this.registerBukkitCommand("ticket");
 		this.registerBukkitCommand("tl");
 		// User Commands
@@ -55,9 +54,9 @@ public class CommandManager extends XcraftCommandManager {
 		this.registerCommand(new ModCommand());
 		this.registerCommand(new StatsCommand());
 		// Usage
-		this.registerUsage(new IDUsage());
-		this.registerUsage(new MessageUsage());
-		this.registerUsage(new AssigneeUsage());
+		this.registerUsage(new IDUsage(tManager));
+		this.registerUsage(new MessageUsage(tManager));
+		this.registerUsage(new AssigneeUsage(tManager));
 	}
 
 	@Override

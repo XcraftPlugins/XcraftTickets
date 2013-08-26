@@ -13,7 +13,8 @@ import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 public class ModCommand extends XcraftCommand {
 
 	public ModCommand() {
-		super("ticket", "mod", "m.*", "<add/remove/list> [Assignee]", Msg.COMMAND_MOD.toString(), "XcraftTickets.Asignee");
+		super("ticket", "mod", "m.*", "<add/remove/list> [Assignee]", Msg.COMMAND_MOD.toString(),
+				"XcraftTickets.Mod");
 	}
 
 	@Override
@@ -33,6 +34,8 @@ public class ModCommand extends XcraftCommand {
 			} else {
 				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_MOD_NOT_FOUND.toString(Replace.NAME(args[1])), true);
 			}
+		} else {
+			return false;
 		}
 		return true;
 	}

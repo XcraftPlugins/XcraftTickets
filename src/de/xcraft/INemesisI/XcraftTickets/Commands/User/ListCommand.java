@@ -43,8 +43,15 @@ public class ListCommand extends XcraftCommand {
 				}
 				counter++;
 				// Ticket comments counter
-				if (ticket.getLog().size() - 1 == 0 && !ticket.hasWatched(sender.getName())) {
+				int c = ticket.getLog().size() - 1;
+				if (c == 0 && !ticket.hasWatched(sender.getName())) {
 					ticket.addToWatched(sender.getName());
+				}
+				String comments;
+				if (ticket.hasWatched(sender.getName())) {
+					comments = Msg.TICKET_LIST_COMMENT_READ.toString(Replace.COMMENTS(String.valueOf(c)));
+				} else {
+					comments = Msg.TICKET_LIST_COMMENT_UNREAD.toString(Replace.COMMENTS(String.valueOf(c)));
 				}
 				//
 				Log log = ticket.getLog();
@@ -56,10 +63,12 @@ public class ListCommand extends XcraftCommand {
 				}
 				String assignee = "";
 				if (ticket.isAssigned()) {
-					assignee = Msg.TICKET_ASSIGNEE.toString(Replace.NAME(ticket.getAssignee()));
+					assignee = Msg.TICKET_LIST_ASSIGNEE
+							.toString(Replace.NAME(ticket.getAssignee()));
 				}
 				Replace[] replace = {Replace.ID(ticket.getId()), Replace.TIME(log.getDate()), Replace.MISC(misc), Replace.NAME(ticket.getOwner()),
-						Replace.ASSIGNEE(assignee), Replace.MESSAGE(log.getEntry(0).message)};
+						Replace.ASSIGNEE(assignee), Replace.COMMENTS(comments),
+						Replace.MESSAGE(log.getEntry(0).message) };
 				pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_LIST.toString(replace), false);
 			}
 		}

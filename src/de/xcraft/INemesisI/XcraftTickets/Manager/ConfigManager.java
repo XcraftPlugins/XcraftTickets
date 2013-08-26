@@ -1,7 +1,10 @@
 package de.xcraft.INemesisI.XcraftTickets.Manager;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,8 +27,8 @@ import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
 public class ConfigManager extends XcraftConfigManager {
 
 	TicketManager tmanager;
-	File folder;
-	File archive;
+	File ticketFolder;
+	File archiveFolder;
 	File remFile;
 	FileConfiguration reminder;
 
@@ -38,13 +41,15 @@ public class ConfigManager extends XcraftConfigManager {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void load() {
-		folder = plugin.getDataFolder();
+		File folder = plugin.getDataFolder();
+		ticketFolder = new File(folder, "tickets");
+		archiveFolder = new File(folder, "archive");
 		remFile = new File(folder, "reminder.yml");
 		reminder = YamlConfiguration.loadConfiguration(remFile);
 		// load tickets
-		File[] files = folder.listFiles();
-		Arrays.sort(files);
 		List<Ticket> tickets = new ArrayList<Ticket>();
+		File[] files = ticketFolder.listFiles();
+		Arrays.sort(files);
 		for (File file : files) {
 			Ticket ticket = loadTicket(file);
 			if (ticket != null)
@@ -70,13 +75,12 @@ public class ConfigManager extends XcraftConfigManager {
 		config.set("Next_Ticket_ID", tmanager.getNextID());
 		config.set("Assignee", tmanager.getAssignees());
 		config.set("Phrases", tmanager.getPhrases());
-		plugin.saveConfig();
 		try {
 			reminder.save(remFile);
 		} catch (IOException e) {
 		}
 		for (Ticket ticket : tmanager.getTickets()) {
-			this.saveTicket(folder, ticket);
+			this.saveTicket(ticketFolder, ticket);
 		}
 	}
 
@@ -122,7 +126,6 @@ public class ConfigManager extends XcraftConfigManager {
 					cs.getLong("pitch"), cs.getLong("yaw"));
 		}
 		return new Ticket(id, assignee, loc, world, processed, watched, log);
-
 	}
 
 	public void saveTicket(File folder, Ticket ticket) {
@@ -152,13 +155,87 @@ public class ConfigManager extends XcraftConfigManager {
 	}
 
 	public void archiveTicket(Ticket ticket) {
-		this.saveTicket(archive, ticket);
+		this.saveTicket(archiveFolder, ticket);
 		this.deleteTicket(ticket);
 	}
 
 	public void deleteTicket(Ticket ticket) {
-		File file = new File(folder, ticket.getId() + ".yml");
+		File file = new File(ticketFolder, ticket.getId() + ".yml");
 		file.delete();
+	}
+
+	public Map<String, Integer> getStats() {
+		File statsFile = new File(plugin.getDataFolder(), "stats.yml");
+		FileConfiguration data = null;
+		Map<String, Integer> stats = new HashMap<String, Integer>();
+		int lastcheck = 0;
+		// if we have no stats, create the file
+		if (!statsFile.exists()) {
+			try {
+				statsFile.createNewFile();
+				data = YamlConfiguration.loadConfiguration(statsFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			// else getstats from last check
+		} else {
+			data = YamlConfiguration.loadConfiguration(statsFile);
+			if (data.isConfigurationSection("Stats")) {
+				ConfigurationSection cs = data.getConfigurationSection("Stats");
+				for (String key : cs.getKeys(false)) {
+					stats.put(key, cs.getInt(key));
+				}
+			}
+			lastcheck = data.getInt("LastTicket");
+		}
+		int newcheck = lastcheck;
+		// check for tickets, we havent analyzed
+		for (File file : archiveFolder.listFiles()) {
+			int number = Integer.parseInt(file.getName().replace(".yml", ""));
+			if (number <= lastcheck)
+				continue;
+			if (number > newcheck)
+				newcheck = number;
+			// analyze them
+			try {
+				FileInputStream fis = new FileInputStream(file);
+				InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+				BufferedReader br = new BufferedReader(isr);
+				// Check for BOM character.
+				br.mark(1);
+				int bom = br.read();
+				if (bom != 65279) {
+					br.reset();
+				}
+				String s;
+				while ((s = br.readLine()) != null) {
+					if (s.contains("CLOSE")) {
+						String[] split = s.split("; ");
+						if (stats.containsKey(split[1])) {
+							stats.put(split[1], stats.get(split[1]) + 1);
+						} else {
+							stats.put(split[1], 1);
+						}
+						break;
+					}
+				}
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+		// save new stats
+		data.set("LastTicket", newcheck);
+		for (String key : stats.keySet()) {
+			data.set("Stats." + key, stats.get(key));
+		}
+		try {
+			data.save(statsFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return stats;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -193,4 +270,5 @@ public class ConfigManager extends XcraftConfigManager {
 	public List<String> getReminder(String player) {
 		return (List<String>) reminder.getList(player);
 	}
+
 }
