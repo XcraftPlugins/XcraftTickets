@@ -93,8 +93,7 @@ public enum Msg {
 	//@formatter:on
 
 	public enum Replace {
-		$NAME$("Name of a Player"), $ID$("ID of a ticket"), $MESSAGE$(
-				"Message provided in a command"), $TIME$("timesamp for a ticket"), $ASSIGNEE$(
+		$NAME$("Name of a Player"), $ID$("ID of a ticket"), $MESSAGE$("Message provided in a command"), $TIME$("timesamp for a ticket"), $ASSIGNEE$(
 				"Assignee of a ticket"), $COMMENTS$("comments.."), $MISC$("Miscellaneous stuff");
 
 		private String key;
@@ -135,7 +134,7 @@ public enum Msg {
 			$ASSIGNEE$.set(replace);
 			return $ASSIGNEE$;
 		}
-		
+
 		public static Replace COMMENTS(String replace) {
 			$COMMENTS$.set(replace);
 			return $COMMENTS$;
@@ -191,16 +190,14 @@ public enum Msg {
 
 	public static void init(XcraftPlugin plugin) {
 		File msgFile = new File(plugin.getDataFolder(), "locale.yml");
-		if (!load(msgFile)) {
+		if (!load(msgFile))
 			return;
-		}
 		parseFile(msgFile);
 	}
 
 	private static boolean load(File file) {
-		if (file.exists()) {
+		if (file.exists())
 			return true;
-		}
 		try {
 			file.createNewFile();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));

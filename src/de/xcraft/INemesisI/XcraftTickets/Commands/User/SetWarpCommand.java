@@ -24,16 +24,16 @@ public class SetWarpCommand extends XcraftCommand {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
 
 		if (!sender.getName().equals(ticket.getOwner())) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;
 		}
 		if (!(sender instanceof Player)) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NOT_FROM_CONSOLE.toString(), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_NOT_FROM_CONSOLE.toString(), true);
 		} else {
 			Player player = (Player) sender;
 			Location loc = player.getLocation();
@@ -41,7 +41,7 @@ public class SetWarpCommand extends XcraftCommand {
 
 			String message = manager.getMessage(sender, args);
 			ticket.getLog().add(EntryType.SETWARP, sender.getName(), message);
-			Replace[] replace = {Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.MESSAGE(message)};
+			Replace[] replace = { Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.MESSAGE(message) };
 			manager.inform(ticket, Msg.TICKET_BROADCAST_SETWARP.toString(replace), true);
 			ticket.clearWatched();
 		}

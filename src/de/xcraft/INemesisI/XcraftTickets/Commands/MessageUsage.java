@@ -27,13 +27,9 @@ public class MessageUsage extends XcraftUsage {
 	}
 
 	@Override
-	public List<String> onTabComplete(List<String> list, CommandSender sender, String token) {
+	public List<String> onTabComplete(List<String> list, CommandSender sender) {
 		if (sender.hasPermission("XcraftTickets.Phrases")) {
-			for (String phrase : tManager.getPhrases().keySet()) {
-				if (phrase.toLowerCase().startsWith(token)) {
-					list.add(phrase);
-				}
-			}
+			list.addAll(tManager.getPhrases().keySet());
 		}
 		return list;
 	}

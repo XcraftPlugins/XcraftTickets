@@ -59,10 +59,9 @@ public class Ticket {
 
 	public boolean isAssignee(CommandSender player, TicketManager manager) {
 		if (this.assignee != null
-				&& (this.assignee.equals(player.getName()) || ((XcraftTickets) manager.getPlugin()).getPermission().playerInGroup((Player) player,
-						this.assignee))) {
+				&& (this.assignee.equals(player.getName()) || manager.getPlugin().getPermission().playerInGroup((Player) player, this.assignee)))
 			return true;
-		} else
+		else
 			return false;
 	}
 

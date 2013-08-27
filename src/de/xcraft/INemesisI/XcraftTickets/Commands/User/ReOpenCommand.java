@@ -22,18 +22,18 @@ public class ReOpenCommand extends XcraftCommand {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getArchivedTicket(id);
 		if (ticket == null) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
 		if (!ticket.getOwner().equals(sender.getName()) && !sender.hasPermission("XcraftTickets.Reopen.All")) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;
 		}
 		String message = manager.getMessage(sender, args);
 		manager.addTicket(ticket);
 		ticket.getLog().add(EntryType.REOPEN, sender.getName(), message);
 		ticket.addToWatched(sender.getName());
-		Replace[] replace = {Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.MESSAGE(message)};
+		Replace[] replace = { Replace.ID(ticket.getId()), Replace.NAME(sender.getName()), Replace.MESSAGE(message) };
 		manager.inform(ticket, Msg.TICKET_BROADCAST_REOPEN.toString(replace), true);
 		return true;
 	}

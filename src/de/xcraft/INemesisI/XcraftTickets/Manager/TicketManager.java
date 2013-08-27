@@ -42,9 +42,8 @@ public class TicketManager extends XcraftPluginManager {
 
 	public Ticket getTicket(int id) {
 		for (Ticket ticket : tickets) {
-			if (ticket.getId() == id) {
+			if (ticket.getId() == id)
 				return ticket;
-			}
 		}
 		return null;
 	}
@@ -62,12 +61,12 @@ public class TicketManager extends XcraftPluginManager {
 				}
 			}
 			if (x > 0) {
-				plugin.messenger.sendInfo(player, Msg.TICKET_REMIND_UNREAD_LIST.toString(Replace.MISC(String.valueOf(x))), true);
+				plugin.getMessenger().sendInfo(player, Msg.TICKET_REMIND_UNREAD_LIST.toString(Replace.MISC(String.valueOf(x))), true);
 			}
 		} else {
 			for (Ticket ticket : tickets) {
 				if (ticket.getOwner().equals(player.getName()) && !ticket.hasWatched(player.getName())) {
-					plugin.messenger.sendInfo(player, Msg.TICKET_REMIND_UNREAD.toString(Replace.ID(ticket.getId())), true);
+					plugin.getMessenger().sendInfo(player, Msg.TICKET_REMIND_UNREAD.toString(Replace.ID(ticket.getId())), true);
 				}
 			}
 		}
@@ -95,14 +94,14 @@ public class TicketManager extends XcraftPluginManager {
 		for (Player mod : mods.keySet()) {
 			if (mods.get(mod) > 0) {
 
-				plugin.messenger.sendInfo(mod, Msg.TICKET_REMIND_UNREAD_LIST.toString(Replace.MISC(String.valueOf(mods.get(mod)))), true);
+				plugin.getMessenger().sendInfo(mod, Msg.TICKET_REMIND_UNREAD_LIST.toString(Replace.MISC(String.valueOf(mods.get(mod)))), true);
 			}
 		}
 		for (Player player : server.getOnlinePlayers()) {
 			List<String> list = cManager.getReminder(player.getName());
 			if (list != null) {
 				for (String id : list) {
-					plugin.messenger.sendInfo(player, Msg.TICKET_REMIND_CLOSE.toString(Replace.ID(Integer.parseInt(id))), true);
+					plugin.getMessenger().sendInfo(player, Msg.TICKET_REMIND_CLOSE.toString(Replace.ID(Integer.parseInt(id))), true);
 				}
 			}
 		}
@@ -123,8 +122,9 @@ public class TicketManager extends XcraftPluginManager {
 	public String getMessage(CommandSender sender, String[] args) {
 		String message = " ";
 		int start = 0;
-		if (args[0].matches("\\d.*"))
+		if (args[0].matches("\\d.*")) {
 			start = 1;
+		}
 		for (int i = start; i < args.length; i++) {
 			message += args[i] + " ";
 		}
@@ -160,11 +160,10 @@ public class TicketManager extends XcraftPluginManager {
 
 	public Ticket getArchivedTicket(int id) {
 		File archive = new File(plugin.getDataFolder(), "/archive/" + id + ".yml");
-		if (!archive.exists()) {
+		if (!archive.exists())
 			return null;
-		} else {
+		else
 			return cManager.loadTicket(archive);
-		}
 	}
 
 	public void setTicketArchived(Ticket ticket) {
@@ -206,11 +205,10 @@ public class TicketManager extends XcraftPluginManager {
 	}
 
 	public int getLastTicket(CommandSender sender) {
-		if (lastTicket.containsKey(sender)) {
+		if (lastTicket.containsKey(sender))
 			return lastTicket.get(sender);
-		} else {
+		else
 			return -1;
-		}
 	}
 
 	public void setLastTicket(CommandSender sender, int id) {

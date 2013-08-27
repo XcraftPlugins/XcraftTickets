@@ -8,7 +8,6 @@ import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
 public class CloseCommand extends XcraftCommand {
@@ -23,11 +22,11 @@ public class CloseCommand extends XcraftCommand {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
 		if (!ticket.getOwner().equals(sender.getName()) && !sender.hasPermission("XcraftTickets.Close.All")) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;
 		}
 		String message = manager.getMessage(sender, args);
@@ -36,10 +35,10 @@ public class CloseCommand extends XcraftCommand {
 			manager.setLastTicket(sender, -1);
 		}
 		manager.setTicketArchived(ticket);
-		Replace[] replace = {Replace.NAME(sender.getName()), Replace.ID(id), Replace.MESSAGE(message)};
+		Replace[] replace = { Replace.NAME(sender.getName()), Replace.ID(id), Replace.MESSAGE(message) };
 		manager.inform(ticket, Msg.TICKET_BROADCAST_CLOSE.toString(replace), true);
 		if (!sender.getName().equals(ticket.getOwner())) {
-			((ConfigManager) manager.getPlugin().configManager).addReminder(ticket.getOwner(), id);
+			manager.getPlugin().getConfigManager().addReminder(ticket.getOwner(), id);
 		}
 		return true;
 	}

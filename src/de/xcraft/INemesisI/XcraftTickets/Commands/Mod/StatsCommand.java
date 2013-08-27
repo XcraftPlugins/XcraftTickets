@@ -22,7 +22,7 @@ public class StatsCommand extends XcraftCommand {
 	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
 		TicketManager manager = (TicketManager) pManager;
 
-		pManager.plugin.messenger.sendInfo(sender, "&6Stats:", true);
+		pManager.plugin.getMessenger().sendInfo(sender, "&6Stats:", true);
 		Map<String, Integer> list = manager.cManager.getStats();
 
 		Map<String, Integer> map = new HashMap<String, Integer>();
@@ -40,9 +40,9 @@ public class StatsCommand extends XcraftCommand {
 		Map<String, Integer> sorted_map = new TreeMap<String, Integer>(bvc);
 		sorted_map.putAll(map);
 		for (String key : sorted_map.keySet()) {
-			pManager.plugin.messenger.sendInfo(sender, "    &3" + key + ": &7" + map.get(key), true);
+			pManager.plugin.getMessenger().sendInfo(sender, "    &3" + key + ": &7" + map.get(key), true);
 		}
-		pManager.plugin.messenger.sendInfo(sender, "    &8Rest: &7" + rest, true);
+		pManager.plugin.getMessenger().sendInfo(sender, "    &8Rest: &7" + rest, true);
 
 		return true;
 	}
@@ -59,11 +59,10 @@ public class StatsCommand extends XcraftCommand {
 		// equals.
 		@Override
 		public int compare(String a, String b) {
-			if (base.get(a) >= base.get(b)) {
+			if (base.get(a) >= base.get(b))
 				return -1;
-			} else {
+			else
 				return 1;
-			} // returning 0 would merge keys
 		}
 	}
 }

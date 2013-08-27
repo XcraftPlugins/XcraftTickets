@@ -2,17 +2,16 @@ package de.xcraft.INemesisI.XcraftTickets;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import de.xcraft.INemesisI.Library.XcraftPlugin;
+import de.xcraft.INemesisI.Library.Message.Messenger;
 import de.xcraft.INemesisI.XcraftTickets.Manager.CommandManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
-import de.xcraft.INemesisI.XcraftTickets.Manager.EventManager;
+import de.xcraft.INemesisI.XcraftTickets.Manager.EventListener;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
 //@formatter:off
@@ -27,21 +26,52 @@ import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 //@formatter:on
 
 public class XcraftTickets extends XcraftPlugin {
-	private Permission permission = null;
 
-	public Logger log = Logger.getLogger("Minecraft");
-	private boolean logging;
+	private TicketManager pluginManager = null;
+	private ConfigManager configManager = null;
+	private CommandManager commandManager = null;
+	private EventListener eventListener = null;
+	private Messenger messenger = null;
+	private Permission permission;
 
 	@Override
 	protected void setup() {
-		Msg.init(this);
-		pluginManager = new TicketManager(this);
-		configManager = new ConfigManager(this);
-		eventListener = new EventManager(this);
-		commandManager = new CommandManager(this);
+		this.messenger = Messenger.getInstance(this);
+		this.pluginManager = new TicketManager(this);
+		this.configManager = new ConfigManager(this);
+		this.eventListener = new EventListener(this);
+		this.commandManager = new CommandManager(this);
 		this.setupPermissions();
-		this.startScheduler();
 		configManager.load();
+	}
+
+	@Override
+	public TicketManager getPluginManager() {
+		return pluginManager;
+	}
+
+	@Override
+	public ConfigManager getConfigManager() {
+		return configManager;
+	}
+
+	@Override
+	public CommandManager getCommandManager() {
+		return commandManager;
+	}
+
+	@Override
+	public EventListener getEventListener() {
+		return eventListener;
+	}
+
+	@Override
+	public Messenger getMessenger() {
+		return messenger;
+	}
+
+	public Permission getPermission() {
+		return permission;
 	}
 
 	private Boolean setupPermissions() {
@@ -51,10 +81,6 @@ public class XcraftTickets extends XcraftPlugin {
 			permission = permissionProvider.getProvider();
 		}
 		return permission != null;
-	}
-
-	public Permission getPermission() {
-		return permission;
 	}
 
 	public void startScheduler() {
@@ -73,33 +99,10 @@ public class XcraftTickets extends XcraftPlugin {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				((TicketManager) pluginManager).informPlayers(XcraftTickets.this.getServer());
+				getPluginManager().informPlayers(XcraftTickets.this.getServer());
 			}
 		};
 		this.getServer().getScheduler().runTaskTimerAsynchronously(this, task, ((min * 60) + sec) * 20, 60 * delay * 20);
 
 	}
-
-	public void Log(String message) {
-		if (this.isLogging()) {
-			log.info(this.getDescription().getFullName() + message);
-		}
-	}
-
-	public String getCName() {
-		return ChatColor.DARK_GRAY + "[" + this.getDescription().getName() + "] " + this.getChatColor();
-	}
-
-	public ChatColor getChatColor() {
-		return ChatColor.DARK_AQUA;
-	}
-
-	public boolean isLogging() {
-		return logging;
-	}
-
-	public void setLogging(boolean logging) {
-		this.logging = logging;
-	}
-
 }

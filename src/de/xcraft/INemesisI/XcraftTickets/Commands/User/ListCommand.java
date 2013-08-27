@@ -10,7 +10,6 @@ import de.xcraft.INemesisI.XcraftTickets.Log;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
 public class ListCommand extends XcraftCommand {
@@ -35,11 +34,11 @@ public class ListCommand extends XcraftCommand {
 				// ticket is assigned to the player
 			|| (ticket.getAssignee() != null && (ticket.getAssignee().equals(sender.getName())
 				// or assignee is a group and player is in group
-			|| ((XcraftTickets) manager.getPlugin()).getPermission().playerInGroup((Player) sender, ticket.getAssignee())))) {
+			|| manager.getPlugin().getPermission().playerInGroup((Player) sender, ticket.getAssignee())))) {
 			//@formatter:on
 				if (counter == -1) {
-					pManager.plugin.messenger.sendInfo(sender, "", false);
-					pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_LIST_HEAD.toString(), true);
+					pManager.plugin.getMessenger().sendInfo(sender, "", false);
+					pManager.plugin.getMessenger().sendInfo(sender, Msg.TICKET_LIST_HEAD.toString(), true);
 				}
 				counter++;
 				// Ticket comments counter
@@ -63,17 +62,15 @@ public class ListCommand extends XcraftCommand {
 				}
 				String assignee = "";
 				if (ticket.isAssigned()) {
-					assignee = Msg.TICKET_LIST_ASSIGNEE
-							.toString(Replace.NAME(ticket.getAssignee()));
+					assignee = Msg.TICKET_LIST_ASSIGNEE.toString(Replace.NAME(ticket.getAssignee()));
 				}
-				Replace[] replace = {Replace.ID(ticket.getId()), Replace.TIME(log.getDate()), Replace.MISC(misc), Replace.NAME(ticket.getOwner()),
-						Replace.ASSIGNEE(assignee), Replace.COMMENTS(comments),
-						Replace.MESSAGE(log.getEntry(0).message) };
-				pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_LIST.toString(replace), false);
+				Replace[] replace = { Replace.ID(ticket.getId()), Replace.TIME(log.getDate()), Replace.MISC(misc), Replace.NAME(ticket.getOwner()),
+						Replace.ASSIGNEE(assignee), Replace.COMMENTS(comments), Replace.MESSAGE(log.getEntry(0).message) };
+				pManager.plugin.getMessenger().sendInfo(sender, Msg.TICKET_LIST.toString(replace), false);
 			}
 		}
 		if (counter == -1) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_LIST_EMTPY.toString(), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.TICKET_LIST_EMTPY.toString(), true);
 		}
 		return true;
 	}

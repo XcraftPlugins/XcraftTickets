@@ -26,7 +26,7 @@ public class WarpCommand extends XcraftCommand {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
 		Location loc = ticket.getLoc();
@@ -48,7 +48,7 @@ public class WarpCommand extends XcraftCommand {
 				player.setNoDamageTicks(200);
 			}
 		} else {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_NOT_FROM_CONSOLE.toString(), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_NOT_FROM_CONSOLE.toString(), true);
 		}
 		return true;
 	}

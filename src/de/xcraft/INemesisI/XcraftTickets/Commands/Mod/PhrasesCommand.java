@@ -21,9 +21,9 @@ public class PhrasesCommand extends XcraftCommand {
 		TicketManager manager = (TicketManager) pManager;
 		Map<String, String> map = manager.getPhrases();
 		if (args[0].equals("list")) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_PHRASES_LIST.toString(), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.COMMAND_PHRASES_LIST.toString(), true);
 			for (String key : map.keySet()) {
-				pManager.plugin.messenger.sendInfo(sender, "&3" + key + ": &7" + map.get(key), true);
+				pManager.plugin.getMessenger().sendInfo(sender, "&3" + key + ": &7" + map.get(key), true);
 			}
 		} else if (args[0].equals("add")) {
 			String key = args[1];
@@ -33,14 +33,14 @@ public class PhrasesCommand extends XcraftCommand {
 			}
 			msg.trim();
 			manager.getPhrases().put(key, msg);
-			pManager.plugin.messenger.sendInfo(sender, "Successuflly added the phrase (" + key + " = " + msg + ")", true);
-			pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_PHRASES_ADD.toString(Replace.NAME(key), Replace.MESSAGE(msg)), true);
+			pManager.plugin.getMessenger().sendInfo(sender, "Successuflly added the phrase (" + key + " = " + msg + ")", true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.COMMAND_PHRASES_ADD.toString(Replace.NAME(key), Replace.MESSAGE(msg)), true);
 		} else if (args[0].equals("remove")) {
 			String key = args[1];
 			if (manager.getPhrases().remove(key) != null) {
-				pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_PHRASES_REMOVE.toString(Replace.NAME(key)), true);
+				pManager.plugin.getMessenger().sendInfo(sender, Msg.COMMAND_PHRASES_REMOVE.toString(Replace.NAME(key)), true);
 			} else {
-				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_PHRASE_NOT_FOUND.toString(Replace.NAME(key)), true);
+				pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_PHRASE_NOT_FOUND.toString(Replace.NAME(key)), true);
 			}
 		} else if (args[0].equals("append")) {
 			String key = args[1];
@@ -51,13 +51,12 @@ public class PhrasesCommand extends XcraftCommand {
 			msg.trim();
 			if (manager.getPhrases().containsKey(key)) {
 				manager.getPhrases().put(key, manager.getPhrases().get(key) + msg);
-				pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_PHRASES_APPEND.toString(Replace.NAME(key), Replace.MESSAGE(msg)), true);
+				pManager.plugin.getMessenger().sendInfo(sender, Msg.COMMAND_PHRASES_APPEND.toString(Replace.NAME(key), Replace.MESSAGE(msg)), true);
 			} else {
-				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_PHRASE_NOT_FOUND.toString(Replace.NAME(key)), true);
+				pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_PHRASE_NOT_FOUND.toString(Replace.NAME(key)), true);
 			}
-		} else {
+		} else
 			return false;
-		}
 		return true;
 	}
 }

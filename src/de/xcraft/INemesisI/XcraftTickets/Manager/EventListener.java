@@ -5,14 +5,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import de.xcraft.INemesisI.Library.XcraftEventListener;
-import de.xcraft.INemesisI.Library.XcraftPlugin;
+import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
 
-public class EventManager extends XcraftEventListener {
+public class EventListener extends XcraftEventListener {
 	TicketManager tManager;
-	
-	public EventManager(XcraftPlugin plugin) {
+
+	public EventListener(XcraftTickets plugin) {
 		super(plugin);
-		tManager = (TicketManager) plugin.pluginManager;
+		tManager = plugin.getPluginManager();
 	}
 
 	@EventHandler(priority = EventPriority.LOW)

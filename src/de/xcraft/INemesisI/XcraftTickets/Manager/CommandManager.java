@@ -29,11 +29,11 @@ public class CommandManager extends XcraftCommandManager {
 
 	public CommandManager(XcraftTickets plugin) {
 		super(plugin);
+		tManager = plugin.getPluginManager();
 	}
 
 	@Override
 	protected void registerCommands() {
-		tManager = (TicketManager) plugin.pluginManager;
 		this.registerBukkitCommand("ticket");
 		this.registerBukkitCommand("tl");
 		// User Commands
@@ -64,9 +64,8 @@ public class CommandManager extends XcraftCommandManager {
 		if (bcmd.getName().equals("tl")) {
 			this.getCommands().get("li.*").execute(tManager, sender, args);
 			return true;
-		}
-		else
-		return super.onCommand(sender, bcmd, label, args);
+		} else
+			return super.onCommand(sender, bcmd, label, args);
 	}
 
 	@Override

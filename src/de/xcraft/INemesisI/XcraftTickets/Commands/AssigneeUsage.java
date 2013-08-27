@@ -27,12 +27,9 @@ public class AssigneeUsage extends XcraftUsage {
 	}
 
 	@Override
-	public List<String> onTabComplete(List<String> list, CommandSender sender, String token) {
-		for (String assignee : tManager.getAssignees()) {
-			if (assignee.toLowerCase().startsWith(token)) list.add(assignee);
-		}
+	public List<String> onTabComplete(List<String> list, CommandSender sender) {
+		list.addAll(tManager.getAssignees());
 		return list;
 	}
-
 
 }

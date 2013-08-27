@@ -7,7 +7,6 @@ import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.XcraftTickets.Msg;
 import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
 import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
 import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 
 public class ViewCommand extends XcraftCommand {
@@ -24,12 +23,12 @@ public class ViewCommand extends XcraftCommand {
 		if (ticket == null) {
 			ticket = manager.getArchivedTicket(id);
 			if (ticket == null) {
-				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), false);
+				pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), false);
 				return true;
 			}
 		}
 		if (!ticket.getOwner().equals(sender.getName()) && !sender.hasPermission("XcraftTickets.View.All")) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(Replace.ID(id)), false);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(Replace.ID(id)), false);
 			return true;
 		}
 		String assignee = "";
@@ -37,22 +36,21 @@ public class ViewCommand extends XcraftCommand {
 			assignee = Msg.TICKET_VIEW_ASSIGNEE.toString(Replace.NAME(ticket.getAssignee()));
 		}
 		Replace[] replace = { Replace.ID(id), Replace.NAME(ticket.getOwner()), Replace.ASSIGNEE(assignee) };
-		pManager.plugin.messenger.sendInfo(sender, "", false);
-		pManager.plugin.messenger.sendInfo(sender, Msg.TICKET_VIEW_INFO.toString(replace), false);
+		pManager.plugin.getMessenger().sendInfo(sender, "", false);
+		pManager.plugin.getMessenger().sendInfo(sender, Msg.TICKET_VIEW_INFO.toString(replace), false);
 
 		String[] entries = ticket.getLog().getEntries();
 		int start = 0;
 		if (args.length < 2 && entries.length > 5) {
 			start = entries.length - 4;
-			pManager.plugin.messenger.sendInfo(sender, entries[0], false);
-			pManager.plugin.messenger.sendInfo(sender,
-					Msg.TICKET_VIEW_BREAK.toString(Replace.ID(id)), false);
+			pManager.plugin.getMessenger().sendInfo(sender, entries[0], false);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.TICKET_VIEW_BREAK.toString(Replace.ID(id)), false);
 		}
 		for (int i = start; i < entries.length; i++) {
 			sender.sendMessage(entries[i]);
 		}
 		ticket.addToWatched(sender.getName());
-		((ConfigManager) manager.getPlugin().configManager).removeReminder(ticket.getOwner(), ticket.getId());
+		manager.getPlugin().getConfigManager().removeReminder(ticket.getOwner(), ticket.getId());
 		return true;
 	}
 }

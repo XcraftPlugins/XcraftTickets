@@ -22,11 +22,11 @@ public class AssignCommand extends XcraftCommand {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
 		if (!manager.getAssignees().contains(args[1])) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_ASSIGNEE_NOT_FOUND.toString(Replace.NAME(args[1])), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_ASSIGNEE_NOT_FOUND.toString(Replace.NAME(args[1])), true);
 			return true;
 		} else {
 			ticket.getLog().add(EntryType.ASSIGN, sender.getName(), args[1]);

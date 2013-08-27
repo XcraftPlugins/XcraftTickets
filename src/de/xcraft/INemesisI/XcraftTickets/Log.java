@@ -44,24 +44,25 @@ public class Log {
 
 	public String getEntryOutput(int index) {
 		LogEntry entry = entries.get(index);
-		Replace[] replace = {Replace.NAME(entry.player), Replace.TIME(formatter.format(new Date(entry.time))), Replace.MESSAGE(entry.message)};
+		Replace[] replace = { Replace.NAME(entry.player), Replace.TIME(formatter.format(new Date(entry.time))), Replace.MESSAGE(entry.message) };
 		switch (entry.type) {
-			case OPEN :
-				return Msg.TICKET_VIEW_OPEN.toString(replace);
-			case COMMENT :
-				return Msg.TICKET_VIEW_COMMENT.toString(replace);
-			case CLOSE :
-				return Msg.TICKET_VIEW_CLOSE.toString(replace);
-			case REOPEN :
-				return Msg.TICKET_VIEW_REOPEN.toString(replace);
-			case ASSIGN :
-				replace[2] = Replace.ASSIGNEE(entry.message);
-				return Msg.TICKET_VIEW_ASSIGN.toString(replace);
-			case SETWARP :
-				return Msg.TICKET_VIEW_SETWARP.toString(replace);
+		case OPEN:
+			return Msg.TICKET_VIEW_OPEN.toString(replace);
+		case COMMENT:
+			return Msg.TICKET_VIEW_COMMENT.toString(replace);
+		case CLOSE:
+			return Msg.TICKET_VIEW_CLOSE.toString(replace);
+		case REOPEN:
+			return Msg.TICKET_VIEW_REOPEN.toString(replace);
+		case ASSIGN:
+			replace[2] = Replace.ASSIGNEE(entry.message);
+			return Msg.TICKET_VIEW_ASSIGN.toString(replace);
+		case SETWARP:
+			return Msg.TICKET_VIEW_SETWARP.toString(replace);
 		}
 		return null;
 	}
+
 	public String[] getEntries() {
 		String[] list = new String[entries.size()];
 		for (int i = 0; i < entries.size(); i++) {

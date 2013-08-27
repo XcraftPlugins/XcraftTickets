@@ -34,7 +34,7 @@ public class ConfigManager extends XcraftConfigManager {
 
 	public ConfigManager(XcraftTickets plugin) {
 		super(plugin);
-		tmanager = (TicketManager) plugin.pluginManager;
+		tmanager = plugin.getPluginManager();
 		tmanager.cManager = this;
 	}
 
@@ -52,8 +52,9 @@ public class ConfigManager extends XcraftConfigManager {
 		Arrays.sort(files);
 		for (File file : files) {
 			Ticket ticket = loadTicket(file);
-			if (ticket != null)
+			if (ticket != null) {
 				tickets.add(ticket);
+			}
 		}
 		tmanager.setTickets(tickets);
 		// load cfg
@@ -98,8 +99,7 @@ public class ConfigManager extends XcraftConfigManager {
 			for (int i = 0; i < list.size(); i++) {
 				String split[] = list.get(i).split("; ");
 				long time = split[0].matches("\\d*") ? Long.valueOf(split[0]) : 0;
-				log.add(time, EntryType.valueOf(split[2]), split[1], split.length >= 4 ? split[3]
-						: "");
+				log.add(time, EntryType.valueOf(split[2]), split[1], split.length >= 4 ? split[3] : "");
 			}
 		}
 		List<String> watched = (ArrayList<String>) cs.getList("watched");
@@ -122,8 +122,7 @@ public class ConfigManager extends XcraftConfigManager {
 		if (cs != null) {
 			world = cs.getString("world");
 			World w = plugin.getServer().getWorld(world);
-			loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"),
-					cs.getLong("pitch"), cs.getLong("yaw"));
+			loc = new Location(w, cs.getLong("x"), cs.getLong("y"), cs.getLong("z"), cs.getLong("pitch"), cs.getLong("yaw"));
 		}
 		return new Ticket(id, assignee, loc, world, processed, watched, log);
 	}
@@ -192,10 +191,12 @@ public class ConfigManager extends XcraftConfigManager {
 		// check for tickets, we havent analyzed
 		for (File file : archiveFolder.listFiles()) {
 			int number = Integer.parseInt(file.getName().replace(".yml", ""));
-			if (number <= lastcheck)
+			if (number <= lastcheck) {
 				continue;
-			if (number > newcheck)
+			}
+			if (number > newcheck) {
 				newcheck = number;
+			}
 			// analyze them
 			try {
 				FileInputStream fis = new FileInputStream(file);
@@ -258,12 +259,10 @@ public class ConfigManager extends XcraftConfigManager {
 					reminder.set(player, null);
 				}
 				return true;
-			} else {
+			} else
 				return false;
-			}
-		} else {
+		} else
 			return false;
-		}
 	}
 
 	@SuppressWarnings("unchecked")

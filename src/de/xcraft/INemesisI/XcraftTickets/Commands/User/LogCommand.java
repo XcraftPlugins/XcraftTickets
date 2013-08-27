@@ -23,11 +23,11 @@ public class LogCommand extends XcraftCommand {
 		int id = Integer.parseInt(args[0]);
 		Ticket ticket = manager.getTicket(id);
 		if (ticket == null) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
 		if (!ticket.getOwner().equals(sender.getName()) && !sender.hasPermission("XcraftTickets.Log.All")) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;
 		}
 		String message = manager.getMessage(sender, args);
@@ -42,7 +42,7 @@ public class LogCommand extends XcraftCommand {
 				ticket.addToWatched(player.getName());
 			}
 		}
-		Replace[] replace = {Replace.ID(id), Replace.NAME(sender.getName()), Replace.MESSAGE(message)};
+		Replace[] replace = { Replace.ID(id), Replace.NAME(sender.getName()), Replace.MESSAGE(message) };
 		manager.inform(ticket, Msg.TICKET_BROADCAST_COMMENT.toString(replace), true);
 		return true;
 	}

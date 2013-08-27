@@ -25,43 +25,42 @@ public class UndoCommand extends XcraftCommand {
 			ticket = manager.getArchivedTicket(id);
 		}
 		if (ticket == null) {
-			pManager.plugin.messenger.sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		} else {
-			LogEntry entry = ticket.getLog().getEntry(ticket.getLog().size());
+			LogEntry entry = ticket.getLog().getEntry(ticket.getLog().size() - 1);
 			if (!entry.player.equals(sender.getName())) {
-				pManager.plugin.messenger.sendInfo(sender, Msg.ERR_UNDO_IMPOSSIBLE.toString(), true);
+				pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_UNDO_IMPOSSIBLE.toString(), true);
 			} else {
 				boolean done = false;
 				switch (entry.type) {
-					case OPEN :
-						manager.deleteTicket(ticket);
-						done = true;
-					case COMMENT :
-						ticket.getLog().remove(entry);
-						done = true;
-					case REOPEN :
-						ticket.getLog().remove(entry);
-						manager.setTicketArchived(ticket);
-						done = true;
-					case CLOSE :
-						ticket.getLog().remove(entry);
-						manager.addTicket(ticket);
-						done = true;
-					case ASSIGN :
-						ticket.getLog().remove(entry);
-						ticket.setAssignee(null);
-						done = true;
-					case SETWARP :
-						pManager.plugin.messenger.sendInfo(sender, Msg.ERR_UNDO_IMPOSSIBLE.toString(), true);
-						return true;
+				case OPEN:
+					manager.deleteTicket(ticket);
+					done = true;
+				case COMMENT:
+					ticket.getLog().remove(entry);
+					done = true;
+				case REOPEN:
+					ticket.getLog().remove(entry);
+					manager.setTicketArchived(ticket);
+					done = true;
+				case CLOSE:
+					ticket.getLog().remove(entry);
+					manager.addTicket(ticket);
+					done = true;
+				case ASSIGN:
+					ticket.getLog().remove(entry);
+					ticket.setAssignee(null);
+					done = true;
+				case SETWARP:
+					pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_UNDO_IMPOSSIBLE.toString(), true);
+					return true;
 				}
 				if (done) {
-					pManager.plugin.messenger.sendInfo(sender, Msg.COMMAND_UNDO_SUCCESSFUL.toString(), true);
+					pManager.plugin.getMessenger().sendInfo(sender, Msg.COMMAND_UNDO_SUCCESSFUL.toString(), true);
 					return true;
-				} else {
+				} else
 					return false;
-				}
 			}
 		}
 		return true;

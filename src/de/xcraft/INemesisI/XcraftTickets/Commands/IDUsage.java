@@ -18,7 +18,6 @@ public class IDUsage extends XcraftUsage {
 		this.tManager = tManager;
 	}
 
-
 	@Override
 	public boolean validate(String arg) {
 		return arg.matches("\\d.*");
@@ -30,16 +29,15 @@ public class IDUsage extends XcraftUsage {
 	}
 
 	@Override
-	public List<String> onTabComplete(List<String> list, CommandSender sender, String token) {
+	public List<String> onTabComplete(List<String> list, CommandSender sender) {
 		int lastTicket = tManager.getLastTicket(sender);
 		List<Ticket> ticketsUnassigned = new ArrayList<Ticket>();
 		List<Ticket> ticketsAssigned = new ArrayList<Ticket>();
 		List<Ticket> ticketsOwned = new ArrayList<Ticket>();
 		for (Ticket ticket : tManager.getTickets()) {
-			if (!String.valueOf(ticket.getId()).startsWith(token)) {
+			if (lastTicket != -1 && lastTicket == ticket.getId()) {
 				continue;
 			}
-			if (lastTicket != -1 && lastTicket == ticket.getId()) continue;
 			if ((ticket.isAssigned() && ticket.isAssignee(sender, tManager))) {
 				ticketsAssigned.add(ticket);
 			} else if (!ticket.isAssigned()) {
@@ -52,7 +50,9 @@ public class IDUsage extends XcraftUsage {
 		sort(ticketsUnassigned);
 		sort(ticketsOwned);
 		// add to the actual Tab-List
-		if (lastTicket != -1) list.add(String.valueOf(lastTicket));
+		if (lastTicket != -1) {
+			list.add(String.valueOf(lastTicket));
+		}
 		for (Ticket ticket : ticketsAssigned) {
 			list.add(String.valueOf(ticket.getId()));
 		}
