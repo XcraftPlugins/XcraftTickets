@@ -24,18 +24,18 @@ public class ListCommand extends XcraftCommand {
 		int counter = -1;
 		for (Ticket ticket : manager.getTickets()) {
 			//@formatter:off
-				// tickets from owner
+			// tickets from owner
 			if (ticket.getOwner().equals(sender.getName())
-			|| (args.length > 0 && args[0].matches("a.*") && sender.hasPermission("XcraftTickets.List.All"))
-				// sender is console...
-			|| (sender instanceof ConsoleCommandSender)
-				// player is allowed to see all tickets. except of assigned ones
-			|| (ticket.getAssignee() == null && sender.hasPermission("XcraftTickets.View.All"))
-				// ticket is assigned to the player
-			|| (ticket.getAssignee() != null && (ticket.getAssignee().equals(sender.getName())
-				// or assignee is a group and player is in group
-			|| manager.getPlugin().getPermission().playerInGroup((Player) sender, ticket.getAssignee())))) {
-			//@formatter:on
+					|| (args.length > 0 && args[0].matches("a.*") && sender.hasPermission("XcraftTickets.List.All"))
+					// sender is console...
+					|| (sender instanceof ConsoleCommandSender)
+					// player is allowed to see all tickets. except of assigned ones
+					|| (ticket.getAssignee() == null && sender.hasPermission("XcraftTickets.View.All"))
+					// ticket is assigned to the player
+					|| (ticket.getAssignee() != null && (ticket.getAssignee().equals(sender.getName())
+							// or assignee is a group and player is in group
+							|| manager.getPlugin().getPermission().playerInGroup((Player) sender, ticket.getAssignee())))) {
+				//@formatter:on
 				if (counter == -1) {
 					pManager.plugin.getMessenger().sendInfo(sender, "", false);
 					pManager.plugin.getMessenger().sendInfo(sender, Msg.TICKET_LIST_HEAD.toString(), true);

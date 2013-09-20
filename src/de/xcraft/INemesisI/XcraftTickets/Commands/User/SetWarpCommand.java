@@ -27,7 +27,6 @@ public class SetWarpCommand extends XcraftCommand {
 			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), true);
 			return true;
 		}
-
 		if (!sender.getName().equals(ticket.getOwner())) {
 			pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NO_PERMISSION.toString(), true);
 			return true;

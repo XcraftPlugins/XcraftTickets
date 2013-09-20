@@ -56,7 +56,7 @@ public class TicketManager extends XcraftPluginManager {
 		if (player.hasPermission("XcraftTickets.Mod")) {
 			int x = 0;
 			for (Ticket ticket : tickets) {
-				if (!ticket.hasWatched(player.getName())) {
+				if (!ticket.hasWatched(player.getName()) && (!ticket.isAssigned() || ticket.isAssignee(player, this))) {
 					x++;
 				}
 			}
@@ -75,6 +75,7 @@ public class TicketManager extends XcraftPluginManager {
 
 	public void informPlayers(Server server) {
 		Map<Player, Integer> mods = new HashMap<Player, Integer>();
+		// unread-reminder
 		for (Player player : server.getOnlinePlayers()) {
 			if (player.hasPermission(plugin.getDescription().getName() + "." + "Mod")) {
 				mods.put(player, 0);
@@ -97,11 +98,17 @@ public class TicketManager extends XcraftPluginManager {
 				plugin.getMessenger().sendInfo(mod, Msg.TICKET_REMIND_UNREAD_LIST.toString(Replace.MISC(String.valueOf(mods.get(mod)))), true);
 			}
 		}
+		// closed-reminder
 		for (Player player : server.getOnlinePlayers()) {
 			List<String> list = cManager.getReminder(player.getName());
 			if (list != null) {
-				for (String id : list) {
-					plugin.getMessenger().sendInfo(player, Msg.TICKET_REMIND_CLOSE.toString(Replace.ID(Integer.parseInt(id))), true);
+				if (list.size() > 1) {
+					plugin.getMessenger().sendInfo(player,
+							Msg.TICKET_REMIND_CLOSE_LIST.toString(Replace.ID(list.size()), Replace.MISC(list.toString())), true);
+
+				}
+				else {
+					plugin.getMessenger().sendInfo(player, Msg.TICKET_REMIND_CLOSE.toString(Replace.ID(Integer.parseInt(list.get(0)))), true);
 				}
 			}
 		}
@@ -151,6 +158,7 @@ public class TicketManager extends XcraftPluginManager {
 		tickets.add(ticket);
 		cManager.saveTicket(cManager.ticketFolder, ticket);
 		this.nextID++;
+		cManager.save();
 		return ticket;
 	}
 

@@ -14,7 +14,7 @@ public enum Msg {
 	//@formatter:off
 	//general stuff
 	NONE("none"),
-	ERR_NOT_FROM_CONSOLE("&cYou can't use this command from the console."), 
+	ERR_NOT_FROM_CONSOLE("&cYou can't use this command from the console."),
 	//Plugin specific errors
 	ERR_TICKET_NOT_FOUND("Could not find a ticket with the id $ID$!"),
 	ERR_TICKET_NO_PERMISSION("You dont have permission to access that ticket!"),
@@ -83,13 +83,14 @@ public enum Msg {
 	TICKET_LIST_COMMENT_UNREAD("&8[&b$COMMENTS$ comments&8]"),
 	TICKET_LIST_ASSIGNEE("assigned to &5$NAME$"),
 	TICKET_LIST("&6#$ID$ &8$TIME$ $MISC$ &e$NAME$ &7$ASSIGNEE$&f\n&f&o$MESSAGE$"),
-	
+
 	//Remind...
 	TICKET_REMIND_CLOSE("Your ticket $ID$ was closed. Please revisit! (/ticket view $ID$)"),
+	TICKET_REMIND_CLOSE_LIST("You have $ID$ unread closed Tickets! (/ticket view <ID>) ($MISC$)"),
 	TICKET_REMIND_UNREAD("You have unread messages in you Ticket $ID$! (/ticket view $ID$)"),
 	TICKET_REMIND_UNREAD_LIST("You have $MISC$ unread Tickets! (/ticket list)"),
 	;
-	
+
 	//@formatter:on
 
 	public enum Replace {

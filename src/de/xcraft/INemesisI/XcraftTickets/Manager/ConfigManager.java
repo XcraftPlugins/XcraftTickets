@@ -44,16 +44,24 @@ public class ConfigManager extends XcraftConfigManager {
 		File folder = plugin.getDataFolder();
 		ticketFolder = new File(folder, "tickets");
 		archiveFolder = new File(folder, "archive");
+		if (!ticketFolder.exists()) {
+			ticketFolder.mkdir();
+		}
+		if (!archiveFolder.exists()) {
+			archiveFolder.mkdir();
+		}
 		remFile = new File(folder, "reminder.yml");
 		reminder = YamlConfiguration.loadConfiguration(remFile);
 		// load tickets
 		List<Ticket> tickets = new ArrayList<Ticket>();
 		File[] files = ticketFolder.listFiles();
-		Arrays.sort(files);
-		for (File file : files) {
-			Ticket ticket = loadTicket(file);
-			if (ticket != null) {
-				tickets.add(ticket);
+		if (files != null) {
+			Arrays.sort(files);
+			for (File file : files) {
+				Ticket ticket = loadTicket(file);
+				if (ticket != null) {
+					tickets.add(ticket);
+				}
 			}
 		}
 		tmanager.setTickets(tickets);
@@ -76,6 +84,7 @@ public class ConfigManager extends XcraftConfigManager {
 		config.set("Next_Ticket_ID", tmanager.getNextID());
 		config.set("Assignee", tmanager.getAssignees());
 		config.set("Phrases", tmanager.getPhrases());
+		plugin.saveConfig();
 		try {
 			reminder.save(remFile);
 		} catch (IOException e) {

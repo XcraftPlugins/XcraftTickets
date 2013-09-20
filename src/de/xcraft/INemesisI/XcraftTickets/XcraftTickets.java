@@ -18,16 +18,16 @@ import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
 /***
  * @author INemesisI
  *     by _____   __                         _      ____
- *       /  _/ | / /__  ____ ___  ___  _____(_)____/  _/ 
- *       / //  |/ / _ \/ __ `__ \/ _ \/ ___/ / ___// /  
- *     _/ // /|  /  __/ / / / / /  __(__  ) (__  )/ /   
- *    /___/_/ |_/\___/_/ /_/ /_/\___/____/_/____/___/                                              
- */ 
+ *       /  _/ | / /__  ____ ___  ___  _____(_)____/  _/
+ *       / //  |/ / _ \/ __ `__ \/ _ \/ ___/ / ___// /
+ *     _/ // /|  /  __/ / / / / /  __(__  ) (__  )/ /
+ *    /___/_/ |_/\___/_/ /_/ /_/\___/____/_/____/___/
+ */
 //@formatter:on
 
 public class XcraftTickets extends XcraftPlugin {
 
-	private TicketManager pluginManager = null;
+	private TicketManager ticketManager = null;
 	private ConfigManager configManager = null;
 	private CommandManager commandManager = null;
 	private EventListener eventListener = null;
@@ -36,8 +36,9 @@ public class XcraftTickets extends XcraftPlugin {
 
 	@Override
 	protected void setup() {
+		Msg.init(this);
 		this.messenger = Messenger.getInstance(this);
-		this.pluginManager = new TicketManager(this);
+		this.ticketManager = new TicketManager(this);
 		this.configManager = new ConfigManager(this);
 		this.eventListener = new EventListener(this);
 		this.commandManager = new CommandManager(this);
@@ -47,7 +48,7 @@ public class XcraftTickets extends XcraftPlugin {
 
 	@Override
 	public TicketManager getPluginManager() {
-		return pluginManager;
+		return ticketManager;
 	}
 
 	@Override
