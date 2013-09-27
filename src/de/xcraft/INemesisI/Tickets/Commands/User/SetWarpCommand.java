@@ -1,4 +1,4 @@
-package de.xcraft.INemesisI.XcraftTickets.Commands.User;
+package de.xcraft.INemesisI.Tickets.Commands.User;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
-import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
-import de.xcraft.INemesisI.XcraftTickets.Msg;
-import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
-import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
+import de.xcraft.INemesisI.Tickets.Log.EntryType;
+import de.xcraft.INemesisI.Tickets.Msg;
+import de.xcraft.INemesisI.Tickets.Msg.Replace;
+import de.xcraft.INemesisI.Tickets.Ticket;
+import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class SetWarpCommand extends XcraftCommand {
 

@@ -1,4 +1,4 @@
-package de.xcraft.INemesisI.XcraftTickets;
+package de.xcraft.INemesisI.Tickets;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
+import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class Ticket {
 	private int id;

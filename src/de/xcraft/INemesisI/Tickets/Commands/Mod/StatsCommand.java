@@ -1,4 +1,4 @@
-package de.xcraft.INemesisI.XcraftTickets.Commands.Mod;
+package de.xcraft.INemesisI.Tickets.Commands.Mod;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import org.bukkit.command.CommandSender;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
-import de.xcraft.INemesisI.XcraftTickets.Msg;
-import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
+import de.xcraft.INemesisI.Tickets.Msg;
+import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class StatsCommand extends XcraftCommand {
 

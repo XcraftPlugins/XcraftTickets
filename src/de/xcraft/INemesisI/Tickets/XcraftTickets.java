@@ -1,4 +1,4 @@
-package de.xcraft.INemesisI.XcraftTickets;
+package de.xcraft.INemesisI.Tickets;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,10 +9,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import de.xcraft.INemesisI.Library.XcraftPlugin;
 import de.xcraft.INemesisI.Library.Message.Messenger;
-import de.xcraft.INemesisI.XcraftTickets.Manager.CommandManager;
-import de.xcraft.INemesisI.XcraftTickets.Manager.ConfigManager;
-import de.xcraft.INemesisI.XcraftTickets.Manager.EventListener;
-import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
+import de.xcraft.INemesisI.Tickets.Manager.CommandManager;
+import de.xcraft.INemesisI.Tickets.Manager.ConfigManager;
+import de.xcraft.INemesisI.Tickets.Manager.EventListener;
+import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 //@formatter:off
 /***
@@ -38,12 +38,13 @@ public class XcraftTickets extends XcraftPlugin {
 	protected void setup() {
 		Msg.init(this);
 		this.messenger = Messenger.getInstance(this);
+		this.setupPermissions();
 		this.ticketManager = new TicketManager(this);
 		this.configManager = new ConfigManager(this);
 		this.eventListener = new EventListener(this);
 		this.commandManager = new CommandManager(this);
-		this.setupPermissions();
 		configManager.load();
+		startScheduler();
 	}
 
 	@Override
@@ -100,10 +101,9 @@ public class XcraftTickets extends XcraftPlugin {
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
-				getPluginManager().informPlayers(XcraftTickets.this.getServer());
+				getPluginManager().informPlayers(getServer());
 			}
 		};
 		this.getServer().getScheduler().runTaskTimerAsynchronously(this, task, ((min * 60) + sec) * 20, 60 * delay * 20);
-
 	}
 }

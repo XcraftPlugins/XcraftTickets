@@ -1,4 +1,4 @@
-package de.xcraft.INemesisI.XcraftTickets.Manager;
+package de.xcraft.INemesisI.Tickets.Manager;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -15,12 +15,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
-import de.xcraft.INemesisI.XcraftTickets.Log;
-import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
-import de.xcraft.INemesisI.XcraftTickets.Msg;
-import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
-import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
+import de.xcraft.INemesisI.Tickets.Log;
+import de.xcraft.INemesisI.Tickets.Log.EntryType;
+import de.xcraft.INemesisI.Tickets.Msg;
+import de.xcraft.INemesisI.Tickets.Msg.Replace;
+import de.xcraft.INemesisI.Tickets.Ticket;
+import de.xcraft.INemesisI.Tickets.XcraftTickets;
 
 public class TicketManager extends XcraftPluginManager {
 	public ConfigManager cManager = null;
@@ -74,6 +74,7 @@ public class TicketManager extends XcraftPluginManager {
 	}
 
 	public void informPlayers(Server server) {
+		System.out.println("inform");
 		Map<Player, Integer> mods = new HashMap<Player, Integer>();
 		// unread-reminder
 		for (Player player : server.getOnlinePlayers()) {
@@ -100,7 +101,9 @@ public class TicketManager extends XcraftPluginManager {
 		}
 		// closed-reminder
 		for (Player player : server.getOnlinePlayers()) {
+			System.out.println("reminder...");
 			List<String> list = cManager.getReminder(player.getName());
+			System.out.println(list.toString());
 			if (list != null) {
 				if (list.size() > 1) {
 					plugin.getMessenger().sendInfo(player,

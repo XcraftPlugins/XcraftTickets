@@ -2,7 +2,7 @@ name: XcraftTickets
 version: 1.5
 author: INemesisI
 
-main: de.xcraft.INemesisI.XcraftTickets.XcraftTickets
+main: de.xcraft.INemesisI.Tickets.XcraftTickets
 load: POSTWORLD
 
 depend: [XcraftLibrary]

@@ -1,4 +1,4 @@
-package de.xcraft.INemesisI.XcraftTickets.Commands.Admin;
+package de.xcraft.INemesisI.Tickets.Commands.Admin;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import org.bukkit.command.CommandSender;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
-import de.xcraft.INemesisI.XcraftTickets.Msg;
-import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
-import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
+import de.xcraft.INemesisI.Tickets.Msg;
+import de.xcraft.INemesisI.Tickets.Msg.Replace;
+import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class ModCommand extends XcraftCommand {
 

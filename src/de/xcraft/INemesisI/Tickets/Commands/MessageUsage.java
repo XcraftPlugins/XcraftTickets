@@ -1,12 +1,12 @@
-package de.xcraft.INemesisI.XcraftTickets.Commands;
+package de.xcraft.INemesisI.Tickets.Commands;
 
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
 import de.xcraft.INemesisI.Library.Command.XcraftUsage;
-import de.xcraft.INemesisI.XcraftTickets.Msg;
-import de.xcraft.INemesisI.XcraftTickets.Manager.TicketManager;
+import de.xcraft.INemesisI.Tickets.Msg;
+import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class MessageUsage extends XcraftUsage {
 	TicketManager tManager;

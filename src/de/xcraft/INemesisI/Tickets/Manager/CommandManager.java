@@ -1,28 +1,28 @@
-package de.xcraft.INemesisI.XcraftTickets.Manager;
+package de.xcraft.INemesisI.Tickets.Manager;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import de.xcraft.INemesisI.Library.Manager.XcraftCommandManager;
-import de.xcraft.INemesisI.XcraftTickets.Msg;
-import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
-import de.xcraft.INemesisI.XcraftTickets.Commands.AssigneeUsage;
-import de.xcraft.INemesisI.XcraftTickets.Commands.IDUsage;
-import de.xcraft.INemesisI.XcraftTickets.Commands.MessageUsage;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Admin.ModCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.AssignCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.PhrasesCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.StatsCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.UnAssignCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.UndoCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.Mod.WarpCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.User.CloseCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.User.ListCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.User.LogCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.User.OpenCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.User.ReOpenCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.User.SetWarpCommand;
-import de.xcraft.INemesisI.XcraftTickets.Commands.User.ViewCommand;
+import de.xcraft.INemesisI.Tickets.Msg;
+import de.xcraft.INemesisI.Tickets.XcraftTickets;
+import de.xcraft.INemesisI.Tickets.Commands.AssigneeUsage;
+import de.xcraft.INemesisI.Tickets.Commands.IDUsage;
+import de.xcraft.INemesisI.Tickets.Commands.MessageUsage;
+import de.xcraft.INemesisI.Tickets.Commands.Admin.ModCommand;
+import de.xcraft.INemesisI.Tickets.Commands.Mod.AssignCommand;
+import de.xcraft.INemesisI.Tickets.Commands.Mod.PhrasesCommand;
+import de.xcraft.INemesisI.Tickets.Commands.Mod.StatsCommand;
+import de.xcraft.INemesisI.Tickets.Commands.Mod.UnAssignCommand;
+import de.xcraft.INemesisI.Tickets.Commands.Mod.UndoCommand;
+import de.xcraft.INemesisI.Tickets.Commands.Mod.WarpCommand;
+import de.xcraft.INemesisI.Tickets.Commands.User.CloseCommand;
+import de.xcraft.INemesisI.Tickets.Commands.User.ListCommand;
+import de.xcraft.INemesisI.Tickets.Commands.User.LogCommand;
+import de.xcraft.INemesisI.Tickets.Commands.User.OpenCommand;
+import de.xcraft.INemesisI.Tickets.Commands.User.ReOpenCommand;
+import de.xcraft.INemesisI.Tickets.Commands.User.SetWarpCommand;
+import de.xcraft.INemesisI.Tickets.Commands.User.ViewCommand;
 
 public class CommandManager extends XcraftCommandManager {
 	TicketManager tManager;

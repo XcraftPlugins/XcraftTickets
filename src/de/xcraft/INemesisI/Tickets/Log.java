@@ -1,11 +1,11 @@
-package de.xcraft.INemesisI.XcraftTickets;
+package de.xcraft.INemesisI.Tickets;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.xcraft.INemesisI.XcraftTickets.Msg.Replace;
+import de.xcraft.INemesisI.Tickets.Msg.Replace;
 
 public class Log {
 	private final DateFormat formatter;

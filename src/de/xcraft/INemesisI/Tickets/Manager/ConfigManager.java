@@ -1,4 +1,4 @@
-package de.xcraft.INemesisI.XcraftTickets.Manager;
+package de.xcraft.INemesisI.Tickets.Manager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,10 +19,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.xcraft.INemesisI.Library.Manager.XcraftConfigManager;
-import de.xcraft.INemesisI.XcraftTickets.Log;
-import de.xcraft.INemesisI.XcraftTickets.Log.EntryType;
-import de.xcraft.INemesisI.XcraftTickets.Ticket;
-import de.xcraft.INemesisI.XcraftTickets.XcraftTickets;
+import de.xcraft.INemesisI.Tickets.Log;
+import de.xcraft.INemesisI.Tickets.Log.EntryType;
+import de.xcraft.INemesisI.Tickets.Ticket;
+import de.xcraft.INemesisI.Tickets.XcraftTickets;
 
 public class ConfigManager extends XcraftConfigManager {
 
