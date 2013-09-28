@@ -37,7 +37,7 @@ public class WarpCommand extends XcraftCommand {
 			Player player = (Player) sender;
 			if (player != null) {
 				player.teleport(loc);
-				player.performCommand("ticket view " + ticket.getId());
+				player.performCommand("ticket view " + ticket.getId() + " all");
 				manager.inform(ticket, Msg.TICKET_BROADCAST_WARP.toString(Replace.NAME(player.getName()), Replace.ID(id)), true);
 				if (ticket.getAssignee() == null) {
 					ticket.setAssignee(player.getName());

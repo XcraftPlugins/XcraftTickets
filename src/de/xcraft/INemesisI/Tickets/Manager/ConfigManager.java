@@ -19,6 +19,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.xcraft.INemesisI.Library.Manager.XcraftConfigManager;
+import de.xcraft.INemesisI.Library.Message.Messenger;
 import de.xcraft.INemesisI.Tickets.Log;
 import de.xcraft.INemesisI.Tickets.Log.EntryType;
 import de.xcraft.INemesisI.Tickets.Ticket;
@@ -61,6 +62,8 @@ public class ConfigManager extends XcraftConfigManager {
 				Ticket ticket = loadTicket(file);
 				if (ticket != null) {
 					tickets.add(ticket);
+				} else {
+					file.delete();
 				}
 			}
 		}
@@ -110,6 +113,9 @@ public class ConfigManager extends XcraftConfigManager {
 				long time = split[0].matches("\\d*") ? Long.valueOf(split[0]) : 0;
 				log.add(time, EntryType.valueOf(split[2]), split[1], split.length >= 4 ? split[3] : "");
 			}
+		} else {
+			Messenger.warning("[" + plugin.getName() + "]" + " Ticket " + id + " could not be loaded: missing log!");
+			return null;
 		}
 		List<String> watched = (ArrayList<String>) cs.getList("watched");
 		if (watched == null) {

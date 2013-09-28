@@ -15,7 +15,7 @@ import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 public class StatsCommand extends XcraftCommand {
 
 	public StatsCommand() {
-		super("ticket", "stats", "s.*", "", Msg.COMMAND_STATS.toString(), "XcraftTickets.Stats");
+		super("ticket", "stats", "st.*", "", Msg.COMMAND_STATS.toString(), "XcraftTickets.Stats");
 	}
 
 	@Override

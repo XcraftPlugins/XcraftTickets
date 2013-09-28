@@ -74,7 +74,6 @@ public class TicketManager extends XcraftPluginManager {
 	}
 
 	public void informPlayers(Server server) {
-		System.out.println("inform");
 		Map<Player, Integer> mods = new HashMap<Player, Integer>();
 		// unread-reminder
 		for (Player player : server.getOnlinePlayers()) {
@@ -101,9 +100,7 @@ public class TicketManager extends XcraftPluginManager {
 		}
 		// closed-reminder
 		for (Player player : server.getOnlinePlayers()) {
-			System.out.println("reminder...");
 			List<String> list = cManager.getReminder(player.getName());
-			System.out.println(list.toString());
 			if (list != null) {
 				if (list.size() > 1) {
 					plugin.getMessenger().sendInfo(player,
