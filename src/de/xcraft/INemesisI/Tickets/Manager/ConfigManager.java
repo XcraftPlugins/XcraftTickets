@@ -154,7 +154,7 @@ public class ConfigManager extends XcraftConfigManager {
 		temp.set("Ticket.log", list);
 		temp.set("Ticket.watched", ticket.getWatched());
 		Location loc = ticket.getLoc();
-		if (loc.getWorld() != null) {
+		if (loc != null && loc.getWorld() != null) {
 			temp.set("Ticket.location.x", loc.getX());
 			temp.set("Ticket.location.y", loc.getY());
 			temp.set("Ticket.location.z", loc.getZ());
@@ -272,17 +272,23 @@ public class ConfigManager extends XcraftConfigManager {
 			if ((list.remove(sid) == true)) {
 				if (list.size() == 0) {
 					reminder.set(player, null);
+				} else {
+					reminder.set(player, list);
 				}
 				return true;
 			} else
 				return false;
 		} else
-			return false;
+			return true;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<String> getReminder(String player) {
 		return (List<String>) reminder.getList(player);
+	}
+
+	public boolean hasReminder(String player) {
+		return reminder.contains(player);
 	}
 
 }

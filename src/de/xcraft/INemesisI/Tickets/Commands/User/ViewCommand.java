@@ -7,6 +7,7 @@ import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.Tickets.Msg;
 import de.xcraft.INemesisI.Tickets.Msg.Replace;
 import de.xcraft.INemesisI.Tickets.Ticket;
+import de.xcraft.INemesisI.Tickets.Manager.ConfigManager;
 import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class ViewCommand extends XcraftCommand {
@@ -25,6 +26,11 @@ public class ViewCommand extends XcraftCommand {
 			if (ticket == null) {
 				pManager.plugin.getMessenger().sendInfo(sender, Msg.ERR_TICKET_NOT_FOUND.toString(Replace.ID(id)), false);
 				return true;
+			} else {
+				ConfigManager cManager = manager.getPlugin().getConfigManager();
+				if (cManager.getReminder(sender.getName()).contains(ticket.getId())) {
+					cManager.removeReminder(sender.getName(), ticket.getId());
+				}
 			}
 		}
 		if (!ticket.getOwner().equals(sender.getName()) && !sender.hasPermission("XcraftTickets.View.All")) {
@@ -50,7 +56,6 @@ public class ViewCommand extends XcraftCommand {
 			sender.sendMessage(entries[i]);
 		}
 		ticket.addToWatched(sender.getName());
-		manager.getPlugin().getConfigManager().removeReminder(ticket.getOwner(), ticket.getId());
 		return true;
 	}
 }
