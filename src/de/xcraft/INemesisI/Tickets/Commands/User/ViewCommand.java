@@ -3,6 +3,7 @@ package de.xcraft.INemesisI.Tickets.Commands.User;
 import org.bukkit.command.CommandSender;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftCommandManager;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.Tickets.Msg;
 import de.xcraft.INemesisI.Tickets.Msg.Replace;
@@ -12,8 +13,8 @@ import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class ViewCommand extends XcraftCommand {
 
-	public ViewCommand() {
-		super("ticket", "view", "v.*|i.*", "<ID> [all]", Msg.COMMAND_VIEW.toString(), "XcraftTickets.View");
+	public ViewCommand(XcraftCommandManager cManager, String command, String name, String pattern, String usage, String desc, String permission) {
+		super(cManager, command, name, pattern, usage, desc, permission);
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class ViewCommand extends XcraftCommand {
 				return true;
 			} else {
 				ConfigManager cManager = manager.getPlugin().getConfigManager();
-				if (cManager.getReminder(sender.getName()).contains(ticket.getId())) {
+				if (cManager.getReminder(sender.getName()).contains(String.valueOf(ticket.getId()))) {
 					cManager.removeReminder(sender.getName(), ticket.getId());
 				}
 			}

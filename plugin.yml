@@ -1,6 +1,7 @@
 name: XcraftTickets
-version: 1.5.1
+version: 1.5.3
 author: INemesisI
+description: Requires XcraftLibrary v1.6.2
 
 main: de.xcraft.INemesisI.Tickets.XcraftTickets
 load: POSTWORLD
@@ -14,41 +15,41 @@ commands:
   tl:
     
 permissions:
-    XcraftTickets.Admin:
+    xcrafttickets.admin:
         description: Access to all /ticket commands this plugin provides
         children:
-            XcraftTickets.Mod: true
-            XcraftTickets.Save: true
-            XcraftTickets.Reload: true
-            XcraftTickets.Assignee: true
+            xcrafttickets.mod: true
+            xcrafttickets.save: true
+            xcrafttickets.reload: true
+            xcrafttickets.assignee: true
         default: op
         
-    XcraftTickets.Mod:
+    xcrafttickets.mod:
         description: Access to all mod related /ticket commands
         children:
-            XcraftTickets.User: true
-            XcraftTickets.Warp: true
-            XcraftTickets.Assign: true
-            XcraftTickets.Unassign: true
-            XcraftTickets.List.All: true
-            XcraftTickets.View.All: true
-            XcraftTickets.Log.All: true
-            XcraftTickets.Close.All: true
-            XcraftTickets.Reopen.All: true
-            XcraftTickets.Phrases: true
-            XcraftTickets.Stats: true
+            xcrafttickets.user: true
+            xcrafttickets.warp: true
+            xcrafttickets.assign: true
+            xcrafttickets.unassign: true
+            xcrafttickets.list.all: true
+            xcrafttickets.view.all: true
+            xcrafttickets.log.all: true
+            xcrafttickets.close.all: true
+            xcrafttickets.reopen.all: true
+            xcrafttickets.phrases: true
+            xcrafttickets.stats: true
         default: false
         
-    XcraftTickets.User:
+    xcrafttickets.user:
         description: Access  to all user related /ticket commands
         children:
-            XcraftTickets.Open: true
-            XcraftTickets.Reopen: true
-            XcraftTickets.Close: true
-            XcraftTickets.List: true
-            XcraftTickets.View: true
-            XcraftTickets.Log: true
-            XcraftTickets.Undo: true
-            XcraftTickets.Setwarp: true
+            xcrafttickets.open: true
+            xcrafttickets.reopen: true
+            xcrafttickets.close: true
+            xcrafttickets.list: true
+            xcrafttickets.view: true
+            xcrafttickets.log: true
+            xcrafttickets.undo: true
+            xcrafttickets.setwarp: true
         default: true
     

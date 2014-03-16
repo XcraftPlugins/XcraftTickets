@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftCommandManager;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.Tickets.Msg;
 import de.xcraft.INemesisI.Tickets.Msg.Replace;
@@ -13,13 +14,18 @@ import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class OpenCommand extends XcraftCommand {
 
-	public OpenCommand() {
-		super("ticket", "open", "o.*", "<MESSAGE> ...", Msg.COMMAND_OPEN.toString(), "XcraftTickets.Open");
+
+	public OpenCommand(XcraftCommandManager cManager, String command, String name, String pattern, String usage, String desc, String permission) {
+		super(cManager, command, name, pattern, usage, desc, permission);
 	}
 
 	@Override
 	public boolean execute(XcraftPluginManager pManager, CommandSender sender, String[] args) {
 		TicketManager manager = (TicketManager) pManager;
+		if (args.length == 1 && args[0].matches("\\d.*")) {
+			pManager.plugin.getMessenger().sendInfo(sender, Msg.USAGE_NO_MESSAGE.toString(), true);
+			return false;
+		}
 		String message = manager.getMessage(sender, args);
 		Location loc = null;
 		if (sender instanceof Player) {

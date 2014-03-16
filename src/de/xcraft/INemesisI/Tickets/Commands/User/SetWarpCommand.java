@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftCommandManager;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.Tickets.Log.EntryType;
 import de.xcraft.INemesisI.Tickets.Msg;
@@ -14,8 +15,9 @@ import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class SetWarpCommand extends XcraftCommand {
 
-	public SetWarpCommand() {
-		super("ticket", "setwarp", "se.*|sw", "<ID> [MESSAGE] ...", Msg.COMMAND_SETWARP.toString(), "XcraftTickets.Setwarp");
+
+	public SetWarpCommand(XcraftCommandManager cManager, String command, String name, String pattern, String usage, String desc, String permission) {
+		super(cManager, command, name, pattern, usage, desc, permission);
 	}
 
 	@Override

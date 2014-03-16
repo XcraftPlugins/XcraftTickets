@@ -8,14 +8,15 @@ import java.util.TreeMap;
 import org.bukkit.command.CommandSender;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftCommandManager;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
-import de.xcraft.INemesisI.Tickets.Msg;
 import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class StatsCommand extends XcraftCommand {
 
-	public StatsCommand() {
-		super("ticket", "stats", "st.*", "", Msg.COMMAND_STATS.toString(), "XcraftTickets.Stats");
+
+	public StatsCommand(XcraftCommandManager cManager, String command, String name, String pattern, String usage, String desc, String permission) {
+		super(cManager, command, name, pattern, usage, desc, permission);
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class StatsCommand extends XcraftCommand {
 		return true;
 	}
 
-	class ValueComparator implements Comparator<String> {
+	private class ValueComparator implements Comparator<String> {
 
 		Map<String, Integer> base;
 

@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftCommandManager;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.Tickets.Log.EntryType;
 import de.xcraft.INemesisI.Tickets.Msg;
@@ -13,8 +14,8 @@ import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class LogCommand extends XcraftCommand {
 
-	public LogCommand() {
-		super("ticket", "log", "l|lo.*", "<ID> <MESSAGE> ...", Msg.COMMAND_LOG.toString(), "XcraftTickets.Log");
+	public LogCommand(XcraftCommandManager cManager, String command, String name, String pattern, String usage, String desc, String permission) {
+		super(cManager, command, name, pattern, usage, desc, permission);
 	}
 
 	@Override

@@ -37,22 +37,22 @@ public class CommandManager extends XcraftCommandManager {
 		this.registerBukkitCommand("ticket");
 		this.registerBukkitCommand("tl");
 		// User Commands
-		this.registerCommand(new OpenCommand());
-		this.registerCommand(new LogCommand());
-		this.registerCommand(new ListCommand());
-		this.registerCommand(new ViewCommand());
-		this.registerCommand(new CloseCommand());
-		this.registerCommand(new ReOpenCommand());
-		this.registerCommand(new SetWarpCommand());
+		this.registerCommand(new OpenCommand(this, "ticket", "open", "o.*", "<MESSAGE> ...", Msg.COMMAND_OPEN.toString(), "xcrafttickets.open"));
+		this.registerCommand(new LogCommand(this, "ticket", "log", "l|lo.*", "<ID> <MESSAGE> ...", Msg.COMMAND_LOG.toString(), "xcrafttickets.log"));
+		this.registerCommand(new ListCommand(this, "ticket", "list", "li.*", "", Msg.COMMAND_LIST.toString(), "xcrafttickets.list"));
+		this.registerCommand(new ViewCommand(this, "ticket", "view", "v.*|i.*", "<ID> [all]", Msg.COMMAND_VIEW.toString(), "xcrafttickets.view"));
+		this.registerCommand(new CloseCommand(this, "ticket", "close", "c.*", "<ID> <MESSAGE> ...", Msg.COMMAND_CLOSE.toString(), "xcrafttickets.close"));
+		this.registerCommand(new ReOpenCommand(this, "ticket", "reopen", "reo.*|ro", "<ID> <MESSAGE> ...", Msg.COMMAND_REOPEN.toString(), "xcrafttickets.reopen"));
+		this.registerCommand(new SetWarpCommand(this, "ticket", "setwarp", "se.*|sw", "<ID> [MESSAGE] ...", Msg.COMMAND_SETWARP.toString(), "xcrafttickets.setwarp"));
 		// Mod Commands
-		this.registerCommand(new WarpCommand());
-		this.registerCommand(new AssignCommand());
-		this.registerCommand(new UnAssignCommand());
-		this.registerCommand(new UndoCommand());
-		this.registerCommand(new PhrasesCommand());
+		this.registerCommand(new WarpCommand(this, "ticket", "warp", "w.*", "<ID>", Msg.COMMAND_WARP.toString(), "xcrafttickets.warp"));
+		this.registerCommand(new AssignCommand(this, "ticket", "assign", "a.*", "<ID> <ASSIGNEE>", Msg.COMMAND_ASSIGN.toString(), "xcrafttickets.assign"));
+		this.registerCommand(new UnAssignCommand(this, "ticket", "unassign", "una.*", "<ID>", Msg.COMMAND_UNASSIGN.toString(), "xcrafttickets.unassign"));
+		this.registerCommand(new UndoCommand(this, "ticket", "undo", "und.*", "<ID>", Msg.COMMAND_UNDO.toString(), "xcrafttickets.undo"));
+		this.registerCommand(new PhrasesCommand(this, "ticket", "phrases", "p.*", "<list/add/remove/append> [MESSAGE]", Msg.COMMAND_PHRASES.toString(), "xcrafttickets.phrases"));
+		this.registerCommand(new StatsCommand(this, "ticket", "stats", "st.*", "", Msg.COMMAND_STATS.toString(), "xcrafttickets.stats"));
 		// Admin Commands
-		this.registerCommand(new ModCommand());
-		this.registerCommand(new StatsCommand());
+		this.registerCommand(new ModCommand(this, "ticket", "mod", "m.*", "<add/remove/list> [Assignee]", Msg.COMMAND_MOD.toString(), "xcrafttickets.mod"));
 		// Usage
 		this.registerUsage(new IDUsage(tManager));
 		this.registerUsage(new MessageUsage(tManager));
@@ -69,8 +69,8 @@ public class CommandManager extends XcraftCommandManager {
 	}
 
 	@Override
-	public void onReload(CommandSender sender) {
-		super.onReload(sender);
+	public void onLoad(CommandSender sender) {
+		super.onLoad(sender);
 		Msg.init(plugin);
 	}
 

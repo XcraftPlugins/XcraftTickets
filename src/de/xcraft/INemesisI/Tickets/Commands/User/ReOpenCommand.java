@@ -3,6 +3,7 @@ package de.xcraft.INemesisI.Tickets.Commands.User;
 import org.bukkit.command.CommandSender;
 
 import de.xcraft.INemesisI.Library.Command.XcraftCommand;
+import de.xcraft.INemesisI.Library.Manager.XcraftCommandManager;
 import de.xcraft.INemesisI.Library.Manager.XcraftPluginManager;
 import de.xcraft.INemesisI.Tickets.Log.EntryType;
 import de.xcraft.INemesisI.Tickets.Msg;
@@ -12,8 +13,8 @@ import de.xcraft.INemesisI.Tickets.Manager.TicketManager;
 
 public class ReOpenCommand extends XcraftCommand {
 
-	public ReOpenCommand() {
-		super("ticket", "reopen", "reo.*|ro", "<ID> <MESSAGE> ...", Msg.COMMAND_REOPEN.toString(), "XcraftTickets.Reopen");
+	public ReOpenCommand(XcraftCommandManager cManager, String command, String name, String pattern, String usage, String desc, String permission) {
+		super(cManager, command, name, pattern, usage, desc, permission);
 	}
 
 	@Override
